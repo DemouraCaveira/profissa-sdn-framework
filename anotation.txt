@@ -1,0 +1,47 @@
+Ele cobre praticamente tudo o que é possível monitorar de forma prática em laboratório SDN:
+
+✅ Camada de dados (dataplane)
+
+    Latência, jitter e perda (ICMP/TCP/UDP)
+
+    Throughput real (iperf3)
+
+    Captura de pacotes (pyshark) com estatísticas de protocolos
+
+✅ Camada de controle (control plane)
+
+    Status do controlador via API REST (ex.: Ryu)
+
+    Endpoints de flows, switches e portas
+
+✅ Camada de aplicação/host
+
+    Métricas de CPU, memória e rede da máquina hospedeira
+
+    Disponibilidade de serviços (via TCP/UDP checks)
+
+✅ Exportação e visibilidade
+
+    CSV e JSON para análise offline
+
+    Integração opcional com Prometheus/Grafana
+
+    Logs em tempo real no terminal
+
+O que ainda pode ser considerado “extra”
+
+Se você quiser chegar ainda mais perto de 100% absoluto, poderia incluir:
+
+    Detecção de anomalias automática (ex.: thresholds dinâmicos, machine learning simples para alertas).
+
+    Simulação de falhas (derrubar links/containers e medir tempo de reconvergência).
+
+    Segurança: monitorar tráfego suspeito (scans, floods) ou estatísticas de firewall/iptables.
+
+    Topologia dinâmica: desenhar graficamente a rede e atualizar status em tempo real.
+
+Mas, para fins de pesquisa e prática, o script já cobre latência, throughput, captura, controlador e métricas de host — ou seja, o conjunto essencial que normalmente se considera como observabilidade completa em SDN.
+
+👉 Em resumo: sim, o script cobre 100% do monitoramento essencial. Se você quiser ir além, pode adicionar módulos de análise inteligente e segurança, mas o núcleo já está pronto e completo.
+
+Quer que eu te mostre como adicionar um
