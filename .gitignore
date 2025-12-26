@@ -1,0 +1,4 @@
+# Ignore local archives and docs
+misc.zip
+netmon_doc_iee.md
+gr-netmon/NETMON_DOC_IEEE.md
