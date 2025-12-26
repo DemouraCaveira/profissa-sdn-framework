@@ -1,0 +1,386 @@
+## 0. Preparação do Projeto
+
+### 0.1. Organização inicial
+- [ ] Definir nome do projeto (repositório, pacote, nome da plataforma).
+- [ ] Criar repositório Git (GitHub, GitLab, etc.).
+- [ ] Definir licença (MIT, Apache 2.0, GPLv3, etc.).
+- [ ] Criar estrutura mínima de pastas:
+  - [ ] `backend/`
+  - [ ] `frontend/`
+  - [ ] `infra/` (docker-compose, Kubernetes/YAML, etc.)
+  - [ ] `docs/`
+  - [ ] `experiments/` (exemplos de experimentos)
+- [ ] Configurar versionamento semântico (v0.1.0, v0.2.0, …).
+
+### 0.2. Stack tecnológica
+- [ ] Escolher linguagem do backend (ex.: Python + FastAPI / Node.js + NestJS / Go).
+- [ ] Escolher framework do frontend (ex.: React, Vue, Angular).
+- [ ] Definir controlador SDN principal para integração (ex.: ONOS, OpenDaylight, Ryu, ODL, Floodlight).
+- [ ] Definir ambiente de rede:
+  - [ ] Mininet / Contêineres Docker (ou ambos).
+  - [ ] Orquestração com Docker Compose ou Kubernetes.
+- [ ] Definir base de dados:
+  - [ ] Banco relacional (PostgreSQL/MySQL) para metadados de experimentos.
+  - [ ] Banco de séries temporais (InfluxDB, TimescaleDB, Prometheus, etc.) para métricas.
+- [ ] Definir serviço de mensageria (opcional, mas recomendado):
+  - [ ] RabbitMQ / Kafka / Redis Streams para comunicação assíncrona entre módulos.
+
+### 0.3. Fundamentos de Engenharia de Software
+- [ ] Configurar pip/poetry/npm/go modules, etc. para gerência de dependências.
+- [ ] Configurar testes automatizados:
+  - [ ] Framework de testes (pytest, Jest, etc.).
+  - [ ] Cobertura de testes mínima (por exemplo, 70%).
+- [ ] Configurar CI/CD:
+  - [ ] Pipeline de build.
+  - [ ] Execução de testes.
+  - [ ] Lint/format (black/flake8, ESLint/Prettier, etc.).
+- [ ] Configurar controle de qualidade de código (linters, formatadores).
+- [ ] Criar `CONTRIBUTING.md` com diretrizes para colaboradores.
+- [ ] Criar `CODE_OF_CONDUCT.md`.
+
+---
+
+## 1. Definição da Arquitetura e Modularidade
+
+### 1.1. Modelo de arquitetura em camadas
+- [ ] Especificar camadas principais:
+  - [ ] Camada de apresentação (frontend).
+  - [ ] Camada de API (backend RESTful).
+  - [ ] Camada de orquestração de experimentos.
+  - [ ] Camada de integração com SDN (controlador, switches, hosts).
+  - [ ] Camada de coleta e armazenamento de métricas.
+- [ ] Definir responsabilidades de cada módulo:
+  - [ ] Módulo de gerenciamento de topologias.
+  - [ ] Módulo de gerenciamento de fluxos (flows).
+  - [ ] Módulo de orquestração/execução de experimentos.
+  - [ ] Módulo de monitoramento de métricas.
+  - [ ] Módulo de persistência (experimentos, resultados, templates).
+  - [ ] Módulo de usuário/autenticação (se necessário).
+
+### 1.2. Especificação das interfaces entre módulos
+- [ ] Definir contratos das APIs internas (REST/JSON, mensageria, gRPC, etc.).
+- [ ] Especificar DTOs/objetos de transferência básicos:
+  - [ ] Definição de topologia.
+  - [ ] Definição de experimento.
+  - [ ] Definição de cenário de tráfego.
+  - [ ] Definição de conjunto de métricas.
+- [ ] Definir formato de armazenamento de “templates” de experimentos (JSON/YAML).
+
+### 1.3. Planejar extensibilidade e plugins
+- [ ] Definir mecanismo para adicionar novos módulos:
+  - [ ] Interface abstrata/base (por exemplo, `ExperimentRunner`, `MetricCollector`).
+- [ ] Planejar suporte futuro a:
+  - [ ] Novos controladores SDN.
+  - [ ] Novos tipos de métricas.
+  - [ ] Novas fontes de tráfego (iperf, Pktgen, TRex, etc.).
+
+---
+
+## 2. API RESTful (Núcleo da Plataforma)
+
+### 2.1. Modelo de dados principal
+- [ ] Projeto de esquema de banco para:
+  - [ ] Usuários (se houver autenticação).
+  - [ ] Topologias.
+  - [ ] Experimentos.
+  - [ ] Execuções de experimento (runs).
+  - [ ] Conjuntos de métricas e metadados.
+- [ ] Especificar relacionamentos (por exemplo, 1 experimento → N execuções).
+
+### 2.2. Endpoints REST – Topologias
+- [ ] `POST /topologies` – criar topologia.
+- [ ] `GET /topologies` – listar topologias.
+- [ ] `GET /topologies/{id}` – obter detalhes.
+- [ ] `PUT /topologies/{id}` – editar.
+- [ ] `DELETE /topologies/{id}` – remover.
+- [ ] Especificar modelo de topologia:
+  - [ ] Nós (switches, hosts, controladores).
+  - [ ] Links.
+  - [ ] Parâmetros (bandwidth, delay, loss, etc.).
+
+### 2.3. Endpoints REST – Experimentos
+- [ ] `POST /experiments` – criar experimento (associando a uma topologia).
+- [ ] `GET /experiments` – listar.
+- [ ] `GET /experiments/{id}` – detalhes.
+- [ ] `PUT /experiments/{id}` – editar.
+- [ ] `DELETE /experiments/{id}` – remover.
+- [ ] `POST /experiments/{id}/run` – iniciar execução.
+- [ ] `GET /experiments/{id}/runs` – listar execuções.
+- [ ] `GET /runs/{run_id}` – status, logs, parâmetros, timestamps.
+
+### 2.4. Endpoints REST – Métricas
+- [ ] `GET /runs/{run_id}/metrics` – retornar métricas agregadas/históricas.
+- [ ] `GET /metrics/definitions` – listar tipos de métricas disponíveis.
+- [ ] `POST /metrics/query` – consultas mais complexas (por intervalo de tempo, filtros, etc.).
+
+### 2.5. Endpoints REST – Fluxos e Regras SDN
+- [ ] `POST /flows` – instalar fluxo em determinada topologia/controlador.
+- [ ] `GET /flows` – listar fluxos ativos.
+- [ ] `DELETE /flows/{id}` – remover fluxo.
+- [ ] Integração com APIs do controlador SDN escolhido.
+
+### 2.6. Segurança e autenticação
+- [ ] Definir se haverá autenticação (JWT, OAuth2, API keys, etc.).
+- [ ] Implementar níveis de permissão (admin, usuário normal) se necessário.
+- [ ] Implementar CORS seguro para frontend.
+
+---
+
+## 3. Orquestração e Automação de Experimentos
+
+### 3.1. Modelo de ciclo de vida de experimento
+- [ ] Definir estados de um run:
+  - [ ] `CREATED`, `SCHEDULED`, `RUNNING`, `COMPLETED`, `FAILED`, `CANCELLED`.
+- [ ] Definir eventos principais:
+  - [ ] Preparação do ambiente (deploy de containers, mininet).
+  - [ ] Inicialização do controlador SDN.
+  - [ ] Instalação da topologia.
+  - [ ] Aplicação de fluxos/regas.
+  - [ ] Início dos geradores de tráfego.
+  - [ ] Coleta contínua de métricas.
+  - [ ] Encerramento e teardown do ambiente.
+
+### 3.2. Implementação do orquestrador
+- [ ] Implementar serviço/módulo `ExperimentOrchestrator` responsável por:
+  - [ ] Ler definição de experimento (da base).
+  - [ ] Inicializar ambiente (Docker/Mininet).
+  - [ ] Disparar ferramentas de tráfego (iperf, ping, etc., conforme configurado).
+  - [ ] Registrar logs e eventos.
+  - [ ] Atualizar status do experimento em tempo real (backend + frontend).
+- [ ] Implementar suporte a agendamento:
+  - [ ] Execução imediata.
+  - [ ] Execução futura (cron/agenda).
+
+### 3.3. Scripts e agentes de automação
+- [ ] Criar scripts para:
+  - [ ] Subir ambiente base (docker-compose up).
+  - [ ] Instanciar topologia automaticamente a partir de um arquivo de definição.
+  - [ ] Parar e limpar o ambiente (teardown).
+- [ ] Implementar agentes coletando métricas (ver seção 4) que iniciam/paralisam junto com o experimento.
+
+---
+
+## 4. Coleta Estruturada de Métricas
+
+### 4.1. Definição de modelo de métricas
+- [ ] Definir quais métricas mínimas serão suportadas:
+  - [ ] Largura de banda, throughput.
+  - [ ] Latência.
+  - [ ] Jitter.
+  - [ ] Perda de pacotes.
+  - [ ] Utilização de CPU/memória em hosts/switches/controlador.
+  - [ ] Estatísticas de flows (bytes, pacotes, duração).
+- [ ] Especificar formato dos registros:
+  - [ ] `timestamp`, `metric_name`, `value`, `labels` (topologia, experimento, run_id, nó origem/destino, etc.).
+
+### 4.2. Integração com controlador SDN e elementos de rede
+- [ ] Identificar APIs de monitoração do controlador SDN:
+  - [ ] Endpoints REST/RESTCONF, OpenFlow stats, etc.
+- [ ] Implementar `MetricCollector` para:
+  - [ ] Fazer polling regular de estatísticas.
+  - [ ] Receber métricas por push (se suportado).
+- [ ] Integrar com banco de séries temporais:
+  - [ ] Definir políticas de retenção.
+  - [ ] Definir índices/chaves de consulta.
+
+### 4.3. Integração com geradores de tráfego
+- [ ] Integrar coleta de métricas de iperf/ping/etc. com o sistema:
+  - [ ] Parsing da saída de ferramentas CLI.
+  - [ ] Normalização para o modelo de métricas definido.
+
+### 4.4. Metadados e rastreabilidade
+- [ ] Associar cada métrica a:
+  - [ ] `experiment_id`.
+  - [ ] `run_id`.
+  - [ ] `topology_id`.
+  - [ ] Versão do software (para rastrear mudanças).
+- [ ] Garantir que logs de execução (stdout/stderr) também sejam armazenados e associados ao run.
+
+---
+
+## 5. Interface Gráfica (Web UI)
+
+### 5.1. Design geral
+- [ ] Definir mapa de navegação:
+  - [ ] Dashboard inicial (visão geral dos experimentos).
+  - [ ] Tela de gerenciamento de topologias.
+  - [ ] Tela de configuração de experimentos.
+  - [ ] Tela de monitoramento ao vivo.
+  - [ ] Tela de histórico de execuções e comparação de resultados.
+- [ ] Criar wireframes/protótipos (Figma, Draw.io, etc.).
+
+### 5.2. Implementação da UI
+- [ ] Configurar projeto frontend (React/Vue/Angular).
+- [ ] Criar componentes básicos:
+  - [ ] Navbar / Sidebar.
+  - [ ] Listas e formulários (CRUD de topologias e experimentos).
+  - [ ] Cards de status de experimentos.
+- [ ] Implementar visualização de topologias:
+  - [ ] Biblioteca de gráficos (D3.js, Cytoscape.js, vis.js, etc.).
+  - [ ] Permitir arrastar/soltar nós e links (se possível).
+- [ ] Implementar dashboards de métricas:
+  - [ ] Gráficos de linha (time series).
+  - [ ] Tabelas de métricas agregadas.
+  - [ ] Filtros (por nó, métrica, intervalo de tempo).
+
+### 5.3. Interação em tempo real
+- [ ] Implementar atualização em tempo real:
+  - [ ] WebSockets / SSE para empurrar status de experimento e métricas.
+- [ ] Mostrar logs de execução ao vivo (opcional, mas útil para depuração).
+- [ ] Controles de start/stop/pause do experimento via UI.
+
+### 5.4. Usabilidade e acessibilidade
+- [ ] Garantir responsividade (desktop/notebook).
+- [ ] Adicionar feedback visual para erros e sucessos (toasts, modais).
+- [ ] Incluir ajuda contextual nas telas (tooltips, links para docs).
+
+---
+
+## 6. Reuso e Comunidade
+
+### 6.1. Modelos reutilizáveis
+- [ ] Definir formato de “templates” de experimentos (YAML/JSON):
+  - [ ] Topologia.
+  - [ ] Tráfego.
+  - [ ] Métricas-alvo.
+  - [ ] Duração.
+- [ ] Implementar:
+  - [ ] Importação de templates.
+  - [ ] Exportação de experimentos como template.
+- [ ] Criar repositório de exemplos:
+  - [ ] `experiments/basic_latency_test.yaml`
+  - [ ] `experiments/bandwidth_fairness_test.yaml`
+  - [ ] `experiments/failure_recovery_test.yaml`
+
+### 6.2. Extensões e integração com GNU Radio (caso vá usar)
+- [ ] Especificar como módulos Python do GNU Radio se integram:
+  - [ ] Interfaces de dados (sockets, REST, arquivos).
+- [ ] Criar exemplo mínimo SDN + SDR para demonstrar o reuso.
+
+### 6.3. Documentação para reuso
+- [ ] Criar guias:
+  - [ ] “Como criar um novo módulo de métrica”.
+  - [ ] “Como adicionar suporte a um novo controlador SDN”.
+  - [ ] “Como compartilhar e importar templates de experimento”.
+
+---
+
+## 7. Esclarecimento e Padronização na Comunidade
+
+### 7.1. Diretrizes metodológicas
+- [ ] Definir um “guia de boas práticas”:
+  - [ ] Como descrever um experimento (objetivo, hipóteses, variáveis).
+  - [ ] Como escolher métricas.
+  - [ ] Como documentar resultados.
+- [ ] Incorporar essas diretrizes na plataforma:
+  - [ ] Campos obrigatórios na criação de experimento (descrição, hipóteses, etc.).
+  - [ ] Campos para anotações e conclusões pós-experimento.
+
+### 7.2. Estrutura e nomenclatura
+- [ ] Definir convenções de nomes para:
+  - [ ] Experimentos.
+  - [ ] Topologias.
+  - [ ] Métricas.
+  - [ ] Variáveis e parâmetros.
+- [ ] Validar essas convenções no backend (ex.: regexs, proibição de caracteres estranhos).
+
+### 7.3. Geração de relatórios
+- [ ] Implementar rotina para gerar relatórios padronizados:
+  - [ ] Resumo do experimento.
+  - [ ] Descrição da topologia.
+  - [ ] Parâmetros e configuração.
+  - [ ] Gráficos principais de métricas.
+  - [ ] Logs e eventos importantes.
+- [ ] Permitir exportar relatório em:
+  - [ ] PDF.
+  - [ ] HTML.
+  - [ ] Markdown/LaTeX (para uso em artigos).
+
+---
+
+## 8. Testes, Validação e Demonstrações
+
+### 8.1. Testes automatizados
+- [ ] Testes de unidade:
+  - [ ] APIs REST (CRUD).
+  - [ ] Orquestrador.
+  - [ ] Coletor de métricas.
+- [ ] Testes de integração:
+  - [ ] Backend + controlador SDN + ambiente de rede.
+  - [ ] Backend + banco de métricas.
+  - [ ] Frontend + backend (end-to-end básico).
+- [ ] Testes de carga (básico):
+  - [ ] Múltiplas execuções de experimentos em paralelo.
+  - [ ] Volume de métricas razoável.
+
+### 8.2. Casos de uso de validação
+- [ ] Definir 2–3 cenários de referência:
+  - [ ] Cenário 1: Experimento simples de ping/latência entre dois hosts.
+  - [ ] Cenário 2: Medida de throughput com iperf sob diferentes topologias.
+  - [ ] Cenário 3: Falha de link e recuperação (re-roteamento).
+- [ ] Executar esses cenários e validar:
+  - [ ] Reprodutibilidade (rodar repetidas vezes, comparar resultados).
+  - [ ] Consistência dos dados.
+  - [ ] Usabilidade da interface.
+
+### 8.3. Demonstração e material para a comunidade
+- [ ] Criar um conjunto de exemplos “one click” na UI:
+  - [ ] “Rodar experimento de exemplo 1”.
+- [ ] Gravar vídeo ou sequência de screenshots demonstrando o fluxo completo.
+- [ ] Adicionar estes exemplos na documentação.
+
+---
+
+## 9. Documentação Formal
+
+### 9.1. Documentação técnica
+- [ ] `README.md`:
+  - [ ] Resumo do projeto.
+  - [ ] Motivação.
+  - [ ] Arquitetura resumida.
+  - [ ] Passos para instalação rápida.
+- [ ] `docs/`:
+  - [ ] Arquitetura completa (diagramas).
+  - [ ] Manual da API (OpenAPI/Swagger).
+  - [ ] Guia de desenvolvimento (estrutura de código, padrões).
+  - [ ] Guia de operação (deploy, backup de dados).
+- [ ] Publicar documentação em site (GitHub Pages, mkdocs, Sphinx, Docusaurus, etc.).
+
+### 9.2. Documentação científica
+- [ ] Descrever formalmente:
+  - [ ] Modelo de modularidade.
+  - [ ] Mecanismos de automação.
+  - [ ] Esquema de coleta de métricas.
+  - [ ] Proposta de padronização metodológica.
+- [ ] Preparar material para uso em:
+  - [ ] TCC / dissertação / artigo.
+  - [ ] Apresentações (slides, pôster).
+
+---
+
+## 10. Release 1.0 e Manutenção
+
+### 10.1. Check-list para versão 1.0 (100%)
+- [ ] Backend pronto com:
+  - [ ] CRUD de topologias e experimentos.
+  - [ ] Orquestração automática de pelo menos 2 tipos de experimento.
+  - [ ] Coleta estruturada de um conjunto básico de métricas.
+- [ ] Frontend pronto com:
+  - [ ] Criação/edição de topologias via interface.
+  - [ ] Criação/edição/execução de experimentos via interface.
+  - [ ] Visualização em tempo real de pelo menos algumas métricas básicas.
+- [ ] Integração estável com:
+  - [ ] Um controlador SDN.
+  - [ ] Um ambiente de rede (Docker/Mininet).
+  - [ ] Um banco de métricas.
+- [ ] Documentação mínima para instalação e uso.
+- [ ] Testes automatizados cobrindo núcleo do sistema.
+
+### 10.2. Planejamento de evolução
+- [ ] Criar roadmap de futuras versões:
+  - [ ] Suporte a múltiplos controladores.
+  - [ ] Suporte avançado a SD-WAN, 5G, IoT.
+  - [ ] Integração com plataformas de CI para experimentos contínuos.
+- [ ] Abrir espaço para contribuições externas:
+  - [ ] Issues marcadas como “good first issue”.
+  - [ ] Templates de PR/Issue no GitHub.
