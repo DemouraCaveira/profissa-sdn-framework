@@ -2,3 +2,7 @@
 misc.zip
 netmon_doc_iee.md
 gr-netmon/NETMON_DOC_IEEE.md
+
+# Test artifacts
+tests/__pycache__/
+tests/**/*.pyc
