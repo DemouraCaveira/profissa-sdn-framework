@@ -1,0 +1,94 @@
+options:
+  parameters:
+    author: netmon
+    catch_exceptions: 'True'
+    category: '[Network]/Monitoring'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: 'Hier block: Forwarding Table S1 (msg) with message strobe and edit box'
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: netmon_forwarding_table_s1_msg_hier
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Forwarding Table S1 (msg)
+    window_size: (800,600)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: netmon_forwarding_table_s1_msg_0
+  id: netmon_forwarding_table_s1_msg
+  parameters:
+    container_name: s1
+    update_interval: '1.0'
+    colorize: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 160]
+    rotation: 0
+    state: true
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.intern("tick")
+    period: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 160]
+    rotation: 0
+    state: true
+- name: qtgui_edit_box_msg_0
+  id: qtgui_edit_box_msg
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gui_hint: ''
+    is_pair: 'False'
+    is_static: 'False'
+    key: ''
+    label: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: string
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [420, 160]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_message_strobe_0, strobe, netmon_forwarding_table_s1_msg_0, tick]
+- [netmon_forwarding_table_s1_msg_0, out, qtgui_edit_box_msg_0, val]
+
+metadata:
+  file_format: 1

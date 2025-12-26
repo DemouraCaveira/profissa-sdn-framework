@@ -1,0 +1,54 @@
+# Build artifacts
+build/
+*/build/
+*.o
+*.so
+*.a
+*.la
+*.lo
+*.lai
+*.dll
+*.dylib
+*.lib
+*.obj
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.egg-info/
+
+# Logs and captures
+raw/
+*.pcap
+*.pcapng
+*.log
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Editors/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# CMake intermediate
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
+TargetDirectories.txt
+*.cmake
+
+# Qt/GUI cache
+*.qt*
+
+# OS files
+.DS_Store
+Thumbs.db
