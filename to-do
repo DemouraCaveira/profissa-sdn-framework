@@ -1,24 +1,22 @@
 ## 0. Preparação do Projeto
 
 ### 0.1. Organização inicial
-- [ ] Definir nome do projeto (repositório, pacote, nome da plataforma).
-- [ ] Criar repositório Git (GitHub, GitLab, etc.).
-- [ ] Definir licença (MIT, Apache 2.0, GPLv3, etc.).
-- [ ] Criar estrutura mínima de pastas:
-  - [ ] `backend/`
-  - [ ] `frontend/`
-  - [ ] `infra/` (docker-compose, Kubernetes/YAML, etc.)
-  - [ ] `docs/`
-  - [ ] `experiments/` (exemplos de experimentos)
-- [ ] Configurar versionamento semântico (v0.1.0, v0.2.0, …).
+- [x] Definir nome do projeto (repositório, pacote, nome da plataforma).
+- [x] Criar repositório Git (GitHub, GitLab, etc.).
+- [x] Definir licença (MIT, Apache 2.0, GPLv3, etc.).
+- [x] Criar estrutura mínima de pastas (agrupadas em `platform/`):
+  - [x] `platform/backend/`
+  - [x] `platform/frontend/`
+  - [x] `platform/infra/` (docker-compose, Kubernetes/YAML, etc.)
+  - [x] `platform/docs/`
+  - [x] `platform/experiments/` (exemplos de experimentos)
+- [x] Configurar versionamento semântico (v0.1.0, v0.2.0, …).
 
 ### 0.2. Stack tecnológica
-- [ ] Escolher linguagem do backend (ex.: Python + FastAPI / Node.js + NestJS / Go).
-- [ ] Escolher framework do frontend (ex.: React, Vue, Angular).
-- [ ] Definir controlador SDN principal para integração (ex.: ONOS, OpenDaylight, Ryu, ODL, Floodlight).
-- [ ] Definir ambiente de rede:
-  - [ ] Mininet / Contêineres Docker (ou ambos).
-  - [ ] Orquestração com Docker Compose ou Kubernetes.
+- [x] Escolher linguagem do backend: Python + FastAPI.
+- [x] Escolher framework do frontend: Vite + React (prioridade na simplicidade e integração via REST/WebSocket com Python).
+- [x] Definir controlador SDN principal para integração: abordagem modular com suporte a ONOS, OpenDaylight, Ryu e Floodlight; escolha fica a critério do usuário em tempo de implantação.
+- [x] Definir ambiente de rede: modular para Mininet e contêineres Docker, orquestrado preferencialmente com Docker Compose (Kubernetes como opção futura).
 - [ ] Definir base de dados:
   - [ ] Banco relacional (PostgreSQL/MySQL) para metadados de experimentos.
   - [ ] Banco de séries temporais (InfluxDB, TimescaleDB, Prometheus, etc.) para métricas.
@@ -26,17 +24,17 @@
   - [ ] RabbitMQ / Kafka / Redis Streams para comunicação assíncrona entre módulos.
 
 ### 0.3. Fundamentos de Engenharia de Software
-- [ ] Configurar pip/poetry/npm/go modules, etc. para gerência de dependências.
-- [ ] Configurar testes automatizados:
-  - [ ] Framework de testes (pytest, Jest, etc.).
-  - [ ] Cobertura de testes mínima (por exemplo, 70%).
-- [ ] Configurar CI/CD:
-  - [ ] Pipeline de build.
-  - [ ] Execução de testes.
-  - [ ] Lint/format (black/flake8, ESLint/Prettier, etc.).
-- [ ] Configurar controle de qualidade de código (linters, formatadores).
-- [ ] Criar `CONTRIBUTING.md` com diretrizes para colaboradores.
-- [ ] Criar `CODE_OF_CONDUCT.md`.
+- [x] Configurar pip/poetry/npm/go modules, etc. para gerência de dependências (pip via `requirements*.txt`; npm via `platform/frontend/package.json`).
+- [x] Configurar testes automatizados:
+  - [x] Framework de testes (pytest).
+  - [x] Cobertura de testes mínima (70% via `pytest.ini`).
+- [x] Configurar CI/CD:
+  - [x] Pipeline de build.
+  - [x] Execução de testes.
+  - [x] Lint/format (ruff check não bloqueante configurado; black/isort configurados em `pyproject.toml`).
+- [x] Configurar controle de qualidade de código (linters, formatadores).
+- [x] Criar `CONTRIBUTING.md` com diretrizes para colaboradores.
+- [x] Criar `CODE_OF_CONDUCT.md`.
 
 ---
 
