@@ -99,7 +99,7 @@
     "link": true,
     "network": true,
     "transport": true,
-    "application": false,
+    "application": true,
     "control": true,
     "dataplane": true
   },

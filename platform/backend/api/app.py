@@ -80,13 +80,13 @@ def _write_samples_to_raw(samples: Sequence[MetricSample]) -> None:
             f.write(_serialize_sample(sample) + "\n")
 
 
-def _collect_minimal(topology: Topology | None) -> List[MetricSample]:
+def _collect_synthetic_full(topology: Topology | None) -> List[MetricSample]:
     if not topology:
         return []
     now = datetime.utcnow()
     samples: List[MetricSample] = []
 
-    def _mk(metric: str, layer: MetricLayer, node: str, value: float, details: Dict | None = None) -> MetricSample:
+    def _mk(metric: str, layer: MetricLayer, node: str, value: float, details: Dict | None = None, labels: Dict | None = None) -> MetricSample:
         return MetricSample(
             timestamp=now,
             node=node,
@@ -94,49 +94,87 @@ def _collect_minimal(topology: Topology | None) -> List[MetricSample]:
             metric=metric,
             value=value,
             details=details or {},
+            labels=labels or {},
         )
 
     if layer_flags.get("physical", True):
         for link in topology.links:
-            samples.append(_mk("if_errors", "physical", f"{link.source}->{link.target}", float(random.randint(0, 2))))
-            samples.append(_mk("if_discards", "physical", f"{link.source}->{link.target}", float(random.randint(0, 2))))
+            path = f"{link.source}->{link.target}"
+            samples.append(_mk("if_errors", "physical", path, float(random.randint(0, 3))))
+            samples.append(_mk("if_discards", "physical", path, float(random.randint(0, 3))))
+            samples.append(_mk("if_crc_errors", "physical", path, float(random.randint(0, 2))))
+            samples.append(_mk("if_in_util_pct", "physical", path, round(random.uniform(10, 80), 3)))
+            samples.append(_mk("if_out_util_pct", "physical", path, round(random.uniform(10, 80), 3)))
+            samples.append(_mk("if_temp_c", "physical", path, round(random.uniform(35, 65), 2)))
+            samples.append(_mk("if_optic_rx_dbm", "physical", path, round(random.uniform(-6.0, -1.0), 2)))
+            samples.append(_mk("if_optic_tx_dbm", "physical", path, round(random.uniform(-2.0, 2.0), 2)))
 
     if layer_flags.get("link", True):
         for link in topology.links:
-            util = random.uniform(0, 70)
+            path = f"{link.source}->{link.target}"
+            util = random.uniform(5, 90)
             jitter = random.uniform(0, 5)
-            samples.append(_mk("link_util_pct", "link", f"{link.source}->{link.target}", round(util, 3), {"jitter_ms": round(jitter, 3)}))
-            samples.append(_mk("queue_occupancy_pct", "link", link.source, round(random.uniform(0, 40), 3)))
+            loss = random.uniform(0, 2)
+            samples.append(_mk("link_util_pct", "link", path, round(util, 2), {"direction": "bidirectional"}))
+            samples.append(_mk("link_loss_pct", "link", path, round(loss, 3)))
+            samples.append(_mk("link_jitter_ms", "link", path, round(jitter, 3)))
+            samples.append(_mk("queue_occupancy_pct", "link", link.source, round(random.uniform(0, 70), 2)))
+            samples.append(_mk("queue_drops", "link", link.source, float(random.randint(0, 20))))
+            samples.append(_mk("ecn_marked_pct", "link", path, round(random.uniform(0, 1), 3)))
 
     if layer_flags.get("network", True):
         for node in topology.nodes:
             if node.type in {"host", "switch"}:
-                rtt = random.uniform(0.2, 5.0)
-                loss = random.uniform(0, 1.0)
+                rtt = random.uniform(0.2, 8.0)
+                loss = random.uniform(0, 3.0)
+                jitter = random.uniform(0, 2.0)
                 samples.append(_mk("latency_ms", "network", node.id, round(rtt, 3)))
                 samples.append(_mk("packet_loss_pct", "network", node.id, round(loss, 3)))
+                samples.append(_mk("jitter_ms", "network", node.id, round(jitter, 3)))
+                samples.append(_mk("ttl_expired", "network", node.id, float(random.randint(0, 2))))
+                samples.append(_mk("routes_count", "network", node.id, float(random.randint(1, 32))))
+                samples.append(_mk("arp_entries", "network", node.id, float(random.randint(1, 64))))
 
     if layer_flags.get("transport", True):
         for node in topology.nodes:
             if node.type == "host":
-                samples.append(_mk("throughput_mbps", "transport", node.id, round(random.uniform(50, 500), 3)))
-                samples.append(_mk("tcp_retrans_pct", "transport", node.id, round(random.uniform(0, 3), 3)))
+                samples.append(_mk("throughput_mbps", "transport", node.id, round(random.uniform(50, 900), 2)))
+                samples.append(_mk("tcp_retrans_pct", "transport", node.id, round(random.uniform(0, 5), 3)))
+                samples.append(_mk("tcp_rtt_ms", "transport", node.id, round(random.uniform(1, 30), 3)))
+                samples.append(_mk("udp_jitter_ms", "transport", node.id, round(random.uniform(0, 5), 3)))
+                samples.append(_mk("udp_loss_pct", "transport", node.id, round(random.uniform(0, 5), 3)))
 
     if layer_flags.get("application", False):
         for node in topology.nodes:
             if node.type == "host":
-                samples.append(_mk("http_latency_ms", "application", node.id, round(random.uniform(10, 200), 3)))
+                samples.append(_mk("http_latency_ms", "application", node.id, round(random.uniform(20, 400), 2), {"status_code": 200}))
+                samples.append(_mk("http_success_pct", "application", node.id, 99.0))
+                samples.append(_mk("dns_latency_ms", "application", node.id, round(random.uniform(5, 80), 2)))
+                samples.append(_mk("dns_success_pct", "application", node.id, 99.0))
+                samples.append(_mk("tls_handshake_ms", "application", node.id, round(random.uniform(30, 150), 2)))
 
     if layer_flags.get("control", True):
         for node in topology.nodes:
             if node.type == "controller":
-                samples.append(_mk("controller_latency_ms", "control", node.id, round(random.uniform(1, 20), 3)))
+                samples.append(_mk("controller_latency_ms", "control", node.id, round(random.uniform(1, 25), 3)))
                 samples.append(_mk("controller_conn_ok", "control", node.id, 1.0, {"ok": True}))
+                samples.append(_mk("of_channel_reconnects", "control", node.id, float(random.randint(0, 1))))
+                samples.append(_mk("flows_installed", "control", node.id, float(random.randint(10, 500))))
+                samples.append(_mk("flows_removed", "control", node.id, float(random.randint(0, 100))))
 
     if layer_flags.get("dataplane", True):
         for flow in flows.values():
-            samples.append(_mk("openflow_flow_packets", "dataplane", flow.topology_id, float(random.randint(10, 500))))
-            samples.append(_mk("openflow_flow_bytes", "dataplane", flow.topology_id, float(random.randint(1_000, 50_000))))
+            topo = flow.topology_id
+            samples.append(_mk("openflow_flow_packets", "dataplane", topo, float(random.randint(10, 10_000)), {"flow_id": flow.id or ""}))
+            samples.append(_mk("openflow_flow_bytes", "dataplane", topo, float(random.randint(1_000, 5_000_000)), {"flow_id": flow.id or ""}))
+        for link in topology.links:
+            port_path = f"{link.source}->{link.target}"
+            samples.append(_mk("table_hits", "dataplane", port_path, float(random.randint(1_000, 10_000))))
+            samples.append(_mk("table_misses", "dataplane", port_path, float(random.randint(0, 500))))
+            samples.append(_mk("port_rx_pkts", "dataplane", port_path, float(random.randint(1_000, 100_000))))
+            samples.append(_mk("port_tx_pkts", "dataplane", port_path, float(random.randint(1_000, 100_000))))
+            samples.append(_mk("port_rx_drops", "dataplane", port_path, float(random.randint(0, 500))))
+            samples.append(_mk("port_tx_drops", "dataplane", port_path, float(random.randint(0, 500))))
 
     return samples
 
@@ -176,19 +214,64 @@ run_metrics: Dict[str, List[MetricRecord]] = {}
 metric_samples: List[MetricSample] = []
 layer_flags: Dict[MetricLayer, bool] = metric_layer_flags({})
 
-# Defaults; may be overridden by platform_config.json.
-metric_definitions: List[MetricDefinition] = [
-    MetricDefinition(name="latency_ms", description="Round-trip latency", unit="ms", layer="network"),
-    MetricDefinition(name="packet_loss_pct", description="Packet loss percentage", unit="%", layer="network"),
-    MetricDefinition(name="throughput_mbps", description="Throughput", unit="Mbps", layer="transport"),
-    MetricDefinition(name="cpu_usage_pct", description="CPU usage", unit="%", layer="application"),
-    MetricDefinition(name="if_errors", description="Interface errors", unit="count", layer="physical"),
-    MetricDefinition(name="if_discards", description="Interface discards", unit="count", layer="physical"),
-    MetricDefinition(name="link_util_pct", description="Link utilization", unit="%", layer="link"),
-    MetricDefinition(name="queue_occupancy_pct", description="Queue occupancy", unit="%", layer="link"),
-    MetricDefinition(name="controller_latency_ms", description="Control-plane latency", unit="ms", layer="control"),
-    MetricDefinition(name="openflow_flow_packets", description="Flow packets", unit="packets", layer="dataplane"),
-]
+
+def _extended_metric_definitions() -> List[MetricDefinition]:
+    return [
+        # Physical/interface
+        MetricDefinition(name="if_errors", description="Interface errors", unit="count", layer="physical"),
+        MetricDefinition(name="if_discards", description="Interface discards", unit="count", layer="physical"),
+        MetricDefinition(name="if_crc_errors", description="CRC errors", unit="count", layer="physical"),
+        MetricDefinition(name="if_in_util_pct", description="Ingress utilization", unit="%", layer="physical"),
+        MetricDefinition(name="if_out_util_pct", description="Egress utilization", unit="%", layer="physical"),
+        MetricDefinition(name="if_temp_c", description="Interface temperature", unit="C", layer="physical"),
+        MetricDefinition(name="if_optic_rx_dbm", description="Optical RX power", unit="dBm", layer="physical"),
+        MetricDefinition(name="if_optic_tx_dbm", description="Optical TX power", unit="dBm", layer="physical"),
+        # Link (L2)
+        MetricDefinition(name="link_util_pct", description="Link utilization", unit="%", layer="link"),
+        MetricDefinition(name="link_loss_pct", description="Link loss", unit="%", layer="link"),
+        MetricDefinition(name="link_jitter_ms", description="Link jitter", unit="ms", layer="link"),
+        MetricDefinition(name="queue_occupancy_pct", description="Queue occupancy", unit="%", layer="link"),
+        MetricDefinition(name="queue_drops", description="Queue drops", unit="count", layer="link"),
+        MetricDefinition(name="ecn_marked_pct", description="ECN marked traffic", unit="%", layer="link"),
+        # Network (L3)
+        MetricDefinition(name="latency_ms", description="Latency", unit="ms", layer="network"),
+        MetricDefinition(name="packet_loss_pct", description="Packet loss", unit="%", layer="network"),
+        MetricDefinition(name="jitter_ms", description="Jitter", unit="ms", layer="network"),
+        MetricDefinition(name="ttl_expired", description="TTL expired events", unit="count", layer="network"),
+        MetricDefinition(name="routes_count", description="Route entries", unit="count", layer="network"),
+        MetricDefinition(name="arp_entries", description="ARP/ND cache entries", unit="count", layer="network"),
+        # Transport (L4)
+        MetricDefinition(name="throughput_mbps", description="Throughput", unit="Mbps", layer="transport"),
+        MetricDefinition(name="tcp_retrans_pct", description="TCP retransmissions", unit="%", layer="transport"),
+        MetricDefinition(name="tcp_rtt_ms", description="TCP RTT", unit="ms", layer="transport"),
+        MetricDefinition(name="udp_jitter_ms", description="UDP jitter", unit="ms", layer="transport"),
+        MetricDefinition(name="udp_loss_pct", description="UDP loss", unit="%", layer="transport"),
+        # Application
+        MetricDefinition(name="http_latency_ms", description="HTTP latency", unit="ms", layer="application"),
+        MetricDefinition(name="http_success_pct", description="HTTP success", unit="%", layer="application"),
+        MetricDefinition(name="dns_latency_ms", description="DNS latency", unit="ms", layer="application"),
+        MetricDefinition(name="dns_success_pct", description="DNS success", unit="%", layer="application"),
+        MetricDefinition(name="tls_handshake_ms", description="TLS handshake", unit="ms", layer="application"),
+        # Control-plane
+        MetricDefinition(name="controller_latency_ms", description="Controller latency", unit="ms", layer="control"),
+        MetricDefinition(name="controller_conn_ok", description="Controller connectivity", unit="bool", layer="control"),
+        MetricDefinition(name="of_channel_reconnects", description="OpenFlow reconnects", unit="count", layer="control"),
+        MetricDefinition(name="flows_installed", description="Flows installed", unit="count", layer="control"),
+        MetricDefinition(name="flows_removed", description="Flows removed", unit="count", layer="control"),
+        # Dataplane
+        MetricDefinition(name="openflow_flow_packets", description="Flow packets", unit="packets", layer="dataplane"),
+        MetricDefinition(name="openflow_flow_bytes", description="Flow bytes", unit="bytes", layer="dataplane"),
+        MetricDefinition(name="table_hits", description="Table hits", unit="count", layer="dataplane"),
+        MetricDefinition(name="table_misses", description="Table misses", unit="count", layer="dataplane"),
+        MetricDefinition(name="port_rx_pkts", description="Port RX packets", unit="packets", layer="dataplane"),
+        MetricDefinition(name="port_tx_pkts", description="Port TX packets", unit="packets", layer="dataplane"),
+        MetricDefinition(name="port_rx_drops", description="Port RX drops", unit="packets", layer="dataplane"),
+        MetricDefinition(name="port_tx_drops", description="Port TX drops", unit="packets", layer="dataplane"),
+    ]
+
+
+# Defaults; may be overridden/augmented by platform_config.json.
+metric_definitions: List[MetricDefinition] = _extended_metric_definitions()
 
 
 def _bootstrap_from_config() -> None:
@@ -206,7 +289,11 @@ def _bootstrap_from_config() -> None:
 
     cfg_metrics = metric_definitions_from_config(cfg)
     if cfg_metrics:
-        metric_definitions = cfg_metrics
+        merged: Dict[str, MetricDefinition] = {m.name: m for m in _extended_metric_definitions()}
+        merged.update({m.name: m for m in cfg_metrics})
+        metric_definitions = list(merged.values())
+    else:
+        metric_definitions = _extended_metric_definitions()
     layer_flags = metric_layer_flags(cfg)
 
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -227,7 +314,7 @@ for layer in layer_flags:
 
 # Seed minimal samples on startup so raw files are not empty for demo/testing scenarios.
 if not metric_samples:
-    seeded = _collect_minimal(next(iter(topologies.values()), None))
+    seeded = _collect_synthetic_full(next(iter(topologies.values()), None))
     if seeded:
         metric_samples.extend(seeded)
         _write_samples_to_raw(seeded)
@@ -442,7 +529,7 @@ async def export_metrics(layer: MetricLayer | None = None) -> Response:
 @app.post("/metrics/collect", response_model=Dict[str, int], dependencies=[Depends(require_api_key)])
 async def collect_metrics() -> Dict[str, int]:
     topology = next(iter(topologies.values()), None)
-    samples = _collect_minimal(topology)
+    samples = _collect_synthetic_full(topology)
     metric_samples.extend(samples)
     _write_samples_to_raw(samples)
     return {"collected": len(samples)}

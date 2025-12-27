@@ -2,3 +2,47 @@
 {"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 9381.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 80.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 29452.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 8001.0, "details": {"flow_id": "flow_cff56210"}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 3358291.0, "details": {"flow_id": "flow_cff56210"}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 7449.0, "details": {"flow_id": "flow_ba22d668"}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 643787.0, "details": {"flow_id": "flow_ba22d668"}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h1", "layer": "dataplane", "metric": "table_hits", "value": 2930.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h1", "layer": "dataplane", "metric": "table_misses", "value": 107.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h1", "layer": "dataplane", "metric": "port_rx_pkts", "value": 32935.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h1", "layer": "dataplane", "metric": "port_tx_pkts", "value": 52088.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h1", "layer": "dataplane", "metric": "port_rx_drops", "value": 451.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h1", "layer": "dataplane", "metric": "port_tx_drops", "value": 10.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h2", "layer": "dataplane", "metric": "table_hits", "value": 9417.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h2", "layer": "dataplane", "metric": "table_misses", "value": 444.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h2", "layer": "dataplane", "metric": "port_rx_pkts", "value": 67365.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h2", "layer": "dataplane", "metric": "port_tx_pkts", "value": 30552.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h2", "layer": "dataplane", "metric": "port_rx_drops", "value": 311.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->h2", "layer": "dataplane", "metric": "port_tx_drops", "value": 420.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->c1", "layer": "dataplane", "metric": "table_hits", "value": 6825.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->c1", "layer": "dataplane", "metric": "table_misses", "value": 277.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->c1", "layer": "dataplane", "metric": "port_rx_pkts", "value": 5563.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->c1", "layer": "dataplane", "metric": "port_tx_pkts", "value": 76188.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->c1", "layer": "dataplane", "metric": "port_rx_drops", "value": 325.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "s1->c1", "layer": "dataplane", "metric": "port_tx_drops", "value": 307.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 5633.0, "details": {"flow_id": "flow_21b27663"}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 3399828.0, "details": {"flow_id": "flow_21b27663"}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 1512.0, "details": {"flow_id": "flow_b9943711"}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 1471617.0, "details": {"flow_id": "flow_b9943711"}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h1", "layer": "dataplane", "metric": "table_hits", "value": 6136.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h1", "layer": "dataplane", "metric": "table_misses", "value": 324.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h1", "layer": "dataplane", "metric": "port_rx_pkts", "value": 70185.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h1", "layer": "dataplane", "metric": "port_tx_pkts", "value": 45041.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h1", "layer": "dataplane", "metric": "port_rx_drops", "value": 433.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h1", "layer": "dataplane", "metric": "port_tx_drops", "value": 144.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h2", "layer": "dataplane", "metric": "table_hits", "value": 6461.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h2", "layer": "dataplane", "metric": "table_misses", "value": 37.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h2", "layer": "dataplane", "metric": "port_rx_pkts", "value": 13062.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h2", "layer": "dataplane", "metric": "port_tx_pkts", "value": 22909.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h2", "layer": "dataplane", "metric": "port_rx_drops", "value": 216.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->h2", "layer": "dataplane", "metric": "port_tx_drops", "value": 396.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "dataplane", "metric": "table_hits", "value": 8841.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "dataplane", "metric": "table_misses", "value": 441.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "dataplane", "metric": "port_rx_pkts", "value": 89220.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "dataplane", "metric": "port_tx_pkts", "value": 52057.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "dataplane", "metric": "port_rx_drops", "value": 305.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "dataplane", "metric": "port_tx_drops", "value": 273.0, "details": {}, "labels": {}}

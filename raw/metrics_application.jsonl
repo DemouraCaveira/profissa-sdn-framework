@@ -1,0 +1,10 @@
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h1", "layer": "application", "metric": "http_latency_ms", "value": 155.15, "details": {"status_code": 200}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h1", "layer": "application", "metric": "http_success_pct", "value": 99.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h1", "layer": "application", "metric": "dns_latency_ms", "value": 27.6, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h1", "layer": "application", "metric": "dns_success_pct", "value": 99.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h1", "layer": "application", "metric": "tls_handshake_ms", "value": 52.64, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "application", "metric": "http_latency_ms", "value": 308.31, "details": {"status_code": 200}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "application", "metric": "http_success_pct", "value": 99.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "application", "metric": "dns_latency_ms", "value": 37.74, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "application", "metric": "dns_success_pct", "value": 99.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "application", "metric": "tls_handshake_ms", "value": 75.08, "details": {}, "labels": {}}

@@ -1,2 +1,12 @@
 {"timestamp": "2025-12-27T13:23:26.333505", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 7.207, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:23:26.333505", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 13.489, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 240.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:27:53.329234", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 71.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 22.753, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 30.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 87.0, "details": {}, "labels": {}}
