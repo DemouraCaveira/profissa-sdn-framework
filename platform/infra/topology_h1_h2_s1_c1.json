@@ -1,0 +1,16 @@
+{
+  "id": "lab-docker-01",
+  "name": "Docker lab h1-h2-s1-c1",
+  "controller": "ryu",
+  "nodes": [
+    {"id": "h1", "type": "host", "mgmt_ip": null},
+    {"id": "h2", "type": "host", "mgmt_ip": null},
+    {"id": "s1", "type": "switch", "mgmt_ip": null},
+    {"id": "c1", "type": "controller", "mgmt_ip": null}
+  ],
+  "links": [
+    {"source": "h1", "target": "s1", "bandwidth_mbps": 1000, "delay_ms": 1, "loss_pct": 0},
+    {"source": "h2", "target": "s1", "bandwidth_mbps": 1000, "delay_ms": 1, "loss_pct": 0}
+  ],
+  "meta": {"env": "docker-lab"}
+}

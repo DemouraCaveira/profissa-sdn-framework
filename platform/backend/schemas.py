@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import Enum
 from typing import Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
@@ -64,3 +65,76 @@ class ExperimentTemplate(BaseModel):
     version: str
     topology: Topology
     experiments: List[Experiment]
+
+
+class RunStatus(str, Enum):
+    CREATED = "CREATED"
+    SCHEDULED = "SCHEDULED"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
+class RunEventType(str, Enum):
+    ENV_PREPARED = "ENV_PREPARED"
+    CONTROLLER_INITIALIZED = "CONTROLLER_INITIALIZED"
+    TOPOLOGY_INSTALLED = "TOPOLOGY_INSTALLED"
+    FLOWS_APPLIED = "FLOWS_APPLIED"
+    TRAFFIC_STARTED = "TRAFFIC_STARTED"
+    METRICS_COLLECTION_STARTED = "METRICS_COLLECTION_STARTED"
+    METRICS_COLLECTION_STOPPED = "METRICS_COLLECTION_STOPPED"
+    TRAFFIC_STOPPED = "TRAFFIC_STOPPED"
+    TEARDOWN_COMPLETED = "TEARDOWN_COMPLETED"
+    RUN_COMPLETED = "RUN_COMPLETED"
+    RUN_FAILED = "RUN_FAILED"
+    RUN_CANCELLED = "RUN_CANCELLED"
+    SCHEDULED = "SCHEDULED"
+
+
+class RunEvent(BaseModel):
+    type: RunEventType
+    timestamp: str
+    message: Optional[str] = None
+    data: Dict[str, str] = Field(default_factory=dict)
+
+
+class Run(BaseModel):
+    id: str
+    experiment_id: str
+    topology_id: str
+    status: RunStatus = RunStatus.CREATED
+    started_at: Optional[str] = None
+    finished_at: Optional[str] = None
+    params: Dict[str, str] = Field(default_factory=dict)
+    logs: List[str] = Field(default_factory=list)
+    events: List[RunEvent] = Field(default_factory=list)
+
+
+class MetricDefinition(BaseModel):
+    name: str
+    description: Optional[str] = None
+    unit: Optional[str] = None
+
+
+class MetricRecord(BaseModel):
+    run_id: str
+    metric_name: str
+    value: float
+    timestamp: str
+    labels: Dict[str, str] = Field(default_factory=dict)
+
+
+class Flow(BaseModel):
+    id: str
+    topology_id: str
+    controller: Optional[str] = None
+    priority: Optional[int] = None
+    match: Dict[str, str] = Field(default_factory=dict)
+    actions: Dict[str, str] = Field(default_factory=dict)
+
+
+class FlowInstallResponse(BaseModel):
+    id: str
+    ok: bool
+    message: Optional[str] = None

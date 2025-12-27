@@ -1,0 +1,20 @@
+{
+  "topology_id": "lab-docker-01",
+  "name": "Docker lab h1-h2-s1-c1",
+  "controller": "ryu",
+  "controller_name": "c1",
+  "hosts": ["h1", "h2"],
+  "switches": ["s1"],
+  "link_defaults": {
+    "bandwidth_mbps": 1000,
+    "delay_ms": 1,
+    "loss_pct": 0.0
+  },
+  "meta": {
+    "source": "docker"
+  },
+  "api_base": "http://localhost:8000",
+  "host_overrides": {},
+  "switch_overrides": {},
+  "controller_meta": {}
+}
