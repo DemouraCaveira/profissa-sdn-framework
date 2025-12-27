@@ -202,26 +202,26 @@
 ## 5. Interface Gráfica (Web UI)
 
 ### 5.1. Design geral
-- [ ] Definir mapa de navegação:
-  - [ ] Dashboard inicial (visão geral dos experimentos).
-  - [ ] Tela de gerenciamento de topologias.
-  - [ ] Tela de configuração de experimentos.
-  - [ ] Tela de monitoramento ao vivo.
-  - [ ] Tela de histórico de execuções e comparação de resultados.
+- [x] Definir mapa de navegação:
+  - [x] Dashboard inicial (visão geral dos experimentos).
+  - [x] Tela de gerenciamento de topologias.
+  - [x] Tela de configuração de experimentos.
+  - [x] Tela de monitoramento ao vivo.
+  - [x] Tela de histórico de execuções e comparação de resultados.
 - [ ] Criar wireframes/protótipos (Figma, Draw.io, etc.).
 
 ### 5.2. Implementação da UI
-- [ ] Configurar projeto frontend (React/Vue/Angular).
+- [x] Configurar projeto frontend (React/Vue/Angular).
 - [ ] Criar componentes básicos:
-  - [ ] Navbar / Sidebar.
+  - [x] Navbar / Sidebar.
   - [ ] Listas e formulários (CRUD de topologias e experimentos).
-  - [ ] Cards de status de experimentos.
+  - [x] Cards de status de experimentos.
 - [ ] Implementar visualização de topologias:
   - [ ] Biblioteca de gráficos (D3.js, Cytoscape.js, vis.js, etc.).
   - [ ] Permitir arrastar/soltar nós e links (se possível).
 - [ ] Implementar dashboards de métricas:
   - [ ] Gráficos de linha (time series).
-  - [ ] Tabelas de métricas agregadas.
+  - [x] Tabelas de métricas agregadas.
   - [ ] Filtros (por nó, métrica, intervalo de tempo).
 
 ### 5.3. Interação em tempo real
