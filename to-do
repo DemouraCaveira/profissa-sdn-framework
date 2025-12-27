@@ -164,38 +164,38 @@
 ## 4. Coleta Estruturada de Métricas
 
 ### 4.1. Definição de modelo de métricas
-- [ ] Definir quais métricas mínimas serão suportadas:
-  - [ ] Largura de banda, throughput.
-  - [ ] Latência.
-  - [ ] Jitter.
-  - [ ] Perda de pacotes.
-  - [ ] Utilização de CPU/memória em hosts/switches/controlador.
-  - [ ] Estatísticas de flows (bytes, pacotes, duração).
-- [ ] Especificar formato dos registros:
-  - [ ] `timestamp`, `metric_name`, `value`, `labels` (topologia, experimento, run_id, nó origem/destino, etc.).
+- [x] Definir quais métricas mínimas serão suportadas:
+  - [x] Largura de banda, throughput.
+  - [x] Latência.
+  - [x] Jitter.
+  - [x] Perda de pacotes.
+  - [x] Utilização de CPU/memória em hosts/switches/controlador.
+  - [x] Estatísticas de flows (bytes, pacotes, duração).
+- [x] Especificar formato dos registros:
+  - [x] `timestamp`, `metric_name`, `value`, `labels` (topologia, experimento, run_id, nó origem/destino, etc.).
 
 ### 4.2. Integração com controlador SDN e elementos de rede
-- [ ] Identificar APIs de monitoração do controlador SDN:
-  - [ ] Endpoints REST/RESTCONF, OpenFlow stats, etc.
-- [ ] Implementar `MetricCollector` para:
-  - [ ] Fazer polling regular de estatísticas.
-  - [ ] Receber métricas por push (se suportado).
-- [ ] Integrar com banco de séries temporais:
-  - [ ] Definir políticas de retenção.
-  - [ ] Definir índices/chaves de consulta.
+- [x] Identificar APIs de monitoração do controlador SDN:
+  - [x] Endpoints REST/RESTCONF, OpenFlow stats, etc.
+- [x] Implementar `MetricCollector` para:
+  - [x] Fazer polling regular de estatísticas.
+  - [x] Receber métricas por push (se suportado).
+- [x] Integrar com banco de séries temporais:
+  - [x] Definir políticas de retenção.
+  - [x] Definir índices/chaves de consulta.
 
 ### 4.3. Integração com geradores de tráfego
-- [ ] Integrar coleta de métricas de iperf/ping/etc. com o sistema:
-  - [ ] Parsing da saída de ferramentas CLI.
-  - [ ] Normalização para o modelo de métricas definido.
+- [x] Integrar coleta de métricas de iperf/ping/etc. com o sistema:
+  - [x] Parsing da saída de ferramentas CLI.
+  - [x] Normalização para o modelo de métricas definido.
 
 ### 4.4. Metadados e rastreabilidade
-- [ ] Associar cada métrica a:
-  - [ ] `experiment_id`.
-  - [ ] `run_id`.
-  - [ ] `topology_id`.
-  - [ ] Versão do software (para rastrear mudanças).
-- [ ] Garantir que logs de execução (stdout/stderr) também sejam armazenados e associados ao run.
+- [x] Associar cada métrica a:
+  - [x] `experiment_id`.
+  - [x] `run_id`.
+  - [x] `topology_id`.
+  - [x] Versão do software (para rastrear mudanças).
+- [x] Garantir que logs de execução (stdout/stderr) também sejam armazenados e associados ao run.
 
 ---
 

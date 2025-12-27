@@ -1,5 +1,7 @@
 # profissa-sdn-framework
 
+![Coverage](https://img.shields.io/badge/coverage-82%25-brightgreen)
+
 Plataforma modular e programavel para orquestrar e monitorar experimentos em Redes SDN. Inclui API RESTful (FastAPI), UI web (Vite + React) e componentes para coleta estruturada de metricas, com foco em reprodutibilidade e extensibilidade.
 
 ## Stack

@@ -13,6 +13,7 @@ from uuid import uuid4
 from fastapi import Depends, FastAPI, Header, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from platform.backend.core.metrics import ensure_labels
 from platform.backend.config_loader import (
     flows_from_config,
     load_platform_config,
@@ -43,6 +44,12 @@ allowed_origins = os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173").split
 config_path = os.getenv("PLATFORM_CONFIG_PATH", "platform/experiments/platform_config.json")
 raw_dir = Path("raw")
 raw_dir.mkdir(parents=True, exist_ok=True)
+software_version = (
+    os.getenv("SOFTWARE_VERSION")
+    or Path("VERSION").read_text(encoding="utf-8").strip()
+    if Path("VERSION").exists()
+    else "dev"
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -80,6 +87,51 @@ def _write_samples_to_raw(samples: Sequence[MetricSample]) -> None:
         path = _raw_file_for_layer(sample.layer)
         with path.open("a", encoding="utf-8") as f:
             f.write(_serialize_sample(sample) + "\n")
+
+
+def _normalize_labels(labels: Dict[str, Any] | None) -> Dict[str, Any]:
+    normalized = ensure_labels(labels or {})
+    normalized.setdefault("version", software_version)
+    return normalized
+
+
+def _normalize_sample(sample: MetricSample) -> MetricSample:
+    return MetricSample(
+        timestamp=sample.timestamp,
+        node=sample.node,
+        layer=sample.layer,
+        metric=sample.metric,
+        value=sample.value,
+        details=sample.details,
+        labels=_normalize_labels(sample.labels),
+    )
+
+
+def _append_run_log(run_id: str, message: str) -> None:
+    run = runs.get(run_id)
+    if not run:
+        return
+    entry = f"{datetime.utcnow().isoformat()} {message}"
+    run.logs.append(entry)
+
+
+def _store_samples(samples: Sequence[MetricSample]) -> None:
+    normalized = [_normalize_sample(sample) for sample in samples]
+    metric_samples.extend(normalized)
+    _write_samples_to_raw(normalized)
+    for sample in normalized:
+        run_id = sample.labels.get("run_id") if sample.labels else None
+        if run_id:
+            record = MetricRecord(
+                timestamp=sample.timestamp,
+                metric_name=sample.metric,
+                value=sample.value,
+                layer=sample.layer,
+                labels=sample.labels,
+                details=sample.details,
+            )
+            run_metrics.setdefault(run_id, []).append(record)
+            _append_run_log(run_id, f"metric:{sample.metric}")
 
 
 def _run_cmd(cmd: List[str], timeout: int = 6) -> str:
@@ -176,10 +228,11 @@ def _parse_ip_link(output: str) -> Dict[str, Dict[str, float]]:
     return metrics
 
 
-def _collect_real(topology: Topology | None) -> List[MetricSample]:
+def _collect_real(topology: Topology | None, labels: Dict[str, Any] | None = None) -> List[MetricSample]:
     if not topology:
         return []
     now = datetime.utcnow()
+    base_labels = _normalize_labels(labels)
     samples: List[MetricSample] = []
 
     def _mk(metric: str, layer: MetricLayer, node: str, value: float, details: Dict | None = None, labels: Dict | None = None) -> MetricSample:
@@ -190,7 +243,7 @@ def _collect_real(topology: Topology | None) -> List[MetricSample]:
             metric=metric,
             value=value,
             details=details or {},
-            labels=labels or {},
+            labels=_normalize_labels(labels or base_labels),
         )
 
     for node in topology.nodes:
@@ -287,10 +340,11 @@ def _collect_real(topology: Topology | None) -> List[MetricSample]:
     return samples
 
 
-def _collect_synthetic_full(topology: Topology | None) -> List[MetricSample]:
+def _collect_synthetic_full(topology: Topology | None, labels: Dict[str, Any] | None = None) -> List[MetricSample]:
     if not topology:
         return []
     now = datetime.utcnow()
+    base_labels = _normalize_labels(labels)
     samples: List[MetricSample] = []
 
     def _mk(metric: str, layer: MetricLayer, node: str, value: float, details: Dict | None = None, labels: Dict | None = None) -> MetricSample:
@@ -301,7 +355,7 @@ def _collect_synthetic_full(topology: Topology | None) -> List[MetricSample]:
             metric=metric,
             value=value,
             details=details or {},
-            labels=labels or {},
+            labels=_normalize_labels(labels or base_labels),
         )
 
     if layer_flags.get("physical", True):
@@ -694,10 +748,9 @@ for layer in layer_flags:
 
 # Seed minimal samples on startup so raw files are not empty for demo/testing scenarios.
 if not metric_samples:
-    seeded = _collect_synthetic_full(next(iter(topologies.values()), None))
+    seeded = _collect_synthetic_full(next(iter(topologies.values()), None), {"version": software_version})
     if seeded:
-        metric_samples.extend(seeded)
-        _write_samples_to_raw(seeded)
+        _store_samples(seeded)
 
 
 @app.post("/topologies", response_model=Topology, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_api_key)])
@@ -878,8 +931,7 @@ async def ingest_samples(payload: MetricSample | List[MetricSample]) -> Dict[str
         samples = payload
     else:
         samples = [payload]
-    metric_samples.extend(samples)
-    _write_samples_to_raw(samples)
+    _store_samples(samples)
     return {"stored": len(samples)}
 
 
@@ -907,10 +959,18 @@ async def export_metrics(layer: MetricLayer | None = None) -> Response:
 
 
 @app.post("/metrics/collect", response_model=Dict[str, int], dependencies=[Depends(require_api_key)])
-async def collect_metrics(mode: str = "synthetic") -> Dict[str, int]:
-    topology = next(iter(topologies.values()), None)
+async def collect_metrics(
+    mode: str = "synthetic",
+    run_id: str | None = None,
+    experiment_id: str | None = None,
+    topology_id: str | None = None,
+    version: str | None = None,
+) -> Dict[str, int]:
+    labels = {k: v for k, v in {"run_id": run_id, "experiment_id": experiment_id, "topology_id": topology_id, "version": version}.items() if v is not None}
+    topology = topologies.get(topology_id) if topology_id else next(iter(topologies.values()), None)
     use_real = mode == "real" or (real_collection_default and mode != "synthetic")
-    samples = _collect_real(topology) if use_real else _collect_synthetic_full(topology)
-    metric_samples.extend(samples)
-    _write_samples_to_raw(samples)
+    samples = _collect_real(topology, labels) if use_real else _collect_synthetic_full(topology, labels)
+    _store_samples(samples)
+    if run_id:
+        _append_run_log(run_id, "metrics_collected")
     return {"collected": len(samples), "mode": "real" if use_real else "synthetic"}
