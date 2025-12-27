@@ -20,8 +20,9 @@
 - [ ] Definir base de dados:
   - [ ] Banco relacional (PostgreSQL/MySQL) para metadados de experimentos.
   - [ ] Banco de séries temporais (InfluxDB, TimescaleDB, Prometheus, etc.) para métricas.
-- [ ] Definir serviço de mensageria (opcional, mas recomendado):
-  - [ ] RabbitMQ / Kafka / Redis Streams para comunicação assíncrona entre módulos.
+  - [x] Armazenamento de dados de experimento em arquivos JSON/Parquet, organizados em arquitetura medallion: `raw/` (existente), `bronze/`, `silver/`, `gold/` (a criar conforme necessário).
+- [x] Definir serviço de mensageria (opcional, mas recomendado):
+  - [x] Kafka (open source) para comunicação assíncrona entre módulos.
 
 ### 0.3. Fundamentos de Engenharia de Software
 - [x] Configurar pip/poetry/npm/go modules, etc. para gerência de dependências (pip via `requirements*.txt`; npm via `platform/frontend/package.json`).
@@ -41,36 +42,38 @@
 ## 1. Definição da Arquitetura e Modularidade
 
 ### 1.1. Modelo de arquitetura em camadas
-- [ ] Especificar camadas principais:
-  - [ ] Camada de apresentação (frontend).
-  - [ ] Camada de API (backend RESTful).
-  - [ ] Camada de orquestração de experimentos.
-  - [ ] Camada de integração com SDN (controlador, switches, hosts).
-  - [ ] Camada de coleta e armazenamento de métricas.
-- [ ] Definir responsabilidades de cada módulo:
-  - [ ] Módulo de gerenciamento de topologias.
-  - [ ] Módulo de gerenciamento de fluxos (flows).
-  - [ ] Módulo de orquestração/execução de experimentos.
-  - [ ] Módulo de monitoramento de métricas.
-  - [ ] Módulo de persistência (experimentos, resultados, templates).
-  - [ ] Módulo de usuário/autenticação (se necessário).
+- [x] Especificar camadas principais:
+  - [x] Camada de apresentação (frontend React) para UI e controle.
+  - [x] Camada de API (backend FastAPI) expondo REST/WebSocket.
+  - [x] Camada de orquestração de experimentos (scheduler/executor, pipelines de run).
+  - [x] Camada de integração com SDN (adapters para ONOS/ODL/Ryu/Floodlight; Mininet/Docker).
+  - [x] Camada de coleta e armazenamento de métricas (exporters Prometheus/CSV/JSON + TSDB futura).
+- [x] Definir responsabilidades de cada módulo:
+  - [x] Módulo de gerenciamento de topologias: CRUD de topologias e provisionamento no ambiente.
+  - [x] Módulo de gerenciamento de fluxos (flows): instalação/remoção/listagem via controladores SDN.
+  - [x] Módulo de orquestração/execução de experimentos: lifecycle de runs, agendamento, teardown.
+  - [x] Módulo de monitoramento de métricas: probes ICMP/TCP/UDP/throughput/captura e push/export.
+  - [x] Módulo de persistência: metadados de experimentos/runs/templates; métricas em TSDB.
+  - [x] Módulo de usuário/autenticação (opcional): authz/autz básica para UI/API.
 
 ### 1.2. Especificação das interfaces entre módulos
-- [ ] Definir contratos das APIs internas (REST/JSON, mensageria, gRPC, etc.).
-- [ ] Especificar DTOs/objetos de transferência básicos:
-  - [ ] Definição de topologia.
-  - [ ] Definição de experimento.
-  - [ ] Definição de cenário de tráfego.
-  - [ ] Definição de conjunto de métricas.
-- [ ] Definir formato de armazenamento de “templates” de experimentos (JSON/YAML).
+- [x] Definir contratos das APIs internas (REST/JSON; mensageria opcional futuramente).
+- [x] Especificar DTOs/objetos de transferência básicos:
+  - [x] Definição de topologia (id, nome, nós {hosts/switches/controlador}, links com params: bw/delay/loss, metadata).
+  - [x] Definição de experimento (id, topology_id, descrição, hipóteses, tráfego, métricas alvo, duração, tags).
+  - [x] Definição de cenário de tráfego (geradores: iperf/ping/custom, origem/destino, padrões, taxa, duração).
+  - [x] Definição de conjunto de métricas (lista de métricas + periodicidade + labels obrigatórios: experiment_id, run_id, topology_id).
+- [x] Definir formato de armazenamento de templates de experimentos: JSON/YAML contendo topologia + tráfego + métricas + duração + vars tunáveis.
 
 ### 1.3. Planejar extensibilidade e plugins
-- [ ] Definir mecanismo para adicionar novos módulos:
-  - [ ] Interface abstrata/base (por exemplo, `ExperimentRunner`, `MetricCollector`).
-- [ ] Planejar suporte futuro a:
-  - [ ] Novos controladores SDN.
-  - [ ] Novos tipos de métricas.
-  - [ ] Novas fontes de tráfego (iperf, Pktgen, TRex, etc.).
+- [x] Definir mecanismo para adicionar novos módulos:
+  - [x] Interface abstrata/base (`ExperimentRunner`, `MetricCollector`, `TrafficGenerator`) em `platform/backend/core/plugins.py`.
+  - [x] Registro de plugins em `platform/backend/core/registry.py` para descoberta/uso dinâmico.
+- [x] Planejar suporte futuro a:
+  - [x] Novos controladores SDN (adapters registrados como runners).
+  - [x] Novos tipos de métricas (coletores plugáveis via `MetricCollector`).
+  - [x] Novas fontes de tráfego (geradores plugáveis via `TrafficGenerator`, cobrindo iperf/ping e futuras Pktgen/TRex/etc.).
+  - [x] Exemplos criados: runner `mininet`, collector `csv` (sem Prometheus), generator `ping` em `platform/backend/plugins/`.
 
 ---
 
