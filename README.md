@@ -2,18 +2,18 @@
 
 ![Coverage](https://img.shields.io/badge/coverage-82%25-brightgreen)
 
-Plataforma modular e programavel para orquestrar e monitorar experimentos em Redes SDN. Inclui API RESTful (FastAPI), UI web (Vite + React) e componentes para coleta estruturada de metricas, com foco em reprodutibilidade e extensibilidade.
+Plataforma modular e programável para orquestrar e monitorar experimentos em Redes SDN. Inclui API RESTful (FastAPI), UI web (Vite + React) e componentes para coleta estruturada de métricas, com foco em reprodutibilidade, extensibilidade e dados ao vivo via SSE.
 
 ## Stack
-- Backend: Python 3.11+, FastAPI (REST/WebSocket), promotor de modularidade para controladores SDN (ONOS, OpenDaylight, Ryu, Floodlight) escolhidos pelo usuario.
-- Frontend: Vite + React (TS) consumindo REST/WebSocket.
+- Backend: Python 3.11+, FastAPI (REST + SSE), modular para controladores SDN (ONOS, OpenDaylight, Ryu, Floodlight) escolhidos pelo usuário.
+- Frontend: Vite + React (TS) consumindo REST/SSE.
 - Ambiente de rede: Mininet e/ou containers Docker, orquestrados preferencialmente com Docker Compose (Kubernetes opcional futuro).
-- Observabilidade: Prometheus client integrado para exposicao/push; coleta em arquivos CSV/JSON.
-- Qualidade: pytest (+pytest-asyncio) com cobertura minima 70%, ruff, black, isort. CI via GitHub Actions.
+- Observabilidade: métricas gravadas em JSONL por camada, SSE para stream ao vivo, backfill automático ao reiniciar, Prometheus client opcional.
+- Qualidade: pytest (+pytest-asyncio) com cobertura mínima 70%, ruff, black, isort. CI via GitHub Actions.
 
 ## Estrutura de pastas
-- `platform/backend/` – backend FastAPI (a desenvolver) e assets de API.
-- `platform/frontend/` – frontend Vite + React (scaffold inicial em `package.json`).
+- `platform/backend/` – FastAPI com SSE, coleta real/sintética, ingestão/exportação de métricas.
+- `platform/frontend/` – Vite + React com páginas Dashboard, Topologia, Monitor, Lab e Histórico.
 - `platform/infra/` – scripts/manifests de infraestrutura (Docker Compose, etc.).
 - `platform/docs/` – documentacao tecnica e diagramas.
 - `platform/experiments/` – exemplos e templates de experimentos.
@@ -27,7 +27,7 @@ Plataforma modular e programavel para orquestrar e monitorar experimentos em Red
 
 ## Requisitos
 - Python 3.11+ (recomendado).
-- Node.js 20+ (para frontend).
+- Node.js 20+ (para frontend). Defina `VITE_API_BASE` para apontar para o backend (ex.: `http://localhost:8000`).
 - Docker/Docker Compose para cenarios conteinerizados ou Mininet instalado localmente.
 
 ## Como instalar (backend/dev)
@@ -70,6 +70,9 @@ npm run build # producao
 ```bash
 PYTHONPATH=$(pwd) .venv/bin/uvicorn platform.backend.api.app:app --host 0.0.0.0 --port 8000
 # opcional: export API_KEY=suachave para exigir header X-API-Key
+# coleta contínua e backfill automático (recomendado para UI):
+PLATFORM_CONFIG_PATH=platform/experiments/platform_config.json REAL_COLLECTION=1 AUTO_COLLECT_INTERVAL=5 \
+PYTHONPATH=$(pwd) .venv/bin/python -m uvicorn platform.backend.api.app:app --host 0.0.0.0 --port 8000
 ```
 - Endpoints principais (sem prefixo `/api`):
 	- `GET /health`
@@ -82,6 +85,7 @@ PYTHONPATH=$(pwd) .venv/bin/uvicorn platform.backend.api.app:app --host 0.0.0.0 
 		- `GET /metrics/latest` (snapshot mais recente por métrica/nó/camada)
 		- `GET /metrics/export?layer=network` (exporta texto JSONL do arquivo bruto por camada)
 		- `POST /metrics/collect` (coletor mínimo sintético; requer API key se configurada)
+		- `GET /stream/events` (SSE com topologia, runs e últimas ~200 métricas)
 	- Fluxos: `POST /flows`, `GET /flows`, `DELETE /flows/{id}`
 - Teste rápido (curl):
 ```bash
@@ -109,6 +113,7 @@ curl http://localhost:8000/flows
 curl http://localhost:8000/metrics/definitions
 curl -X POST http://localhost:8000/metrics/collect -H "X-API-Key: $API_KEY"
 curl http://localhost:8000/metrics/export?layer=network
+curl http://localhost:8000/stream/events
 ```
 4. Se preferir Python em vez de curl:
 ```bash
@@ -124,9 +129,9 @@ PY
 Pipeline GitHub Actions em `.github/workflows/ci.yml`: instala deps, roda ruff check e pytest com cobertura minima de 70%.
 
 ## Roadmap curto
-- Implementar API FastAPI em `platform/backend/` expondo CRUD de topologias/experimentos e orquestracao.
-- Subir shell inicial do frontend em `platform/frontend/` consumindo a API.
-- Adicionar manifests em `platform/infra/` para ambientes Docker/Mininet.
+- UI pronta para navegação: Dashboard, Topologia, Monitor (SSE + filtros por camada/nó), Lab (blocos/pipelines), Histórico (placeholder).
+- Backend com SSE, coleta real/sintética, export/import JSONL, bootstrap de topologia/fluxos via config, backfill automático.
+- Próximos passos: visualização gráfica da topologia, CRUD completo via UI, drag-and-drop no Lab, integração com TSDB, controles start/stop de experimento.
 
 ## Camadas de métricas (referência rápida)
 - `physical`: contadores de interface (erros, descartes, potencia/temperatura quando disponível).
@@ -138,6 +143,20 @@ Pipeline GitHub Actions em `.github/workflows/ci.yml`: instala deps, roda ruff c
 - `dataplane`: contadores de flow/table OpenFlow e estatísticas de porta.
 
 Arquivos brutos são gravados em `raw/metrics_{layer}.jsonl`. Ative/desative coleta por camada via `metric_layers` no `platform_config.json` (ex.: `"link": false` para desligar L2).
+
+## Uso da UI
+- Dashboard: visão geral inicial.
+- Topologia: mapa lógico (hosts, switches, controlador) e lista de links.
+- Monitor: KPIs ao vivo, tabela de eventos, filtros por camada e por nó, horários em Brasília, seção de saúde do stream.
+- Lab: biblioteca de blocos por camada (Ping, TCP, UDP, HTTP, DNS, Controle, Flows, Link, Interface física); adicione ao workflow e veja métricas ao vivo filtradas pelo bloco; alimentado por SSE.
+- Histórico: placeholder para execuções passadas.
+
+## Coleta, stream e backfill
+- `REAL_COLLECTION=1` ativa coleta real no loop automático; caso contrário, usa sintética.
+- `AUTO_COLLECT_INTERVAL` (segundos) controla a frequência da auto-coleta.
+- O backend restaura métricas recentes dos arquivos `raw/metrics_{layer}.jsonl` ao iniciar para que a UI não fique zerada.
+- SSE (`/stream/events`) envia topologia, runs e ~200 métricas recentes.
+- Se quiser forçar coleta manual: `curl -X POST "http://localhost:8000/metrics/collect?mode=real"`.
 
 ## Licenca
 MIT License. Veja `LICENSE`.

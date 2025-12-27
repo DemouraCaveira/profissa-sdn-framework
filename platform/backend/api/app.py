@@ -638,7 +638,7 @@ async def _event_stream():
             "type": "snapshot",
             "generated_at": datetime.utcnow().isoformat(),
             "topology": topology.model_dump() if topology else None,
-            "metrics": [_sample_to_dict(s) for s in metric_samples[-30:]],
+            "metrics": [_sample_to_dict(s) for s in metric_samples[-200:]],
             "runs": [run.model_dump() for run in runs.values()],
         }
         yield f"data: {json.dumps(payload)}\n\n"
@@ -661,6 +661,8 @@ run_metrics: Dict[str, List[MetricRecord]] = {}
 metric_samples: List[MetricSample] = []
 layer_flags: Dict[MetricLayer, bool] = metric_layer_flags({})
 real_collection_default = os.getenv("REAL_COLLECTION", "0") == "1"
+collection_interval_seconds = float(os.getenv("AUTO_COLLECT_INTERVAL", "5"))
+_auto_collect_task: asyncio.Task | None = None
 
 
 def _extended_metric_definitions() -> List[MetricDefinition]:
@@ -824,6 +826,40 @@ if not metric_samples:
         seeded = _collect_synthetic_full(next(iter(topologies.values()), None), {"version": software_version})
         if seeded:
             _store_samples(seeded)
+
+
+async def _auto_collect_loop() -> None:
+    """Continuously collect metrics to keep SSE populated."""
+    while True:
+        try:
+            topology = next(iter(topologies.values()), None)
+            if topology:
+                labels = {"version": software_version}
+                samples = _collect_real(topology, labels) if real_collection_default else _collect_synthetic_full(topology, labels)
+                if samples:
+                    _store_samples(samples)
+        except Exception:
+            # Avoid crashing the loop; log could be added here later.
+            pass
+        await asyncio.sleep(collection_interval_seconds)
+
+
+@app.on_event("startup")
+async def _start_auto_collect() -> None:
+    global _auto_collect_task
+    if _auto_collect_task is None:
+        _auto_collect_task = asyncio.create_task(_auto_collect_loop())
+
+
+@app.on_event("shutdown")
+async def _stop_auto_collect() -> None:
+    global _auto_collect_task
+    if _auto_collect_task:
+        _auto_collect_task.cancel()
+        try:
+            await _auto_collect_task
+        except asyncio.CancelledError:
+            pass
 
 
 @app.post("/topologies", response_model=Topology, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_api_key)])

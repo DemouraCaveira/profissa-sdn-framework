@@ -5,6 +5,7 @@ const nav = [
   { path: "/dashboard", label: "Dashboard" },
   { path: "/topology", label: "Topologia" },
   { path: "/experiments", label: "Experimentos" },
+  { path: "/lab", label: "Lab" },
   { path: "/monitor", label: "Monitor" },
   { path: "/history", label: "Histórico" },
 ];

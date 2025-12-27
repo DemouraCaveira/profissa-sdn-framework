@@ -15,6 +15,7 @@
   - Exportação: `GET /metrics/export?layer=network` (retorna JSONL da camada).
   - Coletor mínimo: `POST /metrics/collect` (gera amostras sintéticas por camada).
   - Camadas suportadas: `physical`, `link`, `network`, `transport`, `application`, `control`, `dataplane`.
+  - Stream SSE: `GET /stream/events` (snapshot com topologia, runs e ~200 métricas recentes).
 
 ## DTOs básicos (JSON)
 
@@ -87,6 +88,22 @@
 - `metric_plan.metric_layers` mapeia cada métrica ao layer correspondente (ex.: `"latency_ms": "network"`).
 - `metric_layers` (raiz) habilita/desabilita coleta por camada (ex.: `"link": false` para ignorar L2).
 - O bootstrap da API lê esse arquivo na inicialização e pré-carrega topologia, fluxos e métricas disponíveis.
+
+## Stream SSE (/stream/events)
+- Tipo de evento: `snapshot`.
+- Payload:
+```json
+{
+  "type": "snapshot",
+  "generated_at": "2024-01-01T12:00:00Z",
+  "topology": {"id": "topo-1", "nodes": [], "links": []},
+  "metrics": [
+    {"timestamp": "...", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 1.2, "details": {}, "labels": {}}
+  ],
+  "runs": []
+}
+```
+- Inclui ~200 métricas recentes; topologia e runs ativos; usado pela UI em Monitor e Lab.
 
 ## Templates de experimento (JSON/YAML)
 - Contêm: versão do template, topologia completa, lista de experimentos que referenciam a topologia, tráfego e métricas.

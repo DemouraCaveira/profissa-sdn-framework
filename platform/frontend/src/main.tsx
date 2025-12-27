@@ -8,6 +8,7 @@ import Topology from "./pages/Topology";
 import Experiments from "./pages/Experiments";
 import Monitor from "./pages/Monitor";
 import History from "./pages/History";
+import Lab from "./pages/Lab";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/topology" element={<Topology />} />
           <Route path="/experiments" element={<Experiments />} />
+          <Route path="/lab" element={<Lab />} />
           <Route path="/monitor" element={<Monitor />} />
           <Route path="/history" element={<History />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

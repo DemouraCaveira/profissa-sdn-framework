@@ -1,0 +1,154 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\geometry{margin=2.4cm}
+
+\title{gr-netmon: Arquitetura, Implementação e Uso de Blocos de Monitoramento para SDN e Ambientes em Contêiner}
+\author{Profissa SDN Framework}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Apresentamos o \textbf{gr-netmon}, um módulo out-of-tree (OOT) para GNU Radio que provê blocos de monitoramento de rede voltados a experimentos SDN e laboratórios em contêineres. O pacote reúne sondas cobrindo camadas física a aplicação, instrumentação do plano de controle OpenFlow e coleta de métricas em formato JSON prontas para consumo por pipelines de observabilidade. O texto descreve requisitos, arquitetura, catálogo de blocos, fluxos de referência, formatos de dados, estratégias de instalação, integração com a Profissa SDN Platform e considerações operacionais, em um nível de detalhe compatível com submissões técnicas de periódicos A1.
+\end{abstract}
+
+\section{Introdução}
+Ambientes SDN demandam telemetria detalhada das camadas física, enlace, rede, transporte, aplicação e do próprio plano de controle. O \textit{gr-netmon} fornece esse conjunto em blocos reutilizáveis para GNU Radio, priorizando: (i) operação em contêineres (Mininet/Docker), (ii) saída estruturada em JSON, (iii) facilidade de integração com coletores externos (e.g., FastAPI/SSE da Profissa SDN Platform) e (iv) exemplos de fluxos completos em GRC. O módulo permite experimentação rápida e replicável, combinando sondas como ping, estatísticas de interface, sessão OpenFlow, captura de cabeçalhos e exportação de PCAP.
+
+\section{Requisitos e ambiente}
+\begin{itemize}[leftmargin=1.5em]
+  \item GNU Radio 3.10+ e Python 3.8+.
+  \item Docker no host para acesso a contêineres de teste.
+  \item Utilitários presentes nos contêineres conforme o bloco: \texttt{ping}, \texttt{ip} (iproute2), \texttt{ss}, \texttt{tcpdump}, \texttt{ovs-ofctl}/\texttt{ovs-vsctl} (openvswitch-common), \texttt{docker stats} para blocos de host/infra.
+  \item Dependência Python para DNS: \texttt{dnspython}.
+\end{itemize}
+
+\section{Arquitetura e organização}
+O repositório está estruturado para um build OOT padrão:
+\begin{itemize}[leftmargin=1.5em]
+  \item \texttt{python/netmon/*.py}: implementação dos blocos (métricas, coleta, logging).
+  \item \texttt{grc/blocks/*.block.yml}: descritores para o GRC (categoria \textit{Network/Monitoring}).
+  \item \texttt{grc/flows/*.grc}: fluxogramas de exemplo prontos.
+  \item \texttt{CMakeLists.txt}: raiz, \texttt{grc/} e \texttt{python/} para integração com o ecossistema GNU Radio.
+  \item \texttt{build/}: diretório gerado localmente (não versionado).
+\end{itemize}
+
+\section{Instalação}
+\subsection{Via CMake (recomendado)}
+\begin{verbatim}
+cd gr-netmon
+mkdir -p build && cd build
+cmake ..
+make
+sudo make install
+\end{verbatim}
+Após a instalação, os blocos ficam disponíveis no GRC em \texttt{[Network]/Monitoring}.
+
+\subsection{Instalação manual (sem CMake)}
+\begin{verbatim}
+ROOT=$(pwd)  # diretório gr-netmon
+PYVER=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+SITE=/usr/local/lib/python${PYVER}/dist-packages
+GRCB=/usr/local/share/gnuradio/grc/blocks
+GRCF=/usr/local/share/gnuradio/grc/examples
+
+sudo mkdir -p "$SITE" "$GRCB" "$GRCF"
+sudo cp -r "$ROOT/gr-netmon/python/netmon" "$SITE/"
+sudo find "$SITE/netmon" -name '__pycache__' -type d -exec rm -rf {} +
+sudo cp -f "$ROOT/gr-netmon/grc/blocks"/*.block.yml "$GRCB/"
+sudo cp -f "$ROOT/gr-netmon/grc/flows"/netmon_*.grc "$GRCF/"
+\end{verbatim}
+
+\section{Catálogo de blocos}
+A Tabela~\ref{tab:blocos} resume os blocos principais, camadas e saídas. Todos publicam mensagens JSON em \texttt{metrics}, com campos mínimos \texttt{ts}, \texttt{ts\_iso}, \texttt{module}, \texttt{container}, e campos adicionais por tipo.
+
+\begin{longtable}{p{3.5cm}p{2.3cm}p{7.5cm}}
+\caption{Blocos principais do gr-netmon}\label{tab:blocos}\\\toprule
+Bloco & Camada & Função / Saída \\\midrule
+HostPingAuto & network & Ping periódico; latência, jitter, perda; stream float + JSON. \\
+HostPingMsg & network & Ping sob demanda via \texttt{tick}; texto + JSON. \\
+LinkInterfaceStats & physical/link & \texttt{ip -s link} e \texttt{/sys/class/net/*/statistics}; JSON por interface. \\
+TransportStats & transport & \texttt{ss -s} e \texttt{/proc/net/snmp}; JSON com matrizes TCP/UDP. \\
+ForwardingTableS1 / Msg & dataplane/control & \texttt{ovs-ofctl dump-flows}; pkts/bytes por fluxo; texto + JSON. \\
+OpenFlowSessionMonitor & control & \texttt{ovs-ofctl show} + \texttt{ovs-vsctl show}; saúde do plano de controle. \\
+IPHeaderCapture & network & Amostra cabeçalhos via \texttt{tcpdump}; log texto. \\
+PCAPExporter & network & Captura PCAP rotativa; arquivos pcap em \texttt{pcap_dir}. \\
+DNSResolverMonitorBlock & application & Latência/sucesso DNS; stream float + JSON. \\
+DockerStats & infra & \texttt{docker stats --no-stream}; JSON CPU/mem/RX/TX por contêiner. \\
+\bottomrule
+\end{longtable}
+
+\section{Fluxos de referência (GRC)}
+\begin{itemize}[leftmargin=1.5em]
+  \item \texttt{netmon_link_interface_stats_auto.grc}: contadores de interface (default h1).
+  \item \texttt{netmon_transport_stats_auto.grc}: estatísticas TCP/UDP (default h1).
+  \item \texttt{netmon_openflow_session_auto.grc}: saúde da sessão OpenFlow em s1.
+  \item \texttt{netmon_forwarding_table_s1_auto.grc}: fluxos OVS em s1; variante \texttt{..._msg_hier} dispara por \texttt{tick}.
+  \item \texttt{netmon_ip_header_capture_auto.grc}: captura leve de cabeçalhos em h1/eth0.
+  \item \texttt{netmon_pcap_exporter_auto.grc}: PCAP rotativo em contêiner.
+  \item \texttt{netmon_alerts_auto.grc}: lê saídas do ping e gera alertas.
+\end{itemize}
+
+\section{Formato de métricas}
+Cada publicação mínima segue:
+\begin{verbatim}
+{
+  "ts": 1734300000.0,
+  "ts_iso": "2025-12-16T12:00:00",
+  "module": "host_ping_auto",
+  "container": "h1",
+  ... campos específicos do bloco ...
+}
+\end{verbatim}
+Exemplos de campos específicos: \texttt{latency_s}, \texttt{loss_pct}, \texttt{jitter_s} (ping); \texttt{ifaces":[{...}]} (estatísticas de interface); \texttt{flows} (dump OVS); \texttt{snmp} (transport stats); \texttt{containers} (docker stats).
+
+\section{Configuração de logs e diretórios}
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{\texttt{log_dir}}: diretório de saída para logs/pcaps; padrão \texttt{${NETMON_LOG_DIR:-$PWD/raw}}.
+  \item \textbf{\texttt{log_to_file}}: habilita gravação (além de mensagens \texttt{metrics}).
+  \item Criado automaticamente se inexistente; use \texttt{NETMON_LOG_DIR} para centralizar em volume compartilhado.
+\end{itemize}
+
+\section{Integração com Profissa SDN Platform}
+\begin{itemize}[leftmargin=1.5em]
+  \item As mensagens \texttt{metrics} podem ser ingeridas via \texttt{/metrics/samples} no backend FastAPI ou gravadas em JSONL \texttt{raw/metrics_{layer}.jsonl} para backfill.
+  \item As camadas mapeiam direto: physical, link, network, transport, application, control, dataplane.
+  \item A UI (Monitor/Lab) consome SSE \texttt{/stream/events}; manter coleta contínua em gr-netmon garante preenchimento ao vivo.
+\end{itemize}
+
+\section{Considerações operacionais}
+\begin{itemize}[leftmargin=1.5em]
+  \item Se não houver tráfego, \texttt{tcpdump} pode bloquear; reduza \texttt{count} ou aumente \texttt{interval}.
+  \item Para OVS, valide no contêiner: \texttt{docker exec s1 ovs-vsctl list-br} e \texttt{ovs-ofctl show s1}.
+  \item Verifique permissões de escrita em \texttt{log_dir} ao usar \texttt{log_to_file=True}.
+\end{itemize}
+
+\section{Trabalho futuro}
+\begin{itemize}[leftmargin=1.5em]
+  \item Exportadores nativos para Prometheus/InfluxDB/Timescale.
+  \item Blocos de sondagem ativa TCP/UDP parametrizáveis (iperf-lite) e captura PCAP com filtros de camada 4.
+  \item Detectores de anomalia in-line (alertas por limiar e modelos simples) integrados aos fluxos existentes.
+  \item Templates de grafos de topologia para correlacionar métricas de múltiplos nós em tempo real.
+\end{itemize}
+
+\section{Conclusão}
+O \textit{gr-netmon} entrega um conjunto abrangente de blocos de monitoramento alinhado às necessidades de redes SDN e laboratórios em contêineres, com saídas estruturadas, exemplos prontos e integração direta com pipelines de observabilidade. A cobertura multipilha e a facilidade de composição no GRC reduzem a barreira para instrumentação fina de experimentos e suportam análises de desempenho, depuração e ensino.
+
+\section*{Referências}
+\begin{itemize}[leftmargin=1.5em]
+  \item Documentação GNU Radio OOT Modules: \url{https://wiki.gnuradio.org/index.php/OutOfTreeModules}
+  \item Profissa SDN Platform (backend FastAPI + frontend Vite/React): documentação local em \texttt{README.md}.
+  \item Ferramentas de apoio: \texttt{ping}, \texttt{ip}, \texttt{ss}, \texttt{tcpdump}, \texttt{ovs-ofctl}, \texttt{docker stats}.
+\end{itemize}
+
+\end{document}
