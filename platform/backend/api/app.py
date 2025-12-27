@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import random
@@ -7,11 +8,12 @@ import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Sequence
+from typing import Any, Dict, List, Sequence
 from uuid import uuid4
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 from platform.backend.core.metrics import ensure_labels
 from platform.backend.config_loader import (
@@ -40,7 +42,10 @@ from platform.backend.schemas import (
 app = FastAPI(title="Profissa SDN Platform API", version="0.1.0")
 
 api_key = os.getenv("API_KEY")
-allowed_origins = os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173").split(",")
+allowed_origins = os.getenv(
+    "CORS_ALLOW_ORIGINS",
+    "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174",
+).split(",")
 config_path = os.getenv("PLATFORM_CONFIG_PATH", "platform/experiments/platform_config.json")
 raw_dir = Path("raw")
 raw_dir.mkdir(parents=True, exist_ok=True)
@@ -87,6 +92,44 @@ def _write_samples_to_raw(samples: Sequence[MetricSample]) -> None:
         path = _raw_file_for_layer(sample.layer)
         with path.open("a", encoding="utf-8") as f:
             f.write(_serialize_sample(sample) + "\n")
+
+
+def _load_recent_samples_from_raw(limit: int = 200) -> List[MetricSample]:
+    loaded: List[MetricSample] = []
+
+    def _tail(path: Path, max_lines: int) -> List[str]:
+        if not path.exists():
+            return []
+        with path.open("r", encoding="utf-8") as f:
+            lines = f.readlines()
+        return lines[-max_lines:]
+
+    for layer in [
+        "physical",
+        "link",
+        "network",
+        "transport",
+        "application",
+        "control",
+        "dataplane",
+    ]:
+        for line in _tail(_raw_file_for_layer(layer), limit):
+            try:
+                obj = json.loads(line)
+                loaded.append(
+                    MetricSample(
+                        timestamp=datetime.fromisoformat(obj.get("timestamp")),
+                        node=obj.get("node", ""),
+                        layer=obj.get("layer", layer),
+                        metric=obj.get("metric", ""),
+                        value=float(obj.get("value", 0)),
+                        details=obj.get("details") or {},
+                        labels=_normalize_labels(obj.get("labels") or {}),
+                    )
+                )
+            except Exception:
+                continue
+    return loaded
 
 
 def _normalize_labels(labels: Dict[str, Any] | None) -> Dict[str, Any]:
@@ -576,6 +619,32 @@ def _filter_samples(query: MetricQuery) -> List[MetricSample]:
     return results
 
 
+def _sample_to_dict(sample: MetricSample) -> Dict[str, Any]:
+    return {
+        "timestamp": sample.timestamp.isoformat(),
+        "node": sample.node,
+        "layer": sample.layer,
+        "metric": sample.metric,
+        "value": sample.value,
+        "details": sample.details,
+        "labels": sample.labels,
+    }
+
+
+async def _event_stream():
+    while True:
+        topology = next(iter(topologies.values()), None)
+        payload = {
+            "type": "snapshot",
+            "generated_at": datetime.utcnow().isoformat(),
+            "topology": topology.model_dump() if topology else None,
+            "metrics": [_sample_to_dict(s) for s in metric_samples[-30:]],
+            "runs": [run.model_dump() for run in runs.values()],
+        }
+        yield f"data: {json.dumps(payload)}\n\n"
+        await asyncio.sleep(2)
+
+
 def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
     if not api_key:
         return
@@ -748,9 +817,13 @@ for layer in layer_flags:
 
 # Seed minimal samples on startup so raw files are not empty for demo/testing scenarios.
 if not metric_samples:
-    seeded = _collect_synthetic_full(next(iter(topologies.values()), None), {"version": software_version})
-    if seeded:
-        _store_samples(seeded)
+    restored = _load_recent_samples_from_raw(limit=200)
+    if restored:
+        metric_samples.extend(restored)
+    else:
+        seeded = _collect_synthetic_full(next(iter(topologies.values()), None), {"version": software_version})
+        if seeded:
+            _store_samples(seeded)
 
 
 @app.post("/topologies", response_model=Topology, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_api_key)])
@@ -917,6 +990,11 @@ async def delete_flow(flow_id: str) -> Response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Flow not found")
     flows.pop(flow_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.get("/stream/events")
+async def stream_events() -> StreamingResponse:
+    return StreamingResponse(_event_stream(), media_type="text/event-stream")
 
 
 @app.get("/health")
