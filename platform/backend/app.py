@@ -3,8 +3,8 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from platform.backend.api import experiments, flows, metrics, topologies
-from platform.backend.plugins import csv_collector, mininet_runner, ping_generator  # noqa: F401
+from backend.api import experiments, flows, metrics, topologies
+from backend.plugins import csv_collector, mininet_runner, ping_generator  # noqa: F401
 
 app = FastAPI(title="profissa-sdn-framework API", version="0.1.0")
 

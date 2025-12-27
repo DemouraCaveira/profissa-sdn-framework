@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, Iterable, List, Optional
 
-from platform.backend import schemas
+from backend import schemas
 
 # In-memory stores; replace with DB/TSDB later
 _metric_definitions: List[schemas.MetricDefinition] = [
@@ -66,4 +66,3 @@ def query_records(run_id: str, metrics: Optional[List[str]] = None, labels: Opti
 
 def clear_all() -> None:
     _metric_records.clear()
-*** End Patch

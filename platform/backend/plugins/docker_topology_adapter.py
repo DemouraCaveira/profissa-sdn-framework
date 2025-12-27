@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 
 import docker
 
-from platform.backend import schemas
+from backend import schemas
 
 
 def _container_ip(container) -> Optional[str]:

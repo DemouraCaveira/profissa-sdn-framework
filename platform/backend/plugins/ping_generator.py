@@ -3,8 +3,8 @@ from __future__ import annotations
 import asyncio
 from typing import Any, Dict
 
-from platform.backend.core.registry import registry
-from platform.backend.core.plugins import TrafficGenerator
+from backend.core.registry import registry
+from backend.core.plugins import TrafficGenerator
 
 
 class PingGenerator:

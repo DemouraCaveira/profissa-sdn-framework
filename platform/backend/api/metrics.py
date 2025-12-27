@@ -3,8 +3,8 @@ from __future__ import annotations
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from platform.backend import schemas
-from platform.backend.core import metrics_store
+from backend import schemas
+from backend.core import metrics_store
 
 router = APIRouter(prefix="/metrics", tags=["metrics"])
 

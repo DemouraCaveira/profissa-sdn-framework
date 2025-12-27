@@ -6,8 +6,8 @@ import time
 from pathlib import Path
 from typing import Any, Dict
 
-from platform.backend.core.registry import registry
-from platform.backend.core.plugins import MetricCollector
+from backend.core.registry import registry
+from backend.core.plugins import MetricCollector
 
 
 class CsvCollector:

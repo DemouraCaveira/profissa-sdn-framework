@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
-from platform.backend import schemas
+from backend import schemas
 
 router = APIRouter(prefix="/flows", tags=["flows"])
 

@@ -5,9 +5,9 @@ from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 
-from platform.backend import schemas
-from platform.backend.core.orchestrator import ExperimentOrchestrator
-from platform.backend.core.registry import registry
+from backend import schemas
+from backend.core.orchestrator import ExperimentOrchestrator
+from backend.core.registry import registry
 
 router = APIRouter(prefix="/experiments", tags=["experiments"])
 

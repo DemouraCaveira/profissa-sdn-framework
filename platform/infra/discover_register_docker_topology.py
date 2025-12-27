@@ -9,7 +9,7 @@ from pathlib import Path
 
 import httpx
 
-from platform.backend.plugins.docker_topology_adapter import build_topology_from_config
+from backend.plugins.docker_topology_adapter import build_topology_from_config
 
 DEFAULT_API = "http://localhost:8000"
 DEFAULT_CONFIG = Path(__file__).resolve().parent.parent / "config" / "topology_docker_lab.json"

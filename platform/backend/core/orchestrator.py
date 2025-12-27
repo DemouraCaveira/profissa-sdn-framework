@@ -5,9 +5,9 @@ from datetime import datetime
 from typing import Dict, Optional
 from uuid import uuid4
 
-from platform.backend import schemas
-from platform.backend.core import metrics_store
-from platform.backend.core.registry import PluginRegistry
+from backend import schemas
+from backend.core import metrics_store
+from backend.core.registry import PluginRegistry
 
 
 def _utc_ts() -> str:
