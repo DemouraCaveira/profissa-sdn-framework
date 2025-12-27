@@ -1,0 +1,71 @@
+Summarized conversation history**O que a API entrega hoje**
+- Endpoints existentes: `health`, `topologies`, `flows`, `metrics/definitions`; o GET-report mostrou tudo respondendo 200.
+- Métricas disponíveis: apenas definições genéricas `latency_ms`, `packet_loss_pct`, `throughput_mbps` (sem coleta de amostras em tempo real).
+- Lacunas: não há coleta integrada dessas séries; erros no plano de controle e throughput indicam coletores ausentes (`aiohttp` e `iperf3` faltando).
+
+**O que você está pedindo**
+- Cobrir 100% de uma topologia SDN e rede em todas as camadas, com o máximo de dados possível (físico → aplicação).
+- Incluir amostras como as do CSV (`sdn_monitor.csv`) e além.
+
+**Proposta de escopo por camada (coletas adicionais)**
+- Físico/Interface: utilização de porta, erros, discards, CRC, drops, flaps, temperatura (se exposto), potência óptica.
+- Enlace (L2): MAC table, STP/RSTP status, VLAN counters, LAG/LACP status, fila/queue occupancy.
+- Rede (L3): ARP/ND cache, rotas, FIB/flow cache, ICMP reachability, TTL expirations.
+- Transporte (L4): TCP handshake success/failure, retransmissões, RTT estimado, janela, UDP loss/jitter.
+- Plano de dados SDN: estatísticas OpenFlow (per-port, per-flow, per-table), contadores de matches, drops, buffer, meter/queue stats.
+- Plano de controle: conectividade switch-controlador, latência control-plane, uso de CPU/mem do controlador, contagem de flows instalados/removidos, eventos de erro.
+- Aplicação/Serviço: disponibilidade de serviços-alvo (HTTP 200/500, tempo de resposta), DNS latência/falha, TLS handshake, jitter MOS (se voz), throughput iperf3.
+- Host/Infra: CPU/mem/disk/IO dos hosts, sockets ativos, conexões estabelecidas, containers/pods (se houver).
+- Observabilidade: NetFlow/sFlow/IPFIX amostras, PCAP sob demanda, logs de controlador/switch (parsers para erros e timeouts).
+
+**Incrementos necessários na API**
+1) Ingestão e séries:
+- Novo endpoint `POST /metrics/samples` para receber amostras (payload com timestamp, node, layer, metric, value, details).
+- Novo endpoint `GET /metrics/query` com filtros por `node`, `layer`, `metric`, intervalo de tempo, agregações (avg/p50/p95/max), e paginação.
+- Endpoint `GET /metrics/latest` para snapshot por nó/métrica.
+- Opcional: `GET /metrics/export` (CSV/JSONL) para baixar janela de tempo.
+
+2) Definições/ontologia:
+- Expandir `metrics/definitions` para incluir todos os tipos acima (p.ex. `if_errors`, `if_discards`, `queue_occupancy_pct`, `openflow_port_rx_pkts`, `openflow_flow_hit`, `tcp_retrans_pct`, `dns_latency_ms`, `controller_latency_ms`, etc.).
+- Adicionar `layer` e `unit` explícitos às definições.
+
+3) Coletor/Agentes:
+- Plano de dados: usar Open vSwitch/OF: `ovs-ofctl dump-ports`, `dump-flows`, `dump-queues`, `dump-meters`.
+- Throughput/jitter: iperf3 bidirecional; instalar `iperf3`.
+- ICMP/TCP/UDP: `fping`/`ping`, `hping3` ou `nping` para TCP/UDP.
+- sFlow/NetFlow: habilitar amostragem nos switches, enviar para um collector (sflowtool/nfdump) e normalizar para amostras.
+- Control-plane: ping TCP para porta do controlador, medir handshake OpenFlow, coletar logs do controlador (Ryu/ONOS/ODL) e CPU/mem via psutil.
+- Host stats: psutil + `ethtool -S` para counters de NIC.
+- DNS/HTTP: sondas httpx/curl com tempo de resposta e código.
+
+4) Armazenamento:
+- In-memory não escala para séries; sugiro backend simples (SQLite/PostgreSQL/Timescale) para guardar amostras e responder a `metrics/query`.
+- Se quiser manter leve, começar com SQLite + índices por (metric,node,timestamp).
+
+5) Autenticação e controle:
+- Ativar API key já suportada; se for expor ingestão, usar key ou OAuth simples.
+
+**Erros atuais a resolver antes de ampliar**
+- Instalar dependências dos coletores: `aiohttp` (control-plane fetch) e `iperf3` (throughput). No virtualenv: `pip install aiohttp iperf3`.
+- Validar se switches (OVS) estão com `ovs-vsctl` disponível para ler counters.
+
+**Plano de implementação sugerido (iterativo)**
+1) Schemas/Endpoints:
+- Estender `schemas` com `MetricSample` (timestamp, node, layer, metric, value, details: dict).
+- Adicionar `POST /metrics/samples`, `GET /metrics/query`, `GET /metrics/latest`, `GET /metrics/export`.
+2) Storage:
+- Implementar provider simples (SQLite) para persistir amostras; fallback in-memory para demo.
+3) Definições:
+- Ampliar `metrics/definitions` para incluir as métricas listadas por camada (com `layer` e `unit`).
+4) Coletores (mínimo viável):
+- Ping/UDP jitter (fping/nping), iperf3 throughput, OVS port/flow stats, controller health ping.
+- Mapear os resultados para `MetricSample` e enviar via `POST /metrics/samples`.
+5) Exportar CSV:
+- `GET /metrics/export?from=&to=&metrics=...` retornando CSV compatível com o formato do `sdn_monitor.csv`.
+6) Observabilidade opcional:
+- sFlow/NetFlow ingest, PCAP sob demanda.
+
+**Se quiser que eu já implemente**
+- Posso começar pelas novas rotas de métricas (ingestão + query + export) e ampliar as definições. Em seguida, adicionar um coletor mínimo (ping + iperf3 + OVS port stats) publicando amostras na API.
+
+Me diga se posso seguir criando esses endpoints e o backend de armazenamento de amostras; começo pelas rotas e pelo modelo de dados, depois pelos coletores básicos.

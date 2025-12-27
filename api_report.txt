@@ -1,0 +1,125 @@
+API GET report generated at 2025-12-27T13:02:24.828556Z
+
+Base URL: http://localhost:8000
+Total requests: 40
+Endpoints (cycled): health, topologies, flows, metrics/definitions
+
+[01] health | status=200 | 11.3 ms
+{"status":"ok"}
+
+[02] topologies | status=200 | 4.6 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[03] flows | status=200 | 3.3 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[04] metrics/definitions | status=200 | 2.5 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[05] health | status=200 | 3.0 ms
+{"status":"ok"}
+
+[06] topologies | status=200 | 2.8 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[07] flows | status=200 | 4.6 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[08] metrics/definitions | status=200 | 3.4 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[09] health | status=200 | 2.7 ms
+{"status":"ok"}
+
+[10] topologies | status=200 | 2.7 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[11] flows | status=200 | 2.8 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[12] metrics/definitions | status=200 | 7.3 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[13] health | status=200 | 4.4 ms
+{"status":"ok"}
+
+[14] topologies | status=200 | 3.5 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[15] flows | status=200 | 7.1 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[16] metrics/definitions | status=200 | 3.0 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[17] health | status=200 | 1.7 ms
+{"status":"ok"}
+
+[18] topologies | status=200 | 1.3 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[19] flows | status=200 | 1.2 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[20] metrics/definitions | status=200 | 1.1 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[21] health | status=200 | 1.6 ms
+{"status":"ok"}
+
+[22] topologies | status=200 | 7.3 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[23] flows | status=200 | 2.8 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[24] metrics/definitions | status=200 | 2.3 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[25] health | status=200 | 3.0 ms
+{"status":"ok"}
+
+[26] topologies | status=200 | 2.3 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[27] flows | status=200 | 2.6 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[28] metrics/definitions | status=200 | 2.1 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[29] health | status=200 | 2.1 ms
+{"status":"ok"}
+
+[30] topologies | status=200 | 2.2 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[31] flows | status=200 | 1.9 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[32] metrics/definitions | status=200 | 1.9 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[33] health | status=200 | 2.0 ms
+{"status":"ok"}
+
+[34] topologies | status=200 | 2.3 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[35] flows | status=200 | 2.5 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[36] metrics/definitions | status=200 | 1.9 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]
+
+[37] health | status=200 | 2.0 ms
+{"status":"ok"}
+
+[38] topologies | status=200 | 2.0 ms
+[{"id":"platform-topology","name":"platform-topology","controller":"ctrl-ryu","nodes":[{"id":"c1","type":"controller","mgmt_ip":"172.20.0.10","image":"alexandremitsurukaihara/lst2.0:ryucontroller","meta":{"ssh_user":"root","ssh_port":22}},{"id":"s1","type":"switch","mgmt_ip":"172.20.0.11","image":"s1-img","meta":{}},{"id":"h1","type":"host","mgmt_ip":"172.20.0.12","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}},{"id":"h2","type":"host","mgmt_ip":"172.20.0.13","image":"alexandremitsurukaihara/lst2.0:host","meta":{"ssh_user":"root","ssh_port":22}}],"links":[{"source":"s1","target":"h1","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":"s1","target":"h2","bandwidth_mbps":1000.0,"delay_ms":1.0,"loss_pct":0.0,"meta":{}},{"source":... [truncated]
+
+[39] flows | status=200 | 3.1 ms
+[{"id":"flow_6fc9e903","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"1","eth_type":"0x0800"},"actions":{"output":"2"},"priority":100,"meta":{}},{"id":"flow_50026a05","topology_id":"platform-topology","controller":"ctrl-ryu","match":{"in_port":"2","eth_type":"0x0800"},"actions":{"output":"1"},"priority":100,"meta":{}}]
+
+[40] metrics/definitions | status=200 | 2.5 ms
+[{"name":"latency_ms","description":"latency_ms","unit":null},{"name":"packet_loss_pct","description":"packet_loss_pct","unit":null},{"name":"throughput_mbps","description":"throughput_mbps","unit":null}]

@@ -1,0 +1,18 @@
+[
+  {
+    "topology_id": "REPLACE_WITH_TOPOLOGY_ID",
+    "controller": "ryu",
+    "match": {"in_port": "1", "eth_type": "0x0800"},
+    "actions": {"output": "2"},
+    "priority": 100,
+    "meta": {"purpose": "h1->h2 forward"}
+  },
+  {
+    "topology_id": "REPLACE_WITH_TOPOLOGY_ID",
+    "controller": "ryu",
+    "match": {"in_port": "2", "eth_type": "0x0800"},
+    "actions": {"output": "1"},
+    "priority": 100,
+    "meta": {"purpose": "h2->h1 forward"}
+  }
+]

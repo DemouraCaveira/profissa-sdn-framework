@@ -1,0 +1,25 @@
+{
+  "topology_id": "REPLACE_WITH_TOPOLOGY_ID",
+  "name": "latency-ping-baseline",
+  "description": "Ping entre h1 e h2 com controlador Ryu.",
+  "hypotheses": "Latência < 5ms com perda 0%.",
+  "traffic": [
+    {
+      "generator": "ping",
+      "src": "h1",
+      "dst": "h2",
+      "protocol": "icmp",
+      "rate": null,
+      "duration_sec": 30,
+      "params": {"count": "20", "interval": "1s"}
+    }
+  ],
+  "metrics": {
+    "metrics": ["latency_ms", "packet_loss_pct", "throughput_mbps"],
+    "interval_sec": 5.0,
+    "labels": ["experiment_id", "run_id", "topology_id", "src", "dst"]
+  },
+  "duration_sec": 30,
+  "tags": ["baseline", "ping", "ryu"],
+  "template_version": "v0.1"
+}

@@ -1,0 +1,6 @@
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->h1", "layer": "physical", "metric": "if_errors", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->h1", "layer": "physical", "metric": "if_discards", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->h2", "layer": "physical", "metric": "if_errors", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->h2", "layer": "physical", "metric": "if_discards", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->c1", "layer": "physical", "metric": "if_errors", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->c1", "layer": "physical", "metric": "if_discards", "value": 2.0, "details": {}, "labels": {}}

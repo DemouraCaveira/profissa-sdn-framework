@@ -1,0 +1,2 @@
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 7.207, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}

@@ -1,0 +1,6 @@
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 4.977, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 0.704, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 4.701, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.051, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 1.513, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.356, "details": {}, "labels": {}}

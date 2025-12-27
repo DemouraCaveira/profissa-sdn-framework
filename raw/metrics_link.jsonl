@@ -1,0 +1,6 @@
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 54.059, "details": {"jitter_ms": 3.551}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 36.13, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 44.305, "details": {"jitter_ms": 4.73}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 38.047, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 34.469, "details": {"jitter_ms": 2.511}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 29.647, "details": {}, "labels": {}}

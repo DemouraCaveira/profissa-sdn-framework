@@ -2,13 +2,19 @@
 
 ## Contratos entre módulos
 - **Topologias (REST/JSON)**
-  - `POST /api/topologies` cria; `GET /api/topologies/{id}` detalha; `GET /api/topologies` lista.
+  - `POST /topologies` cria; `GET /topologies/{id}` detalha; `GET /topologies` lista.
 - **Experimentos (REST/JSON)**
-  - `POST /api/experiments` cria; `GET /api/experiments/{id}` detalha; `POST /api/experiments/{id}/run` agenda/aciona execução; `GET /api/experiments/{id}/runs` lista execuções.
+  - `POST /experiments` cria; `GET /experiments/{id}` detalha; `POST /experiments/{id}/run` agenda/aciona execução; `GET /experiments/{id}/runs` lista execuções.
 - **Orquestrador**
   - Consome DTOs de topologia/experimento e publica eventos de estado (REST callbacks ou fila/mensageria futura). Suporte a WebSocket/SSE para UI.
 - **Métricas**
-  - Exporta via REST `/api/metrics/definitions` e `/api/runs/{run_id}/metrics`. Coleta via Prometheus client ou arquivos CSV/JSON.
+  - Definições: `GET /metrics/definitions`.
+  - Ingestão: `POST /metrics/samples` (1 ou N amostras com `timestamp`, `node`, `layer`, `metric`, `value`, `details`, `labels`).
+  - Consulta: `POST /metrics/query` (filtros por nomes, nós, camadas, janela temporal, limite).
+  - Últimos valores: `GET /metrics/latest?metric=&node=&layer=`.
+  - Exportação: `GET /metrics/export?layer=network` (retorna JSONL da camada).
+  - Coletor mínimo: `POST /metrics/collect` (gera amostras sintéticas por camada).
+  - Camadas suportadas: `physical`, `link`, `network`, `transport`, `application`, `control`, `dataplane`.
 
 ## DTOs básicos (JSON)
 
@@ -75,6 +81,13 @@
 }
 ```
 
+## Configuração central da plataforma
+- Arquivo: `platform/experiments/platform_config.json` (ou sobrescreva com `PLATFORM_CONFIG_PATH`).
+- Campos: `controllers` (lista com id/tipo/api/openflow/auth), `default_controller`, `nodes` (hosts/switches/controllers), `links`, `flow_templates`, `traffic_profiles`, `metric_plan`, `environment` (docker/mininet), `metric_layers` (flags por camada), `layer_descriptions`, `metadata`.
+- `metric_plan.metric_layers` mapeia cada métrica ao layer correspondente (ex.: `"latency_ms": "network"`).
+- `metric_layers` (raiz) habilita/desabilita coleta por camada (ex.: `"link": false` para ignorar L2).
+- O bootstrap da API lê esse arquivo na inicialização e pré-carrega topologia, fluxos e métricas disponíveis.
+
 ## Templates de experimento (JSON/YAML)
 - Contêm: versão do template, topologia completa, lista de experimentos que referenciam a topologia, tráfego e métricas.
-- Podem ser serializados em JSON ou YAML. Exemplo YAML em `platform/experiments/example_experiment.yaml`.
+- Podem ser serializados em JSON ou YAML.

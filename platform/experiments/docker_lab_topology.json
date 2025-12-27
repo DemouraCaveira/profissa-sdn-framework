@@ -1,0 +1,20 @@
+{
+  "name": "docker-lab-01",
+  "controller": "ryu",
+  "nodes": [
+    {"id": "c1", "type": "controller", "mgmt_ip": "172.20.0.10", "image": "alexandremitsurukaihara/lst2.0:ryucontroller", "meta": {"container_name": "c1"}},
+    {"id": "s1", "type": "switch", "mgmt_ip": "172.20.0.11", "image": "s1-img", "meta": {"container_name": "s1"}},
+    {"id": "h1", "type": "host", "mgmt_ip": "172.20.0.12", "image": "alexandremitsurukaihara/lst2.0:host", "meta": {"container_name": "h1"}},
+    {"id": "h2", "type": "host", "mgmt_ip": "172.20.0.13", "image": "alexandremitsurukaihara/lst2.0:host", "meta": {"container_name": "h2"}}
+  ],
+  "links": [
+    {"source": "s1", "target": "h1", "bandwidth_mbps": 1000, "delay_ms": 1, "loss_pct": 0.0},
+    {"source": "s1", "target": "h2", "bandwidth_mbps": 1000, "delay_ms": 1, "loss_pct": 0.0},
+    {"source": "s1", "target": "c1", "bandwidth_mbps": 1000, "delay_ms": 1, "loss_pct": 0.0}
+  ],
+  "meta": {
+    "backend": "docker",
+    "network_name": "sdn_lab_net",
+    "provisioning": "external-existing"
+  }
+}

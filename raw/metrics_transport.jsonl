@@ -1,0 +1,4 @@
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h1", "layer": "transport", "metric": "throughput_mbps", "value": 125.446, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h1", "layer": "transport", "metric": "tcp_retrans_pct", "value": 0.291, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h2", "layer": "transport", "metric": "throughput_mbps", "value": 375.882, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "h2", "layer": "transport", "metric": "tcp_retrans_pct", "value": 2.773, "details": {}, "labels": {}}

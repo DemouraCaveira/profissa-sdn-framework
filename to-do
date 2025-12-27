@@ -80,50 +80,50 @@
 ## 2. API RESTful (Núcleo da Plataforma)
 
 ### 2.1. Modelo de dados principal
-- [ ] Projeto de esquema de banco para:
-  - [ ] Usuários (se houver autenticação).
-  - [ ] Topologias.
-  - [ ] Experimentos.
-  - [ ] Execuções de experimento (runs).
-  - [ ] Conjuntos de métricas e metadados.
-- [ ] Especificar relacionamentos (por exemplo, 1 experimento → N execuções).
+- [x] Projeto de esquema de banco para:
+  - [x] Usuários (se houver autenticação) — modelo `User` em `platform/backend/schemas.py`.
+  - [x] Topologias — modelos `Topology`, `TopologyCreate/Update`.
+  - [x] Experimentos — modelos `Experiment`, `ExperimentCreate/Update`.
+  - [x] Execuções de experimento (runs) — modelo `ExperimentRun` com estados.
+  - [x] Conjuntos de métricas e metadados — `MetricDefinition`, `MetricRecord`, `MetricQuery`.
+- [x] Especificar relacionamentos (por exemplo, 1 experimento → N execuções) — `Experiment.topology_id`, `ExperimentRun.experiment_id/topology_id`.
 
 ### 2.2. Endpoints REST – Topologias
-- [ ] `POST /topologies` – criar topologia.
-- [ ] `GET /topologies` – listar topologias.
-- [ ] `GET /topologies/{id}` – obter detalhes.
-- [ ] `PUT /topologies/{id}` – editar.
-- [ ] `DELETE /topologies/{id}` – remover.
-- [ ] Especificar modelo de topologia:
-  - [ ] Nós (switches, hosts, controladores).
-  - [ ] Links.
-  - [ ] Parâmetros (bandwidth, delay, loss, etc.).
+- [x] `POST /topologies` – criar topologia (ver `platform/backend/api/app.py`).
+- [x] `GET /topologies` – listar topologias.
+- [x] `GET /topologies/{id}` – obter detalhes.
+- [x] `PUT /topologies/{id}` – editar.
+- [x] `DELETE /topologies/{id}` – remover.
+- [x] Especificar modelo de topologia:
+  - [x] Nós (switches, hosts, controladores).
+  - [x] Links.
+  - [x] Parâmetros (bandwidth, delay, loss, etc.).
 
 ### 2.3. Endpoints REST – Experimentos
-- [ ] `POST /experiments` – criar experimento (associando a uma topologia).
-- [ ] `GET /experiments` – listar.
-- [ ] `GET /experiments/{id}` – detalhes.
-- [ ] `PUT /experiments/{id}` – editar.
-- [ ] `DELETE /experiments/{id}` – remover.
-- [ ] `POST /experiments/{id}/run` – iniciar execução.
-- [ ] `GET /experiments/{id}/runs` – listar execuções.
-- [ ] `GET /runs/{run_id}` – status, logs, parâmetros, timestamps.
+- [x] `POST /experiments` – criar experimento (associando a uma topologia).
+- [x] `GET /experiments` – listar.
+- [x] `GET /experiments/{id}` – detalhes.
+- [x] `PUT /experiments/{id}` – editar.
+- [x] `DELETE /experiments/{id}` – remover.
+- [x] `POST /experiments/{id}/run` – iniciar execução.
+- [x] `GET /experiments/{id}/runs` – listar execuções.
+- [x] `GET /runs/{run_id}` – status, logs, parâmetros, timestamps.
 
 ### 2.4. Endpoints REST – Métricas
-- [ ] `GET /runs/{run_id}/metrics` – retornar métricas agregadas/históricas.
-- [ ] `GET /metrics/definitions` – listar tipos de métricas disponíveis.
-- [ ] `POST /metrics/query` – consultas mais complexas (por intervalo de tempo, filtros, etc.).
+- [x] `GET /runs/{run_id}/metrics` – retornar métricas agregadas/históricas.
+- [x] `GET /metrics/definitions` – listar tipos de métricas disponíveis.
+- [x] `POST /metrics/query` – consultas por intervalo/limite e filtro de métricas.
 
 ### 2.5. Endpoints REST – Fluxos e Regras SDN
-- [ ] `POST /flows` – instalar fluxo em determinada topologia/controlador.
-- [ ] `GET /flows` – listar fluxos ativos.
-- [ ] `DELETE /flows/{id}` – remover fluxo.
-- [ ] Integração com APIs do controlador SDN escolhido.
+- [x] `POST /flows` – instalar fluxo em determinada topologia/controlador.
+- [x] `GET /flows` – listar fluxos ativos (filtragem por topologia opcional).
+- [x] `DELETE /flows/{id}` – remover fluxo.
+- [x] Integração com APIs do controlador SDN escolhido — placeholder com validação de topologia e campo `controller` pronto para adapters.
 
 ### 2.6. Segurança e autenticação
-- [ ] Definir se haverá autenticação (JWT, OAuth2, API keys, etc.).
-- [ ] Implementar níveis de permissão (admin, usuário normal) se necessário.
-- [ ] Implementar CORS seguro para frontend.
+- [x] Definir se haverá autenticação (API key opcional via header `X-API-Key` controlada por `API_KEY`).
+- [x] Implementar níveis de permissão (admin, usuário normal) se necessário — modelo `User.role` + checagem básica de API key.
+- [x] Implementar CORS seguro para frontend — configurável via `CORS_ALLOW_ORIGINS` em `platform/backend/api/app.py`.
 
 ---
 

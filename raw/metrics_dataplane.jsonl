@@ -1,0 +1,4 @@
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 474.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 9381.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_packets", "value": 80.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:23:26.333505", "node": "platform-topology", "layer": "dataplane", "metric": "openflow_flow_bytes", "value": 29452.0, "details": {}, "labels": {}}
