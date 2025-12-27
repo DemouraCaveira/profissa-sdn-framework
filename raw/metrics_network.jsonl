@@ -40,3 +40,267 @@
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "network", "metric": "routes_count", "value": 32.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 32.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 4.745, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 2.108, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 0.364, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "network", "metric": "routes_count", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 13.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 3.575, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.884, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 1.586, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h1", "layer": "network", "metric": "routes_count", "value": 12.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 36.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 3.093, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.785, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.971, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h2", "layer": "network", "metric": "routes_count", "value": 20.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 26.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 6.378, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 1.904, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 0.76, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "network", "metric": "routes_count", "value": 7.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 4.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 6.191, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.65, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 1.326, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h1", "layer": "network", "metric": "routes_count", "value": 3.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 10.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 6.839, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 2.08, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 1.54, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h2", "layer": "network", "metric": "routes_count", "value": 30.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 58.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 3.254, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 1.05, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 1.9, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "network", "metric": "routes_count", "value": 29.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 46.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 3.419, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 2.576, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 1.427, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h1", "layer": "network", "metric": "routes_count", "value": 29.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 52.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.589, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.026, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 1.32, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h2", "layer": "network", "metric": "routes_count", "value": 7.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 37.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 7.933, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 0.337, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 0.882, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "network", "metric": "routes_count", "value": 18.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 35.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 2.84, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 2.623, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 1.787, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h1", "layer": "network", "metric": "routes_count", "value": 4.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 38.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.707, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 1.841, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.439, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h2", "layer": "network", "metric": "routes_count", "value": 13.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 57.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 0.753, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 2.096, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 0.595, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "network", "metric": "routes_count", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 46.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 3.308, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.148, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 1.429, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h1", "layer": "network", "metric": "routes_count", "value": 15.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 10.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 4.789, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 2.801, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.94, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h2", "layer": "network", "metric": "routes_count", "value": 21.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 12.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 5.95, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 2.571, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 0.203, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "network", "metric": "routes_count", "value": 17.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 44.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 3.531, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.905, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.431, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h1", "layer": "network", "metric": "routes_count", "value": 4.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 62.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 2.133, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.903, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 1.43, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h2", "layer": "network", "metric": "routes_count", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 4.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 7.657, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 1.614, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 0.602, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "network", "metric": "routes_count", "value": 27.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 11.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 2.525, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.684, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.65, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h1", "layer": "network", "metric": "routes_count", "value": 17.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 56.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 6.914, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 2.144, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.976, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h2", "layer": "network", "metric": "routes_count", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 50.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "network", "metric": "latency_ms", "value": 2.199, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "network", "metric": "packet_loss_pct", "value": 1.467, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "network", "metric": "jitter_ms", "value": 1.191, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "network", "metric": "ttl_expired", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "network", "metric": "routes_count", "value": 30.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "network", "metric": "arp_entries", "value": 14.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.855, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.274, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.868, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h1", "layer": "network", "metric": "ttl_expired", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h1", "layer": "network", "metric": "routes_count", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h1", "layer": "network", "metric": "arp_entries", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 7.816, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.489, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.962, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h2", "layer": "network", "metric": "ttl_expired", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h2", "layer": "network", "metric": "routes_count", "value": 6.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "h2", "layer": "network", "metric": "arp_entries", "value": 54.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h1", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h1", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h2", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h2", "layer": "network", "metric": "latency_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h2", "layer": "network", "metric": "packet_loss_pct", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h2", "layer": "network", "metric": "jitter_ms", "value": 0.0, "details": {"dst": "h1", "source": "ping"}, "labels": {}}

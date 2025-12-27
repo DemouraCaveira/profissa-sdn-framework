@@ -112,13 +112,16 @@ def topology_from_config(cfg: Dict) -> Optional[Topology]:
         role = node.get("role") or node.get("type")
         if role not in {"host", "switch", "controller"}:
             continue
+        node_meta = {k: v for k, v in node.get("meta", {}).items()}
+        if node.get("container_name"):
+            node_meta.setdefault("container_name", node.get("container_name"))
         nodes.append(
             TopologyNode(
                 id=node["id"],
                 type=role,  # type aligns to TopologyNode Literal
                 mgmt_ip=node.get("mgmt_ip"),
                 image=node.get("image"),
-                meta={k: v for k, v in node.get("meta", {}).items()},
+                meta=node_meta,
             )
         )
 

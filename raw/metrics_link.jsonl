@@ -40,3 +40,347 @@
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 52.09, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 9.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.356, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 34.98, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 1.034, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 4.731, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 65.45, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 8.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.078, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 27.28, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 1.034, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 3.66, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 29.74, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 9.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.107, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 54.04, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 0.132, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 1.849, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 1.61, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 19.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.022, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 19.84, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 0.729, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 3.561, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 10.29, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 3.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.981, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 10.84, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 1.01, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 0.392, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 18.12, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 7.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.283, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 77.11, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 0.687, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 1.186, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 28.96, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 5.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.942, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 86.25, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 1.635, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 0.147, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 59.2, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 8.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.878, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 11.69, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 1.209, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 3.559, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 40.68, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 9.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.996, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 23.22, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 0.983, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 3.634, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 36.14, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.054, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 14.53, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 0.606, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 0.797, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 42.42, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 8.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.546, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 82.58, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 1.233, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 1.063, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 36.38, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 7.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.632, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 73.56, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 1.3, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 2.512, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 45.65, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 4.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.166, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 85.62, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 0.743, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 2.526, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 36.1, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 16.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.664, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 24.59, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 1.371, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 2.492, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 56.78, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 18.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.463, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 23.55, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 0.795, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 0.22, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 54.08, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 11.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.204, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:46.429682", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:03.326121", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:17.758498", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:33.318374", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:56:48.606852", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T13:57:01.486242", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 80.95, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 1.397, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 4.428, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 34.33, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 13.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.807, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 57.95, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 0.372, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 0.608, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 61.17, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 16.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.906, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 52.62, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 1.375, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 0.662, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 47.77, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 17.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.301, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:51.302198", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:05.283719", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:18.647492", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:03:31.981215", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 6.46, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 1.099, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 3.003, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 45.79, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 2.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.712, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 58.23, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 0.583, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 3.225, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 41.97, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 19.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.731, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 47.69, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 1.987, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 3.002, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 21.8, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 12.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.965, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:15.679820", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:29.730759", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:43.206772", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:56.952367", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:06:10.509723", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h1", "layer": "link", "metric": "link_util_pct", "value": 83.06, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h1", "layer": "link", "metric": "link_loss_pct", "value": 1.92, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h1", "layer": "link", "metric": "link_jitter_ms", "value": 3.489, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 41.88, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 6.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.146, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h2", "layer": "link", "metric": "link_util_pct", "value": 45.84, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h2", "layer": "link", "metric": "link_loss_pct", "value": 1.473, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h2", "layer": "link", "metric": "link_jitter_ms", "value": 0.199, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 45.12, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 5.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->h2", "layer": "link", "metric": "ecn_marked_pct", "value": 0.263, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->c1", "layer": "link", "metric": "link_util_pct", "value": 80.78, "details": {"direction": "bidirectional"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->c1", "layer": "link", "metric": "link_loss_pct", "value": 1.095, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->c1", "layer": "link", "metric": "link_jitter_ms", "value": 3.882, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "link", "metric": "queue_occupancy_pct", "value": 18.57, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1", "layer": "link", "metric": "queue_drops", "value": 9.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "s1->c1", "layer": "link", "metric": "ecn_marked_pct", "value": 0.551, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:44.423937", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:58.281477", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:12.030813", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:26.216672", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "c1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "c1:eth0@if9:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "s1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "s1:ovs-netdev:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "s1:s1:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "s1:eth0@if7:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h1:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h1:eth0@if11:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h2:lo:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}
+{"timestamp": "2025-12-27T14:08:40.220109", "node": "h2:eth0@if13:", "layer": "link", "metric": "queue_drops", "value": 0.0, "details": {"source": "ip -s link"}, "labels": {}}

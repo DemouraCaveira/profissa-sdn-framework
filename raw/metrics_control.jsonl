@@ -10,3 +10,43 @@
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 30.0, "details": {}, "labels": {}}
 {"timestamp": "2025-12-27T13:29:25.821664", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 87.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 24.776, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 146.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:08.603735", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 51.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 10.723, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 476.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:40:36.623396", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 52.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 6.399, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 159.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:42:11.236252", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 61.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 23.824, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 89.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:50:38.337917", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 27.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 1.535, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 210.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T13:55:45.652228", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 81.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 14.186, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 439.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:02:50.291694", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 24.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 8.142, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 1.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 120.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:05:14.139633", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 5.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "c1", "layer": "control", "metric": "controller_latency_ms", "value": 10.473, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "c1", "layer": "control", "metric": "controller_conn_ok", "value": 1.0, "details": {"ok": true}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "c1", "layer": "control", "metric": "of_channel_reconnects", "value": 0.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "c1", "layer": "control", "metric": "flows_installed", "value": 399.0, "details": {}, "labels": {}}
+{"timestamp": "2025-12-27T14:07:42.902733", "node": "c1", "layer": "control", "metric": "flows_removed", "value": 33.0, "details": {}, "labels": {}}

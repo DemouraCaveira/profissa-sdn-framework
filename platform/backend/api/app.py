@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import os
 import random
+import re
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Sequence
@@ -80,6 +82,211 @@ def _write_samples_to_raw(samples: Sequence[MetricSample]) -> None:
             f.write(_serialize_sample(sample) + "\n")
 
 
+def _run_cmd(cmd: List[str], timeout: int = 6) -> str:
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=True)
+        return res.stdout
+    except (subprocess.SubprocessError, OSError):
+        return ""
+
+
+def _parse_ss_summary(output: str) -> Dict[str, float]:
+    summary: Dict[str, float] = {
+        "total": 0,
+        "tcp_total": 0,
+        "tcp_estab": 0,
+        "tcp_closed": 0,
+        "tcp_orphaned": 0,
+        "tcp_timewait": 0,
+    }
+    matrix: Dict[str, Dict[str, float]] = {proto: {"total": 0, "ip": 0, "ipv6": 0} for proto in ["udp", "tcp", "raw", "inet", "frag"]}
+    for line in output.splitlines():
+        if line.startswith("Total:"):
+            m = re.search(r"Total:\s+(\d+)", line)
+            if m:
+                summary["total"] = float(m.group(1))
+        if line.startswith("TCP:"):
+            m = re.search(r"TCP:\s+(\d+).*estab\s+(\d+), closed\s+(\d+), orphaned\s+(\d+), timewait\s+(\d+)", line)
+            if m:
+                summary.update(
+                    {
+                        "tcp_total": float(m.group(1)),
+                        "tcp_estab": float(m.group(2)),
+                        "tcp_closed": float(m.group(3)),
+                        "tcp_orphaned": float(m.group(4)),
+                        "tcp_timewait": float(m.group(5)),
+                    }
+                )
+        if any(line.startswith(prefix) for prefix in ["UDP", "TCP", "RAW", "INET", "FRAG"]):
+            parts = line.split()
+            if len(parts) >= 4:
+                proto = parts[0].lower()
+                try:
+                    total, ip_v4, ip_v6 = float(parts[1]), float(parts[2]), float(parts[3])
+                    matrix.setdefault(proto, {"total": 0, "ip": 0, "ipv6": 0})
+                    matrix[proto].update({"total": total, "ip": ip_v4, "ipv6": ip_v6})
+                except ValueError:
+                    continue
+    return {**summary, **{f"{proto}_{k}": v for proto, vals in matrix.items() for k, v in vals.items()}}
+
+
+def _parse_snmp(output: str) -> Dict[str, float]:
+    lines = [ln for ln in output.splitlines() if ":" in ln]
+    results: Dict[str, float] = {}
+    i = 0
+    while i < len(lines) - 1:
+        header = lines[i].split()
+        values = lines[i + 1].split()
+        if header[0].rstrip(":") == values[0].rstrip(":"):
+            prefix = header[0].rstrip(":").lower()
+            keys = header[1:]
+            vals = values[1:]
+            for k, v in zip(keys, vals):
+                try:
+                    results[f"{prefix}_{k.lower()}"] = float(v)
+                except ValueError:
+                    continue
+        i += 2
+    return results
+
+
+def _parse_ip_link(output: str) -> Dict[str, Dict[str, float]]:
+    # Returns iface -> metrics
+    metrics: Dict[str, Dict[str, float]] = {}
+    current = None
+    for line in output.splitlines():
+        if re.match(r"^\d+: ", line):
+            current = line.split(":", 1)[1].strip().split()[0]
+            metrics.setdefault(current, {})
+        if current and "RX:" in line:
+            continue
+        if current and "TX:" in line:
+            continue
+        if current and "errors" in line and "dropped" in line:
+            parts = line.split()
+            try:
+                errors = float(parts[1])
+                dropped = float(parts[3])
+                metrics[current].setdefault("errors", 0.0)
+                metrics[current].setdefault("dropped", 0.0)
+                metrics[current]["errors"] += errors
+                metrics[current]["dropped"] += dropped
+            except (IndexError, ValueError):
+                continue
+    return metrics
+
+
+def _collect_real(topology: Topology | None) -> List[MetricSample]:
+    if not topology:
+        return []
+    now = datetime.utcnow()
+    samples: List[MetricSample] = []
+
+    def _mk(metric: str, layer: MetricLayer, node: str, value: float, details: Dict | None = None, labels: Dict | None = None) -> MetricSample:
+        return MetricSample(
+            timestamp=now,
+            node=node,
+            layer=layer,
+            metric=metric,
+            value=value,
+            details=details or {},
+            labels=labels or {},
+        )
+
+    for node in topology.nodes:
+        container = node.meta.get("container_name") or node.id
+        # Transport: ss -s and /proc/net/snmp
+        if layer_flags.get("transport", True):
+            ss_output = _run_cmd(["docker", "exec", container, "ss", "-s"]) if container else ""
+            ss_data = _parse_ss_summary(ss_output) if ss_output else {}
+            if ss_data:
+                samples.append(_mk("ss_sockets_total", "transport", node.id, ss_data.get("total", 0.0), {"source": "ss -s"}))
+                samples.append(
+                    _mk(
+                        "ss_tcp_states",
+                        "transport",
+                        node.id,
+                        ss_data.get("tcp_total", 0.0),
+                        {
+                            "estab": ss_data.get("tcp_estab", 0.0),
+                            "closed": ss_data.get("tcp_closed", 0.0),
+                            "orphaned": ss_data.get("tcp_orphaned", 0.0),
+                            "timewait": ss_data.get("tcp_timewait", 0.0),
+                            "source": "ss -s",
+                        },
+                    )
+                )
+                for proto in ["udp", "tcp", "raw", "inet", "frag"]:
+                    samples.append(
+                        _mk(
+                            f"ss_{proto}_sockets_total",
+                            "transport",
+                            node.id,
+                            ss_data.get(f"{proto}_total", 0.0),
+                            {
+                                "ip": ss_data.get(f"{proto}_ip", 0.0),
+                                "ipv6": ss_data.get(f"{proto}_ipv6", 0.0),
+                                "source": "ss -s",
+                            },
+                        )
+                    )
+
+            snmp_output = _run_cmd(["docker", "exec", container, "cat", "/proc/net/snmp"]) if container else ""
+            snmp_data = _parse_snmp(snmp_output) if snmp_output else {}
+            for key, val in snmp_data.items():
+                samples.append(_mk(f"snmp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
+
+        # Link/Physical: ip -s link
+        if layer_flags.get("link", True) or layer_flags.get("physical", True):
+            ip_link_output = _run_cmd(["docker", "exec", container, "ip", "-s", "link"]) if container else ""
+            ip_link_stats = _parse_ip_link(ip_link_output) if ip_link_output else {}
+            for iface, vals in ip_link_stats.items():
+                path = f"{node.id}:{iface}"
+                if layer_flags.get("physical", True):
+                    samples.append(_mk("if_errors", "physical", path, vals.get("errors", 0.0), {"source": "ip -s link"}))
+                    samples.append(_mk("if_discards", "physical", path, vals.get("dropped", 0.0), {"source": "ip -s link"}))
+                if layer_flags.get("link", True):
+                    samples.append(_mk("queue_drops", "link", path, vals.get("dropped", 0.0), {"source": "ip -s link"}))
+
+        # Network: basic ping between hosts (h1->h2, h2->h1 when mgmt_ip available)
+        if layer_flags.get("network", True) and node.type == "host":
+            peers = [n for n in topology.nodes if n.type == "host" and n.id != node.id and n.mgmt_ip]
+            if peers:
+                target = peers[0]
+                ping_cmd = ["docker", "exec", container, "ping", "-c", "3", "-i", "0.2", target.mgmt_ip]
+                ping_output = _run_cmd(ping_cmd)
+                m = re.search(r"(\d+)% packet loss", ping_output)
+                loss = float(m.group(1)) if m else 0.0
+                rtt_match = re.search(r"rtt min/avg/max/mdev = ([0-9.]+)/([0-9.]+)/([0-9.]+)/([0-9.]+)", ping_output)
+                if rtt_match:
+                    latency = float(rtt_match.group(2))
+                    jitter = float(rtt_match.group(4))
+                else:
+                    latency = 0.0
+                    jitter = 0.0
+                samples.append(_mk("latency_ms", "network", node.id, latency, {"dst": target.id, "source": "ping"}))
+                samples.append(_mk("packet_loss_pct", "network", node.id, loss, {"dst": target.id, "source": "ping"}))
+                samples.append(_mk("jitter_ms", "network", node.id, jitter, {"dst": target.id, "source": "ping"}))
+
+        # Control/Dataplane (best-effort with ovs-ofctl on switches)
+        if node.type == "switch" and layer_flags.get("control", True):
+            ofctl_ports = _run_cmd(["docker", "exec", container, "ovs-ofctl", "dump-ports", "br-s1"]) if container else ""
+            if ofctl_ports:
+                samples.append(_mk("controller_conn_ok", "control", node.id, 1.0, {"source": "ovs-ofctl"}))
+        if node.type == "switch" and layer_flags.get("dataplane", True):
+            flows_dump = _run_cmd(["docker", "exec", container, "ovs-ofctl", "dump-flows", "br-s1"]) if container else ""
+            if flows_dump:
+                lines = [ln for ln in flows_dump.splitlines() if "n_packets" in ln]
+                for idx, ln in enumerate(lines[:10]):
+                    m_pkts = re.search(r"n_packets=(\d+)", ln)
+                    m_bytes = re.search(r"n_bytes=(\d+)", ln)
+                    pkts = float(m_pkts.group(1)) if m_pkts else 0.0
+                    byt = float(m_bytes.group(1)) if m_bytes else 0.0
+                    samples.append(_mk("openflow_flow_packets", "dataplane", node.id, pkts, {"flow_id": f"flow_{idx}", "source": "ovs-ofctl"}))
+                    samples.append(_mk("openflow_flow_bytes", "dataplane", node.id, byt, {"flow_id": f"flow_{idx}", "source": "ovs-ofctl"}))
+    return samples
+
+
 def _collect_synthetic_full(topology: Topology | None) -> List[MetricSample]:
     if not topology:
         return []
@@ -143,6 +350,123 @@ def _collect_synthetic_full(topology: Topology | None) -> List[MetricSample]:
                 samples.append(_mk("tcp_rtt_ms", "transport", node.id, round(random.uniform(1, 30), 3)))
                 samples.append(_mk("udp_jitter_ms", "transport", node.id, round(random.uniform(0, 5), 3)))
                 samples.append(_mk("udp_loss_pct", "transport", node.id, round(random.uniform(0, 5), 3)))
+
+                # ss -s synthetic snapshot
+                ss_totals = {
+                    "total": random.randint(2, 12),
+                    "tcp_total": random.randint(1, 12),
+                    "tcp_estab": random.randint(0, 4),
+                    "tcp_closed": random.randint(8, 16),
+                    "tcp_orphaned": random.randint(0, 1),
+                    "tcp_timewait": random.randint(0, 4),
+                }
+                udp_ip = random.randint(0, 3)
+                udp_ipv6 = random.randint(0, 3)
+                tcp_ip = random.randint(0, 3)
+                tcp_ipv6 = random.randint(0, 3)
+                raw_ip = random.randint(0, 1)
+                raw_ipv6 = random.randint(0, 1)
+                ss_transport_matrix = {
+                    "udp": {"total": udp_ip + udp_ipv6, "ip": udp_ip, "ipv6": udp_ipv6},
+                    "tcp": {"total": tcp_ip + tcp_ipv6, "ip": tcp_ip, "ipv6": tcp_ipv6},
+                    "raw": {"total": raw_ip + raw_ipv6, "ip": raw_ip, "ipv6": raw_ipv6},
+                    "inet": {"total": (udp_ip + udp_ipv6 + tcp_ip + tcp_ipv6), "ip": udp_ip + tcp_ip, "ipv6": udp_ipv6 + tcp_ipv6},
+                    "frag": {"total": random.randint(0, 1), "ip": random.randint(0, 1), "ipv6": 0},
+                }
+
+                samples.append(_mk("ss_sockets_total", "transport", node.id, float(ss_totals["total"]), {"source": "ss -s"}))
+                samples.append(
+                    _mk(
+                        "ss_tcp_states",
+                        "transport",
+                        node.id,
+                        float(ss_totals["tcp_total"]),
+                        {
+                            "estab": ss_totals["tcp_estab"],
+                            "closed": ss_totals["tcp_closed"],
+                            "orphaned": ss_totals["tcp_orphaned"],
+                            "timewait": ss_totals["tcp_timewait"],
+                            "source": "ss -s",
+                        },
+                    )
+                )
+                for proto, counts in ss_transport_matrix.items():
+                    samples.append(
+                        _mk(
+                            f"ss_{proto}_sockets_total",
+                            "transport",
+                            node.id,
+                            float(counts["total"]),
+                            {"ip": counts["ip"], "ipv6": counts["ipv6"], "source": "ss -s"},
+                        )
+                    )
+
+                # /proc/net/snmp synthetic snapshot
+                ip_snmp = {
+                    "in_receives": random.randint(10, 200),
+                    "in_hdr_errors": random.randint(0, 2),
+                    "in_addr_errors": random.randint(0, 2),
+                    "forw_datagrams": random.randint(0, 3),
+                    "in_unknown_protos": random.randint(0, 1),
+                    "in_discards": random.randint(0, 2),
+                    "in_delivers": random.randint(5, 25),
+                    "out_requests": random.randint(5, 25),
+                    "out_discards": random.randint(0, 2),
+                    "out_no_routes": random.randint(0, 1),
+                    "reasm_timeout": 0,
+                    "reasm_reqds": random.randint(0, 1),
+                    "reasm_oks": random.randint(0, 1),
+                    "reasm_fails": random.randint(0, 1),
+                    "frag_oks": random.randint(0, 1),
+                    "frag_fails": random.randint(0, 1),
+                    "frag_creates": random.randint(0, 1),
+                    "out_transmits": random.randint(5, 25),
+                }
+                icmp_snmp = {
+                    "in_msgs": random.randint(0, 10),
+                    "out_msgs": random.randint(0, 10),
+                    "in_errors": random.randint(0, 1),
+                    "out_errors": random.randint(0, 1),
+                    "in_dest_unreachs": random.randint(0, 1),
+                    "out_dest_unreachs": random.randint(0, 1),
+                    "in_time_excds": random.randint(0, 1),
+                    "out_time_excds": random.randint(0, 1),
+                    "in_echo_reqs": random.randint(0, 5),
+                    "out_echo_reps": random.randint(0, 5),
+                }
+                tcp_snmp = {
+                    "active_opens": random.randint(0, 3),
+                    "passive_opens": random.randint(0, 3),
+                    "attempt_fails": random.randint(0, 1),
+                    "estab_resets": random.randint(0, 1),
+                    "curr_estab": random.randint(0, 2),
+                    "in_segs": random.randint(0, 30),
+                    "out_segs": random.randint(0, 30),
+                    "retrans_segs": random.randint(0, 5),
+                    "in_errs": random.randint(0, 1),
+                    "out_rsts": random.randint(0, 1),
+                    "in_csum_errors": random.randint(0, 1),
+                }
+                udp_snmp = {
+                    "in_datagrams": random.randint(0, 10),
+                    "no_ports": random.randint(0, 2),
+                    "in_errors": random.randint(0, 1),
+                    "out_datagrams": random.randint(0, 10),
+                    "rcvbuf_errors": random.randint(0, 1),
+                    "sndbuf_errors": random.randint(0, 1),
+                    "in_csum_errors": random.randint(0, 1),
+                    "ignored_multi": random.randint(0, 1),
+                    "mem_errors": random.randint(0, 1),
+                }
+
+                for key, val in ip_snmp.items():
+                    samples.append(_mk(f"snmp_ip_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
+                for key, val in icmp_snmp.items():
+                    samples.append(_mk(f"snmp_icmp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
+                for key, val in tcp_snmp.items():
+                    samples.append(_mk(f"snmp_tcp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
+                for key, val in udp_snmp.items():
+                    samples.append(_mk(f"snmp_udp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
 
     if layer_flags.get("application", False):
         for node in topology.nodes:
@@ -213,6 +537,7 @@ flows: Dict[str, FlowRule] = {}
 run_metrics: Dict[str, List[MetricRecord]] = {}
 metric_samples: List[MetricSample] = []
 layer_flags: Dict[MetricLayer, bool] = metric_layer_flags({})
+real_collection_default = os.getenv("REAL_COLLECTION", "0") == "1"
 
 
 def _extended_metric_definitions() -> List[MetricDefinition]:
@@ -246,6 +571,61 @@ def _extended_metric_definitions() -> List[MetricDefinition]:
         MetricDefinition(name="tcp_rtt_ms", description="TCP RTT", unit="ms", layer="transport"),
         MetricDefinition(name="udp_jitter_ms", description="UDP jitter", unit="ms", layer="transport"),
         MetricDefinition(name="udp_loss_pct", description="UDP loss", unit="%", layer="transport"),
+        MetricDefinition(name="ss_sockets_total", description="Total sockets from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="ss_tcp_states", description="TCP states from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="ss_udp_sockets_total", description="UDP sockets from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="ss_tcp_sockets_total", description="TCP sockets from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="ss_raw_sockets_total", description="RAW sockets from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="ss_inet_sockets_total", description="INET sockets from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="ss_frag_sockets_total", description="FRAG sockets from ss -s", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_in_receives", description="IP InReceives", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_in_hdr_errors", description="IP InHdrErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_in_addr_errors", description="IP InAddrErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_forw_datagrams", description="IP ForwDatagrams", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_in_unknown_protos", description="IP InUnknownProtos", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_in_discards", description="IP InDiscards", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_in_delivers", description="IP InDelivers", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_out_requests", description="IP OutRequests", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_out_discards", description="IP OutDiscards", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_out_no_routes", description="IP OutNoRoutes", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_reasm_timeout", description="IP ReasmTimeout", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_reasm_reqds", description="IP ReasmReqds", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_reasm_oks", description="IP ReasmOKs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_reasm_fails", description="IP ReasmFails", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_frag_oks", description="IP FragOKs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_frag_fails", description="IP FragFails", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_frag_creates", description="IP FragCreates", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_ip_out_transmits", description="IP OutTransmits", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_in_msgs", description="ICMP InMsgs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_out_msgs", description="ICMP OutMsgs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_in_errors", description="ICMP InErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_out_errors", description="ICMP OutErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_in_dest_unreachs", description="ICMP InDestUnreachs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_out_dest_unreachs", description="ICMP OutDestUnreachs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_in_time_excds", description="ICMP InTimeExcds", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_out_time_excds", description="ICMP OutTimeExcds", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_in_echo_reqs", description="ICMP InEchos", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_icmp_out_echo_reps", description="ICMP OutEchoReps", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_active_opens", description="TCP ActiveOpens", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_passive_opens", description="TCP PassiveOpens", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_attempt_fails", description="TCP AttemptFails", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_estab_resets", description="TCP EstabResets", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_curr_estab", description="TCP CurrEstab", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_in_segs", description="TCP InSegs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_out_segs", description="TCP OutSegs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_retrans_segs", description="TCP RetransSegs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_in_errs", description="TCP InErrs", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_out_rsts", description="TCP OutRsts", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_tcp_in_csum_errors", description="TCP InCsumErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_in_datagrams", description="UDP InDatagrams", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_no_ports", description="UDP NoPorts", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_in_errors", description="UDP InErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_out_datagrams", description="UDP OutDatagrams", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_rcvbuf_errors", description="UDP RcvbufErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_sndbuf_errors", description="UDP SndbufErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_in_csum_errors", description="UDP InCsumErrors", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_ignored_multi", description="UDP IgnoredMulti", unit="count", layer="transport"),
+        MetricDefinition(name="snmp_udp_mem_errors", description="UDP MemErrors", unit="count", layer="transport"),
         # Application
         MetricDefinition(name="http_latency_ms", description="HTTP latency", unit="ms", layer="application"),
         MetricDefinition(name="http_success_pct", description="HTTP success", unit="%", layer="application"),
@@ -527,9 +907,10 @@ async def export_metrics(layer: MetricLayer | None = None) -> Response:
 
 
 @app.post("/metrics/collect", response_model=Dict[str, int], dependencies=[Depends(require_api_key)])
-async def collect_metrics() -> Dict[str, int]:
+async def collect_metrics(mode: str = "synthetic") -> Dict[str, int]:
     topology = next(iter(topologies.values()), None)
-    samples = _collect_synthetic_full(topology)
+    use_real = mode == "real" or (real_collection_default and mode != "synthetic")
+    samples = _collect_real(topology) if use_real else _collect_synthetic_full(topology)
     metric_samples.extend(samples)
     _write_samples_to_raw(samples)
-    return {"collected": len(samples)}
+    return {"collected": len(samples), "mode": "real" if use_real else "synthetic"}

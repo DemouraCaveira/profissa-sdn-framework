@@ -62,3 +62,480 @@ INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
 INFO:     Finished server process [10830]
+INFO:     Started server process [18557]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:40234 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40234 - "POST /metrics/collect?mode=real HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:36136 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36148 - "POST /metrics/collect?mode=real HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:49338 - "GET /topologies HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40492 - "GET /flows HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:40500 - "GET /metrics/definitions HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:52008 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35382 - "GET /metrics/export?layer=physical HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35396 - "GET /metrics/export?layer=link HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40112 - "GET /metrics/export?layer=network HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40122 - "GET /metrics/export?layer=transport HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43332 - "GET /metrics/export?layer=application HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43332 - "GET /metrics/export?layer=control HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43332 - "GET /metrics/export?layer=dataplane HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18557]
+INFO:     Started server process [20829]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:42152 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42152 - "POST /metrics/collect?mode=real HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:42166 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33072 - "POST /metrics/collect?mode=real HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:33078 - "GET /topologies HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59290 - "GET /flows HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59290 - "POST /metrics/collect?mode=real HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:33570 - "GET /metrics/definitions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33964 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58602 - "GET /metrics/export?layer=physical HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58616 - "GET /metrics/export?layer=link HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58616 - "GET /metrics/export?layer=network HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 399, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 327, in app
+    content = await serialize_response(
+  File "/home/jon/profissa-sdn-framework/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 1 validation errors:
+  {'type': 'int_parsing', 'loc': ('response', 'mode'), 'msg': 'Input should be a valid integer, unable to parse string as an integer', 'input': 'real'}
+
+INFO:     127.0.0.1:58616 - "GET /metrics/export?layer=transport HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45822 - "GET /metrics/export?layer=application HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32854 - "GET /metrics/export?layer=control HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32854 - "GET /metrics/export?layer=dataplane HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [20829]
