@@ -13,12 +13,13 @@ Plataforma modular e programável para orquestrar e monitorar experimentos em Re
 
 ## Estrutura de pastas
 - `platform/backend/` – FastAPI com SSE, coleta real/sintética, ingestão/exportação de métricas.
-- `platform/frontend/` – Vite + React com páginas Dashboard, Topologia, Monitor, Lab e Histórico.
+- `platform/frontend/` – Vite + React com páginas Dashboard, Topologia, Monitor, Lab, Histórico, Configurações e Experimentos.
 - `platform/infra/` – scripts/manifests de infraestrutura (Docker Compose, etc.).
 - `platform/docs/` – documentacao tecnica e diagramas.
 - `platform/experiments/` – exemplos e templates de experimentos.
 - `gr-netmon/` – blocos GNU Radio/netmon usados para cenarios SDR/SDN.
 - `raw/` – dados brutos exportados (CSV/JSON de monitoramento).
+- `temp/` – artefatos persistidos (configs, experimentos e execuções).
 - `tests/` – suite de testes pytest.
 - `monitor.py` / `monitor copy.py` – utilitarios de monitoramento e probes (ping/TCP/UDP, opcional throughput/captura).
 - `requirements.txt` / `requirements-dev.txt` – dependencias runtime e de desenvolvimento.
@@ -64,6 +65,10 @@ npm run dev   # desenvolvimento
 npm run build # producao
 ```
 
+### Variáveis do frontend
+- `VITE_API_BASE` (ex.: `http://localhost:8000`)
+- `VITE_API_KEY` (necessário para ações de escrita, se o backend estiver com API key habilitada)
+
 ## API RESTful (backend)
 - Config central: `platform/experiments/platform_config.json` (ou altere via `PLATFORM_CONFIG_PATH`). Contém ambiente, controladores, nós/links, perfis de tráfego, plano de métricas, fluxos e flags por camada (`metric_layers`).
 - Rodar o servidor:
@@ -77,6 +82,9 @@ PYTHONPATH=$(pwd) .venv/bin/python -m uvicorn platform.backend.api.app:app --hos
 - Endpoints principais (sem prefixo `/api`):
 	- `GET /health`
 	- Topologias: `POST/GET/PUT/DELETE /topologies`, `GET /topologies/{id}`
+	- Configurações (multi-ambiente):
+		- `GET /configs`, `GET /configs/active`, `GET /configs/{id}`
+		- `POST /configs` (cria; suporta `set_active`), `POST /configs/{id}/activate`, `DELETE /configs/{id}`
 	- Experimentos: `POST/GET/PUT/DELETE /experiments`, `GET /experiments/{id}`, `POST /experiments/{id}/run`, `GET /experiments/{id}/runs`, `GET /runs/{run_id}`
 	- Métricas (novas rotas):
 		- `GET /metrics/definitions`
@@ -84,7 +92,7 @@ PYTHONPATH=$(pwd) .venv/bin/python -m uvicorn platform.backend.api.app:app --hos
 		- `POST /metrics/query` (filtros por `metric_names`, `nodes`, `layers`, `start_time`, `end_time`, `limit`)
 		- `GET /metrics/latest` (snapshot mais recente por métrica/nó/camada)
 		- `GET /metrics/export?layer=network` (exporta texto JSONL do arquivo bruto por camada)
-		- `POST /metrics/collect` (coletor mínimo sintético; requer API key se configurada)
+		- `POST /metrics/collect` (coleta sob demanda; `mode=synthetic|real`; requer API key se configurada)
 		- `GET /stream/events` (SSE com topologia, runs e últimas ~200 métricas)
 	- Fluxos: `POST /flows`, `GET /flows`, `DELETE /flows/{id}`
 - Teste rápido (curl):
@@ -134,29 +142,36 @@ Pipeline GitHub Actions em `.github/workflows/ci.yml`: instala deps, roda ruff c
 - Próximos passos: visualização gráfica da topologia, CRUD completo via UI, drag-and-drop no Lab, integração com TSDB, controles start/stop de experimento.
 
 ## Camadas de métricas (referência rápida)
-- `physical`: contadores de interface (erros, descartes, potencia/temperatura quando disponível).
-- `link`: utilização de enlace, perda, jitter e ocupação de filas.
-- `network`: latência ICMP, perda, ARP/ND, reachability.
-- `transport`: throughput ativo, retransmissões TCP, jitter/perda UDP.
-- `application`: tempo de resposta HTTP/DNS/TLS, disponibilidade de serviço.
-- `control`: saúde do controlador, latência do plano de controle, sessões OpenFlow.
-- `dataplane`: contadores de flow/table OpenFlow e estatísticas de porta.
 
-Arquivos brutos são gravados em `raw/metrics_{layer}.jsonl`. Ative/desative coleta por camada via `metric_layers` no `platform_config.json` (ex.: `"link": false` para desligar L2).
+OSI (L0–L7) + planos SDN:
+- `service` (L0): SLIs/SLOs, disponibilidade E2E.
+- `physical` (L1): contadores de interface/PHY (erros, descartes, etc.).
+- `link` (L2): utilização de enlace/filas, drops, jitter/loss no nível de link.
+- `network` (L3): latência ICMP, perda, reachability.
+- `transport` (L4): TCP/UDP (throughput, retransmissões, RTT/jitter).
+- `session` (L5): sessões/estados (quando disponível).
+- `presentation` (L6): TLS/encoding (handshake/erros; quando disponível).
+- `application` (L7): HTTP/DNS/app (latência, erros, disponibilidade).
+- `control`: plano de controle SDN (controlador/OpenFlow).
+- `dataplane`: plano de dados SDN (flows/tabelas/counters).
+
+Arquivos brutos são gravados em `raw/metrics_{layer}.jsonl`. Artefatos de experimentos/configs ficam em `temp/`.
 
 ## Uso da UI
 - Dashboard: visão geral inicial.
 - Topologia: mapa lógico (hosts, switches, controlador) e lista de links.
 - Monitor: KPIs ao vivo, tabela de eventos, filtros por camada e por nó, horários em Brasília, seção de saúde do stream.
 - Lab: biblioteca de blocos por camada (Ping, TCP, UDP, HTTP, DNS, Controle, Flows, Link, Interface física); adicione ao workflow e veja métricas ao vivo filtradas pelo bloco; alimentado por SSE.
-- Histórico: placeholder para execuções passadas.
+- Experimentos: biblioteca de templates (30+), execução em 1 clique ("Usar + executar") e modo manual para cenários específicos; resultados na tela e export JSON.
+- Configurações: gerencia múltiplos ambientes (configs salvas) e define a config ativa usada pela coleta.
+- Histórico: execuções passadas e artefatos persistidos.
 
 ## Coleta, stream e backfill
 - `REAL_COLLECTION=1` ativa coleta real no loop automático; caso contrário, usa sintética.
 - `AUTO_COLLECT_INTERVAL` (segundos) controla a frequência da auto-coleta.
 - O backend restaura métricas recentes dos arquivos `raw/metrics_{layer}.jsonl` ao iniciar para que a UI não fique zerada.
 - SSE (`/stream/events`) envia topologia, runs e ~200 métricas recentes.
-- Se quiser forçar coleta manual: `curl -X POST "http://localhost:8000/metrics/collect?mode=real"`.
+- Se quiser forçar coleta manual: `curl -X POST "http://localhost:8000/metrics/collect?mode=real" -H "X-API-Key: $API_KEY"`.
 
 ## Licenca
 MIT License. Veja `LICENSE`.

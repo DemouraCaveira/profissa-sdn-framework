@@ -1,0 +1,268 @@
+% Auto-gerado a partir de temp/metric_catalog_rows_clean.tex (total=267)
+\texttt{e2e\_path\_availability\_pct} & service & \% & ratio & e2e & src, dst, service & Disponibilidade do caminho (sucesso de probes sintéticos) \\
+\texttt{e2e\_latency\_ms\_p50} & service & ms & summary & e2e & src, dst, service & Latência E2E p50 \\
+\texttt{e2e\_latency\_ms\_p95} & service & ms & summary & e2e & src, dst, service & Latência E2E p95 \\
+\texttt{e2e\_latency\_ms\_p99} & service & ms & summary & e2e & src, dst, service & Latência E2E p99 \\
+\texttt{e2e\_jitter\_ms\_p95} & service & ms & summary & e2e & src, dst, service & Jitter E2E p95 \\
+\texttt{e2e\_loss\_pct} & service & \% & ratio & e2e & src, dst, service & Perda E2E \\
+\texttt{path\_changes\_total} & service & count & counter & e2e & src, dst, service & Mudanças de rota (path changes / ECMP hash changes) \\
+\texttt{mttd\_sec} & service & s & derived & reliability & service, incident\_id & Tempo médio de detecção (MTTD) \\
+\texttt{mttr\_sec} & service & s & derived & reliability & service, incident\_id & Tempo médio de restauração (MTTR) \\
+\texttt{worst\_path\_score} & service &  & derived & e2e & src, dst, service & Score derivado para rankear piores caminhos (loss/latency/jitter) \\
+\texttt{if\_link\_up} & physical & bool & gauge & health & node, interface & Status do link (up=1/down=0) \\
+\texttt{if\_flaps\_total} & physical & count & counter & health & node, interface & Contagem de flaps (up/down) \\
+\texttt{if\_speed\_mbps} & physical & Mbps & gauge & capacity & node, interface & Velocidade negociada \\
+\texttt{if\_duplex\_mismatch} & physical & bool & gauge & health & node, interface & Mismatch de duplex (1=sim) \\
+\texttt{if\_in\_bps} & physical & bps & gauge & capacity & node, interface & Tráfego de entrada (bits/s) \\
+\texttt{if\_out\_bps} & physical & bps & gauge & capacity & node, interface & Tráfego de saída (bits/s) \\
+\texttt{if\_in\_bps\_p95} & physical & bps & derived & capacity & node, interface & Utilização de entrada p95 (bits/s) \\
+\texttt{if\_in\_bps\_p99} & physical & bps & derived & capacity & node, interface & Utilização de entrada p99 (bits/s) \\
+\texttt{if\_out\_bps\_p95} & physical & bps & derived & capacity & node, interface & Utilização de saída p95 (bits/s) \\
+\texttt{if\_out\_bps\_p99} & physical & bps & derived & capacity & node, interface & Utilização de saída p99 (bits/s) \\
+\texttt{if\_errors} & physical & count & counter & errors & node, interface & Interface errors \\
+\texttt{if\_discards} & physical & count & counter & errors & node, interface & Interface discards \\
+\texttt{if\_crc\_errors} & physical & count & counter & errors & node, interface & CRC errors \\
+\texttt{if\_fcs\_errors\_total} & physical & count & counter & errors & node, interface & FCS errors \\
+\texttt{if\_alignment\_errors\_total} & physical & count & counter & errors & node, interface & Alignment errors \\
+\texttt{if\_symbol\_errors\_total} & physical & count & counter & errors & node, interface & Symbol errors \\
+\texttt{if\_physical\_drops\_total} & physical & count & counter & errors & node, interface & Drops físicos (quando possível separar de congestionamento) \\
+\texttt{if\_optic\_rx\_dbm} & physical & dBm & gauge & health & node, interface & Optical RX power \\
+\texttt{if\_optic\_tx\_dbm} & physical & dBm & gauge & health & node, interface & Optical TX power \\
+\texttt{if\_optic\_osnr\_db} & physical & dB & gauge & health & node, interface & Optical OSNR \\
+\texttt{if\_optic\_bias\_ma} & physical & mA & gauge & health & node, interface & Optical bias current \\
+\texttt{if\_optic\_temp\_c} & physical & C & gauge & health & node, interface & Optical module temperature \\
+\texttt{if\_optic\_threshold\_violations\_total} & physical & count & counter & health & node, interface & Optical threshold violations \\
+\texttt{if\_temp\_c} & physical & C & gauge & health & node, interface & Interface temperature \\
+\texttt{if\_mtu\_effective\_bytes} & physical & bytes & gauge & health & node, interface & MTU efetivo (detecção de inconsistências) \\
+\texttt{poe\_power\_w} & physical & W & gauge & capacity & node, interface & Consumo PoE \\
+\texttt{poe\_events\_total} & physical & count & counter & health & node, interface & Eventos PoE \\
+\texttt{poe\_budget\_w} & physical & W & gauge & capacity & node & Budget PoE \\
+\texttt{mac\_table\_size} & link & count & gauge & l2 & node, vlan & Tamanho da MAC table \\
+\texttt{mac\_churn\_rate} & link & count/s & derived & l2 & node, vlan & MAC churn rate \\
+\texttt{mac\_moves\_total} & link & count & counter & l2 & node, vlan & MAC moves \\
+\texttt{stp\_root\_changes\_total} & link & count & counter & l2 & node, instance & STP root changes \\
+\texttt{stp\_topology\_changes\_total} & link & count & counter & l2 & node, instance & STP topology changes \\
+\texttt{stp\_blocked\_ports} & link & count & gauge & l2 & node & STP blocked ports \\
+\texttt{lacp\_members\_up} & link & count & gauge & l2 & node, portchannel & LACP members up \\
+\texttt{lacp\_members\_down} & link & count & gauge & l2 & node, portchannel & LACP members down \\
+\texttt{lacp\_imbalance\_pct} & link & \% & ratio & capacity & node, portchannel & LACP imbalance \\
+\texttt{lacp\_renegotiations\_total} & link & count & counter & l2 & node, portchannel & LACP renegotiations \\
+\texttt{vlan\_active\_count} & link & count & gauge & l2 & node, trunk & VLANs ativas por trunk \\
+\texttt{vlan\_allowed\_mismatch\_total} & link & count & counter & l2 & node, trunk & Inconsistência de VLANs allowed \\
+\texttt{vlan\_native\_mismatch\_total} & link & count & counter & l2 & node, trunk & Inconsistência de VLAN native \\
+\texttt{bum\_rate\_pps} & link & pps & gauge & capacity & node, vlan, type & Taxa de BUM (broadcast/multicast/unknown) \\
+\texttt{bum\_peak\_pps} & link & pps & derived & capacity & node, vlan, type & Pico de BUM \\
+\texttt{arp\_cache\_util\_pct} & link & \% & ratio & l2 & node, vrf & ARP cache utilization \\
+\texttt{arp\_miss\_rate} & link & count/s & derived & l2 & node, vrf & ARP miss rate \\
+\texttt{arp\_duplicates\_total} & link & count & counter & l2 & node, vrf & ARP duplicados \\
+\texttt{arp\_gratuitous\_spikes\_total} & link & count & counter & l2 & node, vrf & Picos de gratuitous ARP \\
+\texttt{nd\_cache\_util\_pct} & link & \% & ratio & l2 & node, vrf & ND (IPv6) cache utilization \\
+\texttt{nd\_miss\_rate} & link & count/s & derived & l2 & node, vrf & ND miss rate \\
+\texttt{nd\_duplicates\_total} & link & count & counter & l2 & node, vrf & ND duplicados \\
+\texttt{lldp\_neighbors\_expected\_pct} & link & \% & ratio & l2 & node & LLDP/CDP expected vs real \\
+\texttt{lldp\_drift\_total} & link & count & counter & l2 & node & LLDP/CDP drift events \\
+\texttt{microburst\_queue\_occupancy\_pct\_peak} & link & \% & derived & capacity & node, interface, queue & Microbursts: pico de fila/ocupação \\
+\texttt{link\_util\_pct} & link & \% & gauge & capacity & node, interface & Link utilization \\
+\texttt{link\_loss\_pct} & link & \% & ratio & errors & node, interface & Link loss \\
+\texttt{link\_jitter\_ms} & link & ms & gauge & performance & node, interface & Link jitter \\
+\texttt{queue\_occupancy\_pct} & link & \% & gauge & capacity & node, interface, queue, qos\_class & Queue occupancy \\
+\texttt{queue\_drops} & link & count & counter & errors & node, interface, queue, qos\_class & Queue drops \\
+\texttt{ecn\_marked\_pct} & link & \% & ratio & capacity & node, interface, qos\_class & ECN marked traffic \\
+\texttt{prefix\_reachability\_pct} & network & \% & ratio & l3 & prefix, vrf, tenant, src, dst & Reachability por prefixo \\
+\texttt{routing\_convergence\_ms} & network & ms & derived & l3 & protocol, vrf & Tempo de convergência de roteamento \\
+\texttt{route\_count} & network & count & gauge & l3 & protocol, afi, safi, vrf & Route count (total/por AFI/SAFI/VRF) \\
+\texttt{route\_churn\_rate} & network & count/s & derived & l3 & protocol, vrf & Route churn rate \\
+\texttt{bgp\_session\_up} & network & bool & gauge & routing & peer, vrf, afi, safi & BGP session up (1/0) \\
+\texttt{bgp\_session\_flaps\_total} & network & count & counter & routing & peer, vrf & BGP session flaps \\
+\texttt{bgp\_updates\_total} & network & count & counter & routing & peer, vrf, afi, safi & BGP updates \\
+\texttt{bgp\_withdraws\_total} & network & count & counter & routing & peer, vrf, afi, safi & BGP withdraws \\
+\texttt{bgp\_prefix\_limit\_hits\_total} & network & count & counter & routing & peer, vrf & BGP prefix limit hits \\
+\texttt{bgp\_as\_path\_changes\_total} & network & count & counter & routing & prefix, peer, vrf & BGP AS-path changes \\
+\texttt{ospf\_session\_up} & network & bool & gauge & routing & neighbor, area, vrf & OSPF adjacency up (1/0) \\
+\texttt{ospf\_flaps\_total} & network & count & counter & routing & neighbor, area, vrf & OSPF adjacency flaps \\
+\texttt{isis\_session\_up} & network & bool & gauge & routing & neighbor, level, vrf & IS-IS adjacency up (1/0) \\
+\texttt{isis\_flaps\_total} & network & count & counter & routing & neighbor, level, vrf & IS-IS adjacency flaps \\
+\texttt{icmp\_unreachable\_total} & network & count & counter & errors & src, dst, code & ICMP unreachable \\
+\texttt{icmp\_frag\_needed\_total} & network & count & counter & errors & src, dst & ICMP frag needed (PMTUD) \\
+\texttt{ip\_fragments\_total} & network & count & counter & errors & src, dst & IP fragments \\
+\texttt{ip\_fragment\_drops\_total} & network & count & counter & errors & node & Drops por MTU/fragmentação \\
+\texttt{dscp\_packets\_total} & network & count & counter & qos & dscp, node, interface & Distribuição DSCP (contagem por classe) \\
+\texttt{dscp\_remark\_events\_total} & network & count & counter & qos & from, to, policy & Eventos de remarking DSCP \\
+\texttt{acl\_drops\_total} & network & count & counter & security & rule\_id, node & ACL/Policy drops por regra \\
+\texttt{tunnel\_up} & network & bool & gauge & overlay & tunnel, type, vrf & Tunnel up/down \\
+\texttt{tunnel\_keepalive\_loss\_total} & network & count & counter & overlay & tunnel, type, vrf & Tunnel keepalive loss \\
+\texttt{tunnel\_encap\_errors\_total} & network & count & counter & overlay & tunnel, type & Encapsulation errors \\
+\texttt{tunnel\_decap\_errors\_total} & network & count & counter & overlay & tunnel, type & Decapsulation errors \\
+\texttt{vxlan\_vni\_mapping\_ok} & network & bool & gauge & overlay & vni, vrf & VNI/VRF mapping health \\
+\texttt{latency\_ms} & network & ms & gauge & performance & src, dst & Latency \\
+\texttt{packet\_loss\_pct} & network & \% & ratio & performance & src, dst & Packet loss \\
+\texttt{jitter\_ms} & network & ms & gauge & performance & src, dst & Jitter \\
+\texttt{ttl\_expired} & network & count & counter & errors & src, dst & TTL expired events \\
+\texttt{routes\_count} & network & count & gauge & routing & node, vrf & Route entries \\
+\texttt{arp\_entries} & network & count & gauge & l3 & node, vrf & ARP/ND cache entries \\
+\texttt{tcp\_retrans\_pct} & transport & \% & ratio & transport & src, dst, flow & TCP retransmissions (\%) \\
+\texttt{tcp\_retrans\_total} & transport & count & counter & transport & src, dst, flow & TCP retransmissions (count) \\
+\texttt{tcp\_fast\_retrans\_total} & transport & count & counter & transport & src, dst, flow & TCP fast retransmit \\
+\texttt{tcp\_dup\_acks\_total} & transport & count & counter & transport & src, dst, flow & TCP duplicate ACKs \\
+\texttt{tcp\_handshake\_success\_pct} & transport & \% & ratio & transport & dst, port & TCP handshake success rate \\
+\texttt{tcp\_handshake\_latency\_ms} & transport & ms & gauge & transport & dst, port & TCP handshake latency \\
+\texttt{tcp\_resets\_total} & transport & count & counter & transport & src, dst, flow & Resets (RST) \\
+\texttt{tcp\_out\_of\_order\_total} & transport & count & counter & transport & src, dst, flow & TCP out-of-order \\
+\texttt{tcp\_zero\_window\_total} & transport & count & counter & transport & src, dst, flow & TCP zero window \\
+\texttt{tcp\_window\_scaling\_anomalies\_total} & transport & count & counter & transport & src, dst, flow & TCP window scaling anomalies \\
+\texttt{udp\_loss\_pct} & transport & \% & ratio & transport & src, dst, flow & UDP loss \\
+\texttt{udp\_jitter\_ms} & transport & ms & gauge & transport & src, dst, flow & UDP jitter \\
+\texttt{nat\_table\_util\_pct} & transport & \% & ratio & nat & node, nat\_pool & NAT table utilization \\
+\texttt{nat\_port\_exhaustion\_events\_total} & transport & count & counter & nat & node, nat\_pool & NAT port exhaustion events \\
+\texttt{nat\_translation\_failures\_total} & transport & count & counter & nat & node & NAT translation failures \\
+\texttt{lb\_healthcheck\_success\_pct} & transport & \% & ratio & lb & lb, pool, backend & Load balancer health checks success \\
+\texttt{lb\_connection\_rate} & transport & count/s & gauge & lb & lb, vip & Load balancer connection rate \\
+\texttt{lb\_concurrent\_connections} & transport & count & gauge & lb & lb, vip & Load balancer concurrent connections \\
+\texttt{lb\_backend\_connect\_errors\_total} & transport & count & counter & lb & lb, backend & LB backend connect errors \\
+\texttt{lb\_backend\_timeouts\_total} & transport & count & counter & lb & lb, backend & LB backend timeouts \\
+\texttt{throughput\_mbps} & transport & Mbps & gauge & performance & src, dst & Throughput \\
+\texttt{tcp\_rtt\_ms} & transport & ms & gauge & transport & src, dst, flow & TCP RTT \\
+\texttt{ss\_sockets\_total} & transport & count & gauge & host & node & Total sockets from ss -s \\
+\texttt{ss\_tcp\_states} & transport & count & gauge & host & node & TCP states from ss -s \\
+\texttt{ss\_udp\_sockets\_total} & transport & count & gauge & host & node & UDP sockets from ss -s \\
+\texttt{ss\_tcp\_sockets\_total} & transport & count & gauge & host & node & TCP sockets from ss -s \\
+\texttt{ss\_raw\_sockets\_total} & transport & count & gauge & host & node & RAW sockets from ss -s \\
+\texttt{ss\_inet\_sockets\_total} & transport & count & gauge & host & node & INET sockets from ss -s \\
+\texttt{ss\_frag\_sockets\_total} & transport & count & gauge & host & node & FRAG sockets from ss -s \\
+\texttt{snmp\_ip\_in\_receives} & transport & count & counter & snmp & node & IP InReceives \\
+\texttt{snmp\_ip\_in\_hdr\_errors} & transport & count & counter & snmp & node & IP InHdrErrors \\
+\texttt{snmp\_ip\_in\_addr\_errors} & transport & count & counter & snmp & node & IP InAddrErrors \\
+\texttt{snmp\_ip\_forw\_datagrams} & transport & count & counter & snmp & node & IP ForwDatagrams \\
+\texttt{snmp\_ip\_in\_unknown\_protos} & transport & count & counter & snmp & node & IP InUnknownProtos \\
+\texttt{snmp\_ip\_in\_discards} & transport & count & counter & snmp & node & IP InDiscards \\
+\texttt{snmp\_ip\_in\_delivers} & transport & count & counter & snmp & node & IP InDelivers \\
+\texttt{snmp\_ip\_out\_requests} & transport & count & counter & snmp & node & IP OutRequests \\
+\texttt{snmp\_ip\_out\_discards} & transport & count & counter & snmp & node & IP OutDiscards \\
+\texttt{snmp\_ip\_out\_no\_routes} & transport & count & counter & snmp & node & IP OutNoRoutes \\
+\texttt{snmp\_ip\_reasm\_timeout} & transport & count & counter & snmp & node & IP ReasmTimeout \\
+\texttt{snmp\_ip\_reasm\_reqds} & transport & count & counter & snmp & node & IP ReasmReqds \\
+\texttt{snmp\_ip\_reasm\_oks} & transport & count & counter & snmp & node & IP ReasmOKs \\
+\texttt{snmp\_ip\_reasm\_fails} & transport & count & counter & snmp & node & IP ReasmFails \\
+\texttt{snmp\_ip\_frag\_oks} & transport & count & counter & snmp & node & IP FragOKs \\
+\texttt{snmp\_ip\_frag\_fails} & transport & count & counter & snmp & node & IP FragFails \\
+\texttt{snmp\_ip\_frag\_creates} & transport & count & counter & snmp & node & IP FragCreates \\
+\texttt{snmp\_ip\_out\_transmits} & transport & count & counter & snmp & node & IP OutTransmits \\
+\texttt{snmp\_icmp\_in\_msgs} & transport & count & counter & snmp & node & ICMP InMsgs \\
+\texttt{snmp\_icmp\_out\_msgs} & transport & count & counter & snmp & node & ICMP OutMsgs \\
+\texttt{snmp\_icmp\_in\_errors} & transport & count & counter & snmp & node & ICMP InErrors \\
+\texttt{snmp\_icmp\_out\_errors} & transport & count & counter & snmp & node & ICMP OutErrors \\
+\texttt{snmp\_icmp\_in\_dest\_unreachs} & transport & count & counter & snmp & node & ICMP InDestUnreachs \\
+\texttt{snmp\_icmp\_out\_dest\_unreachs} & transport & count & counter & snmp & node & ICMP OutDestUnreachs \\
+\texttt{snmp\_icmp\_in\_time\_excds} & transport & count & counter & snmp & node & ICMP InTimeExcds \\
+\texttt{snmp\_icmp\_out\_time\_excds} & transport & count & counter & snmp & node & ICMP OutTimeExcds \\
+\texttt{snmp\_icmp\_in\_echo\_reqs} & transport & count & counter & snmp & node & ICMP InEchos \\
+\texttt{snmp\_icmp\_out\_echo\_reps} & transport & count & counter & snmp & node & ICMP OutEchoReps \\
+\texttt{snmp\_tcp\_active\_opens} & transport & count & counter & snmp & node & TCP ActiveOpens \\
+\texttt{snmp\_tcp\_passive\_opens} & transport & count & counter & snmp & node & TCP PassiveOpens \\
+\texttt{snmp\_tcp\_attempt\_fails} & transport & count & counter & snmp & node & TCP AttemptFails \\
+\texttt{snmp\_tcp\_estab\_resets} & transport & count & counter & snmp & node & TCP EstabResets \\
+\texttt{snmp\_tcp\_curr\_estab} & transport & count & gauge & snmp & node & TCP CurrEstab \\
+\texttt{snmp\_tcp\_in\_segs} & transport & count & counter & snmp & node & TCP InSegs \\
+\texttt{snmp\_tcp\_out\_segs} & transport & count & counter & snmp & node & TCP OutSegs \\
+\texttt{snmp\_tcp\_retrans\_segs} & transport & count & counter & snmp & node & TCP RetransSegs \\
+\texttt{snmp\_tcp\_in\_errs} & transport & count & counter & snmp & node & TCP InErrs \\
+\texttt{snmp\_tcp\_out\_rsts} & transport & count & counter & snmp & node & TCP OutRsts \\
+\texttt{snmp\_tcp\_in\_csum\_errors} & transport & count & counter & snmp & node & TCP InCsumErrors \\
+\texttt{snmp\_udp\_in\_datagrams} & transport & count & counter & snmp & node & UDP InDatagrams \\
+\texttt{snmp\_udp\_no\_ports} & transport & count & counter & snmp & node & UDP NoPorts \\
+\texttt{snmp\_udp\_in\_errors} & transport & count & counter & snmp & node & UDP InErrors \\
+\texttt{snmp\_udp\_out\_datagrams} & transport & count & counter & snmp & node & UDP OutDatagrams \\
+\texttt{snmp\_udp\_rcvbuf\_errors} & transport & count & counter & snmp & node & UDP RcvbufErrors \\
+\texttt{snmp\_udp\_sndbuf\_errors} & transport & count & counter & snmp & node & UDP SndbufErrors \\
+\texttt{snmp\_udp\_in\_csum\_errors} & transport & count & counter & snmp & node & UDP InCsumErrors \\
+\texttt{snmp\_udp\_ignored\_multi} & transport & count & counter & snmp & node & UDP IgnoredMulti \\
+\texttt{snmp\_udp\_mem\_errors} & transport & count & counter & snmp & node & UDP MemErrors \\
+\texttt{tls\_session\_resumption\_pct} & session & \% & ratio & tls & sni, service & TLS session resumption rate \\
+\texttt{tls\_renegotiations\_total} & session & count & counter & tls & sni, service & TLS renegotiations \\
+\texttt{tls\_handshake\_failures\_total} & session & count & counter & tls & sni, cert & TLS handshake failures (por SNI/cert) \\
+\texttt{vpn\_sessions\_active} & session & count & gauge & vpn & profile, tenant & VPN sessions active \\
+\texttt{vpn\_session\_establish\_rate} & session & count/s & gauge & vpn & profile, tenant & VPN session establish rate \\
+\texttt{vpn\_session\_failures\_total} & session & count & counter & vpn & profile, tenant, reason & VPN session failures \\
+\texttt{aaa\_auth\_failures\_total} & session & count & counter & aaa & realm, reason & Falhas de autenticação AAA \\
+\texttt{session\_idle\_timeouts\_total} & session & count & counter & session & policy, profile & Idle/timeout expirations \\
+\texttt{fw\_state\_table\_util\_pct} & session & \% & ratio & security & node & Firewall state table usage \\
+\texttt{fw\_state\_table\_drops\_total} & session & count & counter & security & node & Drops por overflow de state table \\
+\texttt{tls\_handshake\_latency\_ms\_p95} & presentation & ms & summary & tls & sni, service & TLS handshake latency p95 \\
+\texttt{tls\_handshake\_latency\_ms\_p99} & presentation & ms & summary & tls & sni, service & TLS handshake latency p99 \\
+\texttt{tls\_version\_connections\_total} & presentation & count & counter & tls & version, sni & Distribuição de versões TLS \\
+\texttt{tls\_cipher\_connections\_total} & presentation & count & counter & tls & cipher, sni & Distribuição de ciphers \\
+\texttt{cert\_expiry\_days} & presentation & days & gauge & tls & cert, sni & Certificados: dias até expiração \\
+\texttt{cert\_validation\_errors\_total} & presentation & count & counter & tls & cert, sni & Certificados: validation errors \\
+\texttt{cert\_chain\_errors\_total} & presentation & count & counter & tls & cert, sni & Certificados: chain errors \\
+\texttt{sni\_mismatch\_total} & presentation & count & counter & tls & sni, cert & SNI mismatch \\
+\texttt{compression\_errors\_total} & presentation & count & counter & encoding & algo & Erro de compressão (gzip/br) \\
+\texttt{encoding\_errors\_total} & presentation & count & counter & encoding & codec & Erro de encoding/codec \\
+\texttt{http2\_negotiation\_success\_pct} & presentation & \% & ratio & http & service & HTTP/2 negotiation success \\
+\texttt{http3\_quic\_negotiation\_success\_pct} & presentation & \% & ratio & http & service & HTTP/3 (QUIC) negotiation success \\
+\texttt{quic\_fallback\_rate\_pct} & presentation & \% & ratio & http & service & HTTP/3 fallback rate \\
+\texttt{app\_rps} & application & rps & gauge & app & service, route & Taxa de requisições (RPS/QPS) \\
+\texttt{app\_latency\_ms\_p95} & application & ms & summary & app & service, route & Latência p95 (app) \\
+\texttt{app\_latency\_ms\_p99} & application & ms & summary & app & service, route & Latência p99 (app) \\
+\texttt{http\_responses\_total} & application & count & counter & http & service, route, code & Códigos HTTP (por classe/rota) \\
+\texttt{http\_errors\_total} & application & count & counter & http & service, route, code & HTTP errors (4xx/5xx) \\
+\texttt{dns\_qps} & application & qps & gauge & dns & server, zone & DNS QPS \\
+\texttt{dns\_latency\_ms\_p95} & application & ms & summary & dns & server, zone & DNS latency p95 \\
+\texttt{dns\_servfail\_total} & application & count & counter & dns & server, zone & DNS SERVFAIL \\
+\texttt{dns\_nxdomain\_total} & application & count & counter & dns & server, zone & DNS NXDOMAIN \\
+\texttt{dns\_cache\_hit\_ratio\_pct} & application & \% & ratio & dns & server & DNS cache hit ratio \\
+\texttt{dhcp\_success\_pct} & application & \% & ratio & dhcp & scope, server & DHCP success rate (DORA) \\
+\texttt{dhcp\_dora\_latency\_ms} & application & ms & gauge & dhcp & scope, server & DHCP DORA latency \\
+\texttt{dhcp\_pool\_util\_pct} & application & \% & ratio & dhcp & scope & DHCP pool utilization \\
+\texttt{dhcp\_conflicts\_total} & application & count & counter & dhcp & scope & DHCP conflicts \\
+\texttt{ntp\_offset\_ms} & application & ms & gauge & ntp & server & NTP offset/drift \\
+\texttt{ntp\_drift\_ppm} & application & ppm & gauge & ntp & server & NTP drift \\
+\texttt{ntp\_stratum\_changes\_total} & application & count & counter & ntp & server & NTP stratum changes \\
+\texttt{ntp\_reachability\_pct} & application & \% & ratio & ntp & server & NTP reachability \\
+\texttt{http\_ttfb\_ms} & application & ms & gauge & http & service, route & HTTP time-to-first-byte \\
+\texttt{http\_ttlb\_ms} & application & ms & gauge & http & service, route & HTTP time-to-last-byte \\
+\texttt{http\_payload\_bytes\_p95} & application & bytes & summary & http & service, route & HTTP payload size p95 \\
+\texttt{grpc\_status\_total} & application & count & counter & grpc & service, method, status & gRPC status codes \\
+\texttt{grpc\_deadlines\_exceeded\_total} & application & count & counter & grpc & service, method & gRPC deadlines exceeded \\
+\texttt{db\_connection\_errors\_total} & application & count & counter & db & db, service & Database connection errors (alto nível) \\
+\texttt{db\_query\_latency\_ms\_p95} & application & ms & summary & db & db, service & Database query latency p95 (alto nível) \\
+\texttt{controller\_latency\_ms} & control & ms & gauge & control & controller, endpoint & Controller latency \\
+\texttt{controller\_conn\_ok} & control & bool & gauge & control & controller & Controller connectivity \\
+\texttt{of\_channel\_reconnects} & control & count & counter & control & switch & OpenFlow reconnects \\
+\texttt{flows\_installed} & control & count & counter & control & controller, switch & Flows installed \\
+\texttt{flows\_removed} & control & count & counter & control & controller, switch & Flows removed \\
+\texttt{cpu\_util\_pct} & control & \% & gauge & host & node & CPU utilization \\
+\texttt{mem\_util\_pct} & control & \% & gauge & host & node & Memory utilization \\
+\texttt{openflow\_flow\_packets} & dataplane & packets & counter & dataplane & switch, table, flow & Flow packets \\
+\texttt{openflow\_flow\_bytes} & dataplane & bytes & counter & dataplane & switch, table, flow & Flow bytes \\
+\texttt{table\_hits} & dataplane & count & counter & dataplane & switch, table & Table hits \\
+\texttt{table\_misses} & dataplane & count & counter & dataplane & switch, table & Table misses \\
+\texttt{port\_rx\_pkts} & dataplane & packets & counter & dataplane & switch, port & Port RX packets \\
+\texttt{port\_tx\_pkts} & dataplane & packets & counter & dataplane & switch, port & Port TX packets \\
+\texttt{port\_rx\_drops} & dataplane & packets & counter & dataplane & switch, port & Port RX drops \\
+\texttt{port\_tx\_drops} & dataplane & packets & counter & dataplane & switch, port & Port TX drops \\
+\texttt{flow\_bytes} & dataplane & bytes & counter & dataplane & src, dst, 5tuple & Flow byte counter \\
+\texttt{flow\_packets} & dataplane & packets & counter & dataplane & src, dst, 5tuple & Flow packet counter \\
+\texttt{flow\_duration\_sec} & dataplane & s & gauge & dataplane & src, dst, 5tuple & Flow duration \\
+\texttt{interface\_util\_p95\_pct} & service & \% & derived & capacity & node, interface & Interface utilization p95 \\
+\texttt{interface\_headroom\_pct} & service & \% & derived & capacity & node, interface & Interface headroom \\
+\texttt{queue\_depth} & service & count & gauge & capacity & node, interface, queue, qos\_class & Queue depth \\
+\texttt{buffer\_occupancy\_pct} & service & \% & gauge & capacity & node, asic & Buffer occupancy \\
+\texttt{ecn\_marks\_total} & service & count & counter & capacity & node, interface, qos\_class & ECN marks \\
+\texttt{elephant\_flows\_total} & service & count & derived & capacity & node, app & Elephant flows (classificação) \\
+\texttt{mice\_flows\_total} & service & count & derived & capacity & node, app & Mice flows (classificação) \\
+\texttt{hotspot\_score} & service &  & derived & capacity & node, interface, asic & Hotspot score (links/ASICs com maior utilização/drops) \\
+\texttt{slo\_error\_budget\_remaining\_pct} & service & \% & derived & reliability & slo, service & Error budget restante do SLO \\
+\texttt{incident\_rate} & service & count/s & derived & reliability & service & Taxa de incidentes \\
+\texttt{flap\_storm\_events\_total} & service & count & counter & reliability & node, interface & Flap storms \\
+\texttt{config\_drift\_score} & service &  & derived & reliability & node & Config drift vs golden config \\
+\texttt{firewall\_denies\_total} & service & count & counter & security & policy, rule\_id, node & Firewall/IDS denies por policy \\
+\texttt{scan\_spikes\_total} & service & count & counter & security & src, dst, port & Picos de scans \\
+\texttt{ddos\_syn\_rate\_pps} & service & pps & gauge & security & dst, service & DDoS signal: SYN rate \\
+\texttt{ddos\_udp\_flood\_pps} & service & pps & gauge & security & dst, service & DDoS signal: UDP flood indicators \\
+\texttt{abnormal\_pps} & service & pps & derived & security & node, interface & PPS anormal \\
+\texttt{anomaly\_new\_asns\_total} & service & count & counter & security & asn, prefix & Anomalias: novos ASNs \\
+\texttt{anomaly\_new\_countries\_total} & service & count & counter & security & country, service & Anomalias: novos países \\
+\texttt{anomaly\_new\_services\_total} & service & count & counter & security & service & Anomalias: novos serviços \\
+\texttt{anomaly\_new\_ports\_total} & service & count & counter & security & port, proto & Anomalias: novas portas \\
+\texttt{auth\_failures\_total} & service & count & counter & security & realm, profile & Falhas AAA/VPN (agregado) \\
+\texttt{cert\_errors\_total} & service & count & counter & security & sni, cert & Cert errors (agregado) \\

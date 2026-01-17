@@ -1,0 +1,78 @@
+% Auto-gerado (transport) a partir de temp/metric_catalog_rows_clean.tex (count=77)
+\texttt{tcp\_retrans\_pct} & transport & \% & ratio & transport & src, dst, flow & TCP retransmissions (\%) \\
+\texttt{tcp\_retrans\_total} & transport & count & counter & transport & src, dst, flow & TCP retransmissions (count) \\
+\texttt{tcp\_fast\_retrans\_total} & transport & count & counter & transport & src, dst, flow & TCP fast retransmit \\
+\texttt{tcp\_dup\_acks\_total} & transport & count & counter & transport & src, dst, flow & TCP duplicate ACKs \\
+\texttt{tcp\_handshake\_success\_pct} & transport & \% & ratio & transport & dst, port & TCP handshake success rate \\
+\texttt{tcp\_handshake\_latency\_ms} & transport & ms & gauge & transport & dst, port & TCP handshake latency \\
+\texttt{tcp\_resets\_total} & transport & count & counter & transport & src, dst, flow & Resets (RST) \\
+\texttt{tcp\_out\_of\_order\_total} & transport & count & counter & transport & src, dst, flow & TCP out-of-order \\
+\texttt{tcp\_zero\_window\_total} & transport & count & counter & transport & src, dst, flow & TCP zero window \\
+\texttt{tcp\_window\_scaling\_anomalies\_total} & transport & count & counter & transport & src, dst, flow & TCP window scaling anomalies \\
+\texttt{udp\_loss\_pct} & transport & \% & ratio & transport & src, dst, flow & UDP loss \\
+\texttt{udp\_jitter\_ms} & transport & ms & gauge & transport & src, dst, flow & UDP jitter \\
+\texttt{nat\_table\_util\_pct} & transport & \% & ratio & nat & node, nat\_pool & NAT table utilization \\
+\texttt{nat\_port\_exhaustion\_events\_total} & transport & count & counter & nat & node, nat\_pool & NAT port exhaustion events \\
+\texttt{nat\_translation\_failures\_total} & transport & count & counter & nat & node & NAT translation failures \\
+\texttt{lb\_healthcheck\_success\_pct} & transport & \% & ratio & lb & lb, pool, backend & Load balancer health checks success \\
+\texttt{lb\_connection\_rate} & transport & count/s & gauge & lb & lb, vip & Load balancer connection rate \\
+\texttt{lb\_concurrent\_connections} & transport & count & gauge & lb & lb, vip & Load balancer concurrent connections \\
+\texttt{lb\_backend\_connect\_errors\_total} & transport & count & counter & lb & lb, backend & LB backend connect errors \\
+\texttt{lb\_backend\_timeouts\_total} & transport & count & counter & lb & lb, backend & LB backend timeouts \\
+\texttt{throughput\_mbps} & transport & Mbps & gauge & performance & src, dst & Throughput \\
+\texttt{tcp\_rtt\_ms} & transport & ms & gauge & transport & src, dst, flow & TCP RTT \\
+\texttt{ss\_sockets\_total} & transport & count & gauge & host & node & Total sockets from ss -s \\
+\texttt{ss\_tcp\_states} & transport & count & gauge & host & node & TCP states from ss -s \\
+\texttt{ss\_udp\_sockets\_total} & transport & count & gauge & host & node & UDP sockets from ss -s \\
+\texttt{ss\_tcp\_sockets\_total} & transport & count & gauge & host & node & TCP sockets from ss -s \\
+\texttt{ss\_raw\_sockets\_total} & transport & count & gauge & host & node & RAW sockets from ss -s \\
+\texttt{ss\_inet\_sockets\_total} & transport & count & gauge & host & node & INET sockets from ss -s \\
+\texttt{ss\_frag\_sockets\_total} & transport & count & gauge & host & node & FRAG sockets from ss -s \\
+\texttt{snmp\_ip\_in\_receives} & transport & count & counter & snmp & node & IP InReceives \\
+\texttt{snmp\_ip\_in\_hdr\_errors} & transport & count & counter & snmp & node & IP InHdrErrors \\
+\texttt{snmp\_ip\_in\_addr\_errors} & transport & count & counter & snmp & node & IP InAddrErrors \\
+\texttt{snmp\_ip\_forw\_datagrams} & transport & count & counter & snmp & node & IP ForwDatagrams \\
+\texttt{snmp\_ip\_in\_unknown\_protos} & transport & count & counter & snmp & node & IP InUnknownProtos \\
+\texttt{snmp\_ip\_in\_discards} & transport & count & counter & snmp & node & IP InDiscards \\
+\texttt{snmp\_ip\_in\_delivers} & transport & count & counter & snmp & node & IP InDelivers \\
+\texttt{snmp\_ip\_out\_requests} & transport & count & counter & snmp & node & IP OutRequests \\
+\texttt{snmp\_ip\_out\_discards} & transport & count & counter & snmp & node & IP OutDiscards \\
+\texttt{snmp\_ip\_out\_no\_routes} & transport & count & counter & snmp & node & IP OutNoRoutes \\
+\texttt{snmp\_ip\_reasm\_timeout} & transport & count & counter & snmp & node & IP ReasmTimeout \\
+\texttt{snmp\_ip\_reasm\_reqds} & transport & count & counter & snmp & node & IP ReasmReqds \\
+\texttt{snmp\_ip\_reasm\_oks} & transport & count & counter & snmp & node & IP ReasmOKs \\
+\texttt{snmp\_ip\_reasm\_fails} & transport & count & counter & snmp & node & IP ReasmFails \\
+\texttt{snmp\_ip\_frag\_oks} & transport & count & counter & snmp & node & IP FragOKs \\
+\texttt{snmp\_ip\_frag\_fails} & transport & count & counter & snmp & node & IP FragFails \\
+\texttt{snmp\_ip\_frag\_creates} & transport & count & counter & snmp & node & IP FragCreates \\
+\texttt{snmp\_ip\_out\_transmits} & transport & count & counter & snmp & node & IP OutTransmits \\
+\texttt{snmp\_icmp\_in\_msgs} & transport & count & counter & snmp & node & ICMP InMsgs \\
+\texttt{snmp\_icmp\_out\_msgs} & transport & count & counter & snmp & node & ICMP OutMsgs \\
+\texttt{snmp\_icmp\_in\_errors} & transport & count & counter & snmp & node & ICMP InErrors \\
+\texttt{snmp\_icmp\_out\_errors} & transport & count & counter & snmp & node & ICMP OutErrors \\
+\texttt{snmp\_icmp\_in\_dest\_unreachs} & transport & count & counter & snmp & node & ICMP InDestUnreachs \\
+\texttt{snmp\_icmp\_out\_dest\_unreachs} & transport & count & counter & snmp & node & ICMP OutDestUnreachs \\
+\texttt{snmp\_icmp\_in\_time\_excds} & transport & count & counter & snmp & node & ICMP InTimeExcds \\
+\texttt{snmp\_icmp\_out\_time\_excds} & transport & count & counter & snmp & node & ICMP OutTimeExcds \\
+\texttt{snmp\_icmp\_in\_echo\_reqs} & transport & count & counter & snmp & node & ICMP InEchos \\
+\texttt{snmp\_icmp\_out\_echo\_reps} & transport & count & counter & snmp & node & ICMP OutEchoReps \\
+\texttt{snmp\_tcp\_active\_opens} & transport & count & counter & snmp & node & TCP ActiveOpens \\
+\texttt{snmp\_tcp\_passive\_opens} & transport & count & counter & snmp & node & TCP PassiveOpens \\
+\texttt{snmp\_tcp\_attempt\_fails} & transport & count & counter & snmp & node & TCP AttemptFails \\
+\texttt{snmp\_tcp\_estab\_resets} & transport & count & counter & snmp & node & TCP EstabResets \\
+\texttt{snmp\_tcp\_curr\_estab} & transport & count & gauge & snmp & node & TCP CurrEstab \\
+\texttt{snmp\_tcp\_in\_segs} & transport & count & counter & snmp & node & TCP InSegs \\
+\texttt{snmp\_tcp\_out\_segs} & transport & count & counter & snmp & node & TCP OutSegs \\
+\texttt{snmp\_tcp\_retrans\_segs} & transport & count & counter & snmp & node & TCP RetransSegs \\
+\texttt{snmp\_tcp\_in\_errs} & transport & count & counter & snmp & node & TCP InErrs \\
+\texttt{snmp\_tcp\_out\_rsts} & transport & count & counter & snmp & node & TCP OutRsts \\
+\texttt{snmp\_tcp\_in\_csum\_errors} & transport & count & counter & snmp & node & TCP InCsumErrors \\
+\texttt{snmp\_udp\_in\_datagrams} & transport & count & counter & snmp & node & UDP InDatagrams \\
+\texttt{snmp\_udp\_no\_ports} & transport & count & counter & snmp & node & UDP NoPorts \\
+\texttt{snmp\_udp\_in\_errors} & transport & count & counter & snmp & node & UDP InErrors \\
+\texttt{snmp\_udp\_out\_datagrams} & transport & count & counter & snmp & node & UDP OutDatagrams \\
+\texttt{snmp\_udp\_rcvbuf\_errors} & transport & count & counter & snmp & node & UDP RcvbufErrors \\
+\texttt{snmp\_udp\_sndbuf\_errors} & transport & count & counter & snmp & node & UDP SndbufErrors \\
+\texttt{snmp\_udp\_in\_csum\_errors} & transport & count & counter & snmp & node & UDP InCsumErrors \\
+\texttt{snmp\_udp\_ignored\_multi} & transport & count & counter & snmp & node & UDP IgnoredMulti \\
+\texttt{snmp\_udp\_mem\_errors} & transport & count & counter & snmp & node & UDP MemErrors \\

@@ -9,6 +9,7 @@ import Experiments from "./pages/Experiments";
 import Monitor from "./pages/Monitor";
 import History from "./pages/History";
 import Lab from "./pages/Lab";
+import Settings from "./pages/Settings";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/lab" element={<Lab />} />
           <Route path="/monitor" element={<Monitor />} />
           <Route path="/history" element={<History />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AppShell>

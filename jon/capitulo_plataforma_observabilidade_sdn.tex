@@ -1,0 +1,186 @@
+\documentclass[12pt,oneside]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{indentfirst}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+\usepackage{hyperref}
+\usepackage{xurl}
+\hypersetup{hidelinks}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\begin{document}
+
+\chapter{Plataforma de Observabilidade e Experimenta\c{c}\~ao em SDN}\label{ch:plataforma-observabilidade-sdn}
+
+\section{Motiva\c{c}\~ao e objetivo}
+Redes definidas por software (\textit{Software-Defined Networking} -- SDN) deslocam a complexidade operacional para o plano de controle e para a programa\c{c}\~ao do \textit{dataplane}. Essa mudan\c{c}a traz flexibilidade, mas amplifica a necessidade de observa\c{c}\~ao sistem\'atica: falhas e degrada\c{c}\~oes podem emergir em diferentes camadas (do enlace ao servi\c{c}o fim-a-fim) e, em SDN, tamb\'em no acoplamento entre controlador e switches.
+
+Este cap\'itulo descreve a arquitetura e o funcionamento da plataforma \texttt{profissa-sdn-framework} (diret\'orio \texttt{platform/}), concebida para: (i) coletar, normalizar e persistir m\'etricas de m\'ultiplas camadas; (ii) oferecer uma interface para inspe\c{c}\~ao em tempo real via \textit{Server-Sent Events} (SSE) e consultas REST; e (iii) estruturar experimentos como registros cient\'ificos reprodut\'iveis (topologia, tr\'afego, plano de m\'etricas, execu\c{c}\~oes e artefatos).
+
+\section{Vis\~ao geral da arquitetura}
+A plataforma adota uma arquitetura cliente--servidor com persist\^encia em arquivos:
+
+\begin{itemize}
+\item \textbf{Backend} (FastAPI + Pydantic): implementa API REST e SSE, orquestra a coleta (real ou sint\'etica), aplica configura\c{c}\~oes ativas, realiza persist\^encia e exp\~oe cat\'alogo de m\'etricas. O n\'ucleo est\'a em \texttt{platform/backend/api/app.py}.
+\item \textbf{Frontend} (Vite + React/TypeScript): consome SSE para telemetria ao vivo e REST para opera\c{c}\~oes de invent\'ario/configura\c{c}\~ao/experimentos. Rotas de UI est\~ao em \texttt{platform/frontend/src/pages/}.
+\item \textbf{Persist\^encia por arquivos}: artefatos operacionais em \texttt{temp/} (configs, runs, m\'etricas por run) e telemetria em \texttt{raw/} (arquivos \texttt{metrics\_\{layer\}.jsonl}).
+\end{itemize}
+
+\subsection{Fluxo de dados (telemetria ao vivo e registro)}
+A telemetria segue um padr\~ao \textit{append-only}:
+
+\begin{enumerate}
+\item Um processo de coleta gera amostras normalizadas (\texttt{MetricSample}).
+\item As amostras s\~ao armazenadas no \textit{buffer} em mem\'oria e persistidas em \texttt{raw/} (JSONL por camada).
+\item Eventos SSE (endpoint \texttt{/stream/events}) transportam um \textit{payload} JSON para o frontend, contendo \texttt{generated\_at}, \texttt{topology} e um lote de \texttt{metrics}.
+\item Para fins de reprodutibilidade, execu\c{c}\~oes de experimento (\texttt{ExperimentRun}) registram um \textit{snapshot}: coleta \`unica de amostras e persist\^encia do conjunto como \texttt{MetricRecord} associado ao \texttt{run\_id}.
+\end{enumerate}
+
+No frontend, o consumo SSE est\'a centralizado no \textit{hook} \texttt{useEventStream} (\texttt{platform/frontend/src/hooks/useEventStream.ts}), que converte mensagens em \texttt{EventPayload} e atualiza o estado de telas que operam em tempo real (Dashboard, Monitor, Topologia, Lab).
+
+\section{Modelo de dados e normaliza\c{c}\~ao}
+A tipagem can\^onica \`e definida em \texttt{platform/backend/schemas.py}. Os principais conceitos s\~ao:
+
+\begin{itemize}
+\item \textbf{Camadas}: \texttt{MetricLayer} organiza m\'etricas em \texttt{service}, \texttt{physical}, \texttt{link}, \texttt{network}, \texttt{transport}, \texttt{session}, \texttt{presentation}, \texttt{application}, \texttt{control} e \texttt{dataplane}.
+\item \textbf{Defini\c{c}\~oes}: \texttt{MetricDefinition} descreve nome, descri\c{c}\~ao, unidade, \textit{kind} (ex.: \texttt{gauge}, \texttt{counter}, \texttt{summary}, \texttt{derived}) e dimens\~oes (r\'otulos) esperadas.
+\item \textbf{Amostras}: \texttt{MetricSample} representa um ponto de telemetria com \texttt{timestamp}, \texttt{layer}, \texttt{node}, \texttt{metric} e \texttt{value}, opcionalmente com \texttt{labels} e \texttt{details}.
+\item \textbf{Registros}: \texttt{MetricRecord} agrega a amostra com metadados de execu\c{c}\~ao (ex.: \texttt{run\_id}, \texttt{experiment\_id}, \texttt{topology\_id}) quando a coleta \`e feita no contexto de experimentos.
+\end{itemize}
+
+A normaliza\c{c}\~ao (incluindo garantia de r\'otulos m\'inimos e coer\^encia de formato) \`e implementada em \texttt{platform/backend/core/metrics.py}.
+
+\section{Cat\'alogo de m\'etricas (completude e rastreabilidade)}
+O cat\'alogo can\^onico da plataforma est\'a em \texttt{platform/backend/core/metric\_catalog.py} e cont\'em 267 defini\c{c}\~oes. Cada defini\c{c}\~ao especifica: camada, unidade, \textit{kind}, categoria e dimens\~oes (r\'otulos). Esse cat\'alogo funciona como contrato entre coleta, persist\^encia e visualiza\c{c}\~ao: o backend exp\~oe \texttt{/metrics/definitions} e o frontend utiliza tais defini\c{c}\~oes para filtros, agrupamentos e contextualiza\c{c}\~ao de valores.
+
+A Tabela~\ref{tab:metric-catalog} inclui o cat\'alogo completo (gerado diretamente a partir do reposit\'orio para evitar lacunas). Para compila\c{c}\~ao, recomenda-se suporte a \texttt{longtable} e \texttt{booktabs}.
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{longtable}{p{0.22\textwidth}p{0.10\textwidth}p{0.07\textwidth}p{0.09\textwidth}p{0.10\textwidth}p{0.16\textwidth}p{0.22\textwidth}}
+\caption{Cat\'alogo de m\'etricas da plataforma (267 defini\c{c}\~oes).}\label{tab:metric-catalog}\\
+\toprule
+\textbf{Nome} & \textbf{Camada} & \textbf{Unid.} & \textbf{Kind} & \textbf{Categoria} & \textbf{Dimens\~oes} & \textbf{Descri\c{c}\~ao}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Nome} & \textbf{Camada} & \textbf{Unid.} & \textbf{Kind} & \textbf{Categoria} & \textbf{Dimens\~oes} & \textbf{Descri\c{c}\~ao}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{7}{r}{\footnotesize\emph{Continua na pr\'oxima p\'agina.}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\input{../temp/metric_catalog_rows_clean.tex}
+\end{longtable}
+\endgroup
+
+\section{API: contratos, opera\c{c}\~oes e seguran\c{c}a}
+O backend exp\~oe endpoints REST para invent\'ario (topologias, fluxos, configs), experimenta\c{c}\~ao (experimentos e execu\c{c}\~oes) e m\'etricas (cat\'alogo, ingest\~ao, consulta, exporta\c{c}\~ao), al\'em de SSE para telemetria ao vivo.
+
+\subsection{Endpoints principais}
+Os endpoints centrais (ver \texttt{platform/backend/api/app.py}) incluem:
+
+\begin{itemize}
+\item \textbf{Topologias}: \texttt{GET /topologies}, \texttt{GET /topologies/\{id\}}, \texttt{POST /topologies}, \texttt{PUT /topologies/\{id\}}, \texttt{DELETE /topologies/\{id\}}.
+\item \textbf{Experimentos}: \texttt{GET /experiments}, \texttt{GET /experiments/\{id\}}, \texttt{POST /experiments}, \texttt{PUT /experiments/\{id\}}, \texttt{DELETE /experiments/\{id\}}.
+\item \textbf{Execu\c{c}\~oes}: \texttt{POST /experiments/\{id\}/run?mode=synthetic|real}, \texttt{GET /experiments/\{id\}/runs}, \texttt{GET /runs/\{run\_id\}}, \texttt{GET /runs/\{run\_id\}/metrics}.
+\item \textbf{M\'etricas}: \texttt{GET /metrics/definitions}, \texttt{POST /metrics/query}, \texttt{POST /metrics/samples}, \texttt{GET /metrics/latest}, \texttt{GET /metrics/export}, \texttt{POST /metrics/collect}.
+\item \textbf{Fluxos}: \texttt{GET /flows}, \texttt{POST /flows}, \texttt{DELETE /flows/\{flow\_id\}}.
+\item \textbf{Configura\c{c}\~oes}: \texttt{GET /configs}, \texttt{GET /configs/active}, \texttt{GET /configs/\{id\}}, \texttt{POST /configs}, \texttt{POST /configs/\{id\}/activate}, \texttt{DELETE /configs/\{id\}}.
+\item \textbf{Streaming}: \texttt{GET /stream/events}.
+\item \textbf{Sa\'ude}: \texttt{GET /health}.
+\end{itemize}
+
+\subsection{Autentica\c{c}\~ao (API key)}
+Opera\c{c}\~oes mut\'aveis (ex.: criar topologia/experimento, iniciar execu\c{c}\~ao, salvar/ativar configs) s\~ao protegidas por uma chave via cabe\c{c}alho \texttt{X-API-Key}, exigida no backend (depend\^encia \texttt{require\_api\_key}). No frontend, as telas de experimentos e configura\c{c}\~oes usam \texttt{VITE\_API\_KEY} para montar cabe\c{c}alhos de requisi\c{c}\~ao.
+
+\section{Coleta de m\'etricas: modos real e sint\'etico}
+A plataforma implementa dois modos de coleta:
+
+\begin{itemize}
+\item \textbf{Real}: utiliza comandos e fontes do sistema/ambiente (ex.: \texttt{docker exec}, \texttt{ping}, \texttt{ip -s link}, \texttt{/proc/net/snmp}, \texttt{ovs-ofctl}) para extrair contadores, lat\^encia/perda e sinais do plano de controle/dataplane.
+\item \textbf{Sint\'etico}: gera amostras de forma determin\'istica/aleat\'oria para cobrir o cat\'alogo mesmo quando o ambiente real n\~ao est\'a dispon\'ivel, permitindo valida\c{c}\~ao de pipeline, dashboards e filtros.
+\end{itemize}
+
+Ambos os modos produzem \texttt{MetricSample} com labels de contexto (em particular \texttt{experiment\_id}, \texttt{run\_id} e \texttt{topology\_id} quando aplic\'avel), permitindo correla\c{c}\~ao e rastreabilidade de resultados.
+
+\section{Interface (frontend): descri\c{c}\~ao por p\'agina}
+As p\'aginas do frontend materializam diferentes vistas do mesmo \textit{data plane} de telemetria. As principais rotas est\~ao em \texttt{platform/frontend/src/main.tsx} e as telas descritas a seguir em \texttt{platform/frontend/src/pages/}.
+
+\subsection{Dashboard (Observabilidade)}
+A p\'agina \textbf{Observabilidade} (\texttt{Dashboard.tsx}) \`e o ponto de entrada para inspe\c{c}\~ao do cat\'alogo e dos dados ao vivo.
+
+\begin{itemize}
+\item \textbf{Estado do sistema}: exibe o estado do SSE (\texttt{stream: open|connecting|closed}), o estado de carregamento das defini\c{c}\~oes (\texttt{/metrics/definitions}), contadores de eventos e timestamp da \''ultima amostra.
+\item \textbf{Vistas e filtros}: organiza o cat\'alogo em vistas predefinidas (\textit{overview} e subconjuntos por p\'agina) e aplica filtros por camada, categoria, \textit{kind} e busca textual (nome/descri\c{c}\~ao).
+\item \textbf{KPIs E2E}: no \textit{overview}, mostra KPIs de servi\c{c}o fim-a-fim (disponibilidade, lat\^encia, perda e jitter), calculados a partir das m\'etricas \texttt{e2e\_*} presentes no stream.
+\item \textbf{Camadas}: apresenta, por camada, o total de defini\c{c}\~oes e quantas possuem dados observados no stream, permitindo identificar lacunas de instrumenta\c{c}\~ao.
+\item \textbf{Piores caminhos}: monta um ranking \textit{Top 10} usando uma fun\c{c}\~ao de score baseada em perda e percentis (p95) de lat\^encia/jitter; o objetivo \`e priorizar diagn\'ostico de degrada\c{c}\~ao.
+\end{itemize}
+
+\subsection{Topologia}
+A p\'agina \textbf{Topologia} (\texttt{Topology.tsx}) consome o mesmo SSE para exibir a topologia atual (hosts, switches e controlador). A visualiza\c{c}\~ao \`e propositalmente simplificada: agrupa n\'os por tipo e lista links com atributos (quando presentes), servindo como confirma\c{c}\~ao de invent\'ario e base de interpreta\c{c}\~ao para m\'etricas por n\'o e por caminho.
+
+\subsection{Experimentos}
+A p\'agina \textbf{Experimentos} (\texttt{Experiments.tsx}) estrutura experimenta\c{c}\~ao como registro cient\'ifico:
+
+\begin{itemize}
+\item \textbf{Templates (1 clique)}: biblioteca de perfis por categoria (ex.: L2, L3, L7, SDN, falhas, QoS), cada um definindo tr\'afego, dura\c{c}\~ao, camadas-alvo e um conjunto preferencial de m\'etricas. O usu\'ario pode \textit{usar} (preencher o formul\'ario) ou \textit{usar e executar} (criar e iniciar uma execu\c{c}\~ao imediatamente).
+\item \textbf{Cria\c{c}\~ao manual}: permite especificar topologia, \texttt{src/dst}, gerador de tr\'afego (\texttt{ping}/\texttt{iperf}/\texttt{custom}), protocolo, taxa e dura\c{c}\~ao; e selecionar m\'etricas por camada a partir de \texttt{/metrics/definitions}.
+\item \textbf{Execu\c{c}\~oes (runs)}: cada execu\c{c}\~ao \`e um \textit{snapshot} iniciado por \texttt{POST /experiments/\{id\}/run?mode=...}; ao final, os registros ficam dispon\'iveis em \texttt{GET /runs/\{run\_id\}/metrics}, com op\c{c}\~ao de exporta\c{c}\~ao JSON.
+\item \textbf{Hist\'orico/resultados}: lista experimentos, execu\c{c}\~oes e apresenta uma tabela com os 50 registros mais recentes da execu\c{c}\~ao selecionada.
+\end{itemize}
+
+\subsection{Lab de Experimentos}
+A p\'agina \textbf{Lab de Experimentos} (\texttt{Lab.tsx}) oferece uma constru\c{c}\~ao conceitual de \textit{workflow} por blocos (ex.: \textit{Ping}, \textit{TCP}, \textit{DNS}, \textit{Controlador SDN}, \textit{Fluxos OpenFlow}). Cada bloco declara: camada e m\'etricas-alvo; a tela filtra o stream para mostrar dados ao vivo correspondentes ao bloco selecionado. Trata-se de uma vista orientada a hip\'oteses e pipelines de medi\c{c}\~ao, n\~ao de execu\c{c}\~ao \textit{batch}.
+
+\subsection{Monitor}
+A p\'agina \textbf{Monitor} (\texttt{Monitor.tsx}) \`e a tela operacional de telemetria em tempo real via SSE:
+
+\begin{itemize}
+\item \textbf{Filtros por camada e n\'o}: permite selecionar subconjuntos para KPIs e para a tabela de eventos.
+\item \textbf{KPIs ao vivo}: deriva indicadores simples a partir do primeiro valor dispon\'ivel entre m\'etricas alternativas (ex.: tr\'afego por \texttt{packet\_rate} ou \texttt{throughput\_mbps}; perda por \texttt{packet\_loss\_pct} etc.).
+\item \textbf{Tabela de eventos}: mostra os 20 eventos mais recentes ap\'os filtros, com m\'etrica, n\'o, valor, camada e timestamp.
+\end{itemize}
+
+\subsection{Configura\c{c}\~oes (Settings)}
+A p\'agina \textbf{Configura\c{c}\~oes} (\texttt{Settings.tsx}) \`e a principal interface para gest\~ao de perfis \texttt{platform\_config}:
+
+\begin{itemize}
+\item \textbf{Perfis salvos}: lista configs, permite ativar e remover (com prote\c{c}\~oes para perfil base).
+\item \textbf{Edi\c{c}\~ao guiada}: monta uma configura\c{c}\~ao a partir de formul\'ario: modo (docker/local), controlador (opcional), n\'os (id/role/mgmt\_ip/container\_name), links (source/target e par\^ametros), camadas habilitadas e plano de m\'etricas (intervalo, labels e sele\c{c}\~ao por camada).
+\item \textbf{Valida\c{c}\~ao}: imp\~oe restri\c{c}\~oes coerentes com a coleta (ex.: em docker, \texttt{container\_name}; para \texttt{ping}, hosts com \texttt{mgmt\_ip}; para \texttt{ovs-ofctl}, ao menos um switch).
+\item \textbf{Preview JSON}: exibe o \texttt{platform\_config.json} derivado, servindo de ponte entre opera\c{c}\~ao assistida e reprodutibilidade baseada em arquivos.
+\end{itemize}
+
+\subsection{Hist\'orico}
+A p\'agina \textbf{Hist\'orico} (\texttt{History.tsx}) encontra-se, no estado atual, como um \textit{placeholder} de UI (tabela de eventos simulados e bloco descritivo de relat\'orios). Do ponto de vista de produto, esta tela delimita uma extens\~ao natural: integra\c{c}\~ao com \texttt{/metrics/export} e com os arquivos \texttt{raw/*.jsonl} para recortes temporais, filtros e relat\'orios reprodut\'iveis.
+
+\section{Discuss\~ao: extensibilidade e limita\c{c}\~oes}
+A plataforma foi desenhada para evoluir sem quebrar contratos:
+
+\begin{itemize}
+\item \textbf{Extensibilidade por camadas}: o cat\'alogo estabelece um namespace e um vocabul\'ario (unidades, \textit{kind}, dimens\~oes) que permite adicionar novos coletores preservando compatibilidade com UI e exporta\c{c}\~ao.
+\item \textbf{Reprodutibilidade}: a separa\c{c}\~ao entre telemetria ao vivo (SSE) e execu\c{c}\~oes registradas (runs + m\'etricas persistidas) endere\c{c}a simultaneamente opera\c{c}\~ao e pesquisa.
+\item \textbf{Limita\c{c}\~oes atuais}: a tela de Hist\'orico \`e parcial; o modo real depende fortemente do ambiente (docker, permiss\~oes e ferramentas); e o score de \textit{piores caminhos} privilegia simplicidade operacional, podendo ser refinado com normaliza\c{c}\~ao por SLA/SLO e pesos por servi\c{c}o.
+\end{itemize}
+
+\section{S\'intese}
+Este cap\'itulo apresentou a plataforma de observabilidade e experimenta\c{c}\~ao em SDN, destacando: (i) a arquitetura backend/frontend com SSE e REST; (ii) o modelo de dados e persist\^encia orientada a registros; (iii) o cat\'alogo completo de 267 m\'etricas e sua fun\c{c}\~ao como contrato; e (iv) o papel de cada p\'agina da interface (Dashboard, Topologia, Experimentos, Lab, Monitor, Configura\c{c}\~oes e Hist\'orico).
+
+\end{document}

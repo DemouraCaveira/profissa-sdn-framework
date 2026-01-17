@@ -86,10 +86,13 @@ def validate_config(cfg: Dict) -> None:
     if layers_cfg:
         for layer_name, enabled in layers_cfg.items():
             if layer_name not in {
+                "service",
                 "physical",
                 "link",
                 "network",
                 "transport",
+                "session",
+                "presentation",
                 "application",
                 "control",
                 "dataplane",
@@ -194,11 +197,14 @@ def metric_definitions_from_config(cfg: Dict) -> Optional[List[MetricDefinition]
 
 def metric_layer_flags(cfg: Dict) -> Dict[MetricLayer, bool]:
     defaults: Dict[MetricLayer, bool] = {
+        "service": True,
         "physical": True,
         "link": True,
         "network": True,
         "transport": True,
-        "application": False,
+        "session": True,
+        "presentation": True,
+        "application": True,
         "control": True,
         "dataplane": True,
     }

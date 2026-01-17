@@ -22,6 +22,7 @@ from platform.backend.config_loader import (
     metric_definitions_from_config,
     metric_layer_flags,
     topology_from_config,
+    validate_config,
 )
 from platform.backend.schemas import (
     Experiment,
@@ -39,16 +40,31 @@ from platform.backend.schemas import (
     TopologyUpdate,
 )
 
+from platform.backend.core.metric_catalog import metric_definitions as catalog_metric_definitions
+
 app = FastAPI(title="Profissa SDN Platform API", version="0.1.0")
 
 api_key = os.getenv("API_KEY")
 allowed_origins = os.getenv(
     "CORS_ALLOW_ORIGINS",
-    "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174",
+    "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://0.0.0.0:5173,http://0.0.0.0:5174",
 ).split(",")
 config_path = os.getenv("PLATFORM_CONFIG_PATH", "platform/experiments/platform_config.json")
 raw_dir = Path("raw")
 raw_dir.mkdir(parents=True, exist_ok=True)
+
+temp_root = Path(os.getenv("PLATFORM_TEMP_DIR", "temp"))
+temp_store_dir = temp_root / "experiments"
+temp_experiments_dir = temp_store_dir / "registry"
+legacy_temp_experiments_dir = temp_store_dir / "experiments"
+temp_runs_dir = temp_store_dir / "runs"
+temp_run_metrics_dir = temp_store_dir / "run_metrics"
+for _d in [temp_experiments_dir, legacy_temp_experiments_dir, temp_runs_dir, temp_run_metrics_dir]:
+    _d.mkdir(parents=True, exist_ok=True)
+
+temp_configs_dir = temp_root / "configs"
+temp_configs_dir.mkdir(parents=True, exist_ok=True)
+active_config_path = temp_configs_dir / "active.json"
 software_version = (
     os.getenv("SOFTWARE_VERSION")
     or Path("VERSION").read_text(encoding="utf-8").strip()
@@ -94,6 +110,181 @@ def _write_samples_to_raw(samples: Sequence[MetricSample]) -> None:
             f.write(_serialize_sample(sample) + "\n")
 
 
+def _atomic_write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(content, encoding="utf-8")
+    tmp.replace(path)
+
+
+def _persist_experiment(experiment: Experiment) -> None:
+    path = temp_experiments_dir / f"{experiment.id}.json"
+    _atomic_write_text(path, json.dumps(experiment.model_dump(mode="json"), indent=2, ensure_ascii=False))
+
+
+def _persist_run(run: ExperimentRun) -> None:
+    path = temp_runs_dir / f"{run.id}.json"
+    _atomic_write_text(path, json.dumps(run.model_dump(mode="json"), indent=2, ensure_ascii=False))
+
+
+def _persist_run_metrics(run_id: str) -> None:
+    metrics = run_metrics.get(run_id, [])
+    path = temp_run_metrics_dir / f"{run_id}.json"
+    _atomic_write_text(path, json.dumps([m.model_dump(mode="json") for m in metrics], indent=2, ensure_ascii=False))
+
+
+def _delete_persisted_experiment(experiment_id: str) -> None:
+    (temp_experiments_dir / f"{experiment_id}.json").unlink(missing_ok=True)
+    (legacy_temp_experiments_dir / f"{experiment_id}.json").unlink(missing_ok=True)
+
+
+def _delete_persisted_run(run_id: str) -> None:
+    (temp_runs_dir / f"{run_id}.json").unlink(missing_ok=True)
+    (temp_run_metrics_dir / f"{run_id}.json").unlink(missing_ok=True)
+
+
+def _load_experiments_and_runs_from_temp() -> None:
+    # Best-effort restore for researcher workflow; ignore corrupt files.
+    for root in [legacy_temp_experiments_dir, temp_experiments_dir]:
+        for path in sorted(root.glob("*.json")):
+            try:
+                obj = json.loads(path.read_text(encoding="utf-8"))
+                exp = Experiment(**obj)
+                experiments[exp.id] = exp
+            except Exception:
+                continue
+
+    for path in sorted(temp_runs_dir.glob("*.json")):
+        try:
+            obj = json.loads(path.read_text(encoding="utf-8"))
+            run = ExperimentRun(**obj)
+            runs[run.id] = run
+            run_metrics.setdefault(run.id, [])
+        except Exception:
+            continue
+
+    for path in sorted(temp_run_metrics_dir.glob("*.json")):
+        try:
+            run_id = path.stem
+            items = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(items, list):
+                continue
+            run_metrics[run_id] = [MetricRecord(**item) for item in items if isinstance(item, dict)]
+        except Exception:
+            continue
+
+
+def _load_active_config_id() -> str | None:
+    try:
+        if not active_config_path.exists():
+            return None
+        obj = json.loads(active_config_path.read_text(encoding="utf-8"))
+        config_id = obj.get("active") if isinstance(obj, dict) else None
+        return str(config_id) if config_id else None
+    except Exception:
+        return None
+
+
+def _set_active_config_id(config_id: str) -> None:
+    _atomic_write_text(active_config_path, json.dumps({"active": config_id}, indent=2, ensure_ascii=False))
+
+
+def _config_path_for_id(config_id: str) -> Path:
+    safe = re.sub(r"[^a-zA-Z0-9_-]+", "_", config_id.strip()).strip("_")
+    return temp_configs_dir / f"{safe}.json"
+
+
+def _list_configs() -> List[Dict[str, Any]]:
+    active_id = _load_active_config_id()
+    items: List[Dict[str, Any]] = []
+    for path in sorted(temp_configs_dir.glob("*.json")):
+        if path.name == "active.json":
+            continue
+        config_id = path.stem
+        try:
+            obj = json.loads(path.read_text(encoding="utf-8"))
+            name = obj.get("name") if isinstance(obj, dict) else None
+            updated_at = obj.get("updated_at") if isinstance(obj, dict) else None
+        except Exception:
+            name = None
+            updated_at = None
+        items.append({"id": config_id, "name": name or config_id, "active": config_id == active_id, "updated_at": updated_at})
+    return items
+
+
+def _read_config_payload(config_id: str) -> Dict[str, Any]:
+    path = _config_path_for_id(config_id)
+    if not path.exists():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Config not found")
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(obj, dict):
+            raise ValueError("config must be an object")
+        return obj
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid config JSON")
+
+
+def _write_config_payload(config_id: str, payload: Dict[str, Any]) -> None:
+    # Validate the embedded platform config if present.
+    cfg = payload.get("config") if isinstance(payload.get("config"), dict) else None
+    if cfg is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing 'config' object")
+    validate_config(cfg)
+    payload = {
+        **payload,
+        "id": config_id,
+        "updated_at": datetime.utcnow().isoformat(),
+    }
+    _atomic_write_text(_config_path_for_id(config_id), json.dumps(payload, indent=2, ensure_ascii=False))
+
+
+def _seed_default_config_if_missing() -> None:
+    # Ensure at least one saved config exists: keep current repo default as lft-profissa.
+    if any(p for p in temp_configs_dir.glob("*.json") if p.name != "active.json"):
+        return
+    try:
+        default_cfg = load_platform_config(config_path)
+        payload = {
+            "name": "lft-profissa",
+            "description": "Configuração padrão (docker) do Profissa SDN Framework",
+            "environment": "docker",
+            "config": default_cfg,
+        }
+        _write_config_payload("lft-profissa", payload)
+        _set_active_config_id("lft-profissa")
+    except Exception:
+        # Best-effort only.
+        pass
+
+
+def _apply_active_config() -> None:
+    """Apply the active saved config to in-memory runtime state."""
+    global metric_definitions, layer_flags
+    active_id = _load_active_config_id()
+    if not active_id:
+        return
+    obj = _read_config_payload(active_id)
+    cfg = obj.get("config") if isinstance(obj.get("config"), dict) else None
+    if not cfg:
+        return
+    topology = topology_from_config(cfg)
+    if topology and topology.id not in topologies:
+        topologies[topology.id] = topology
+
+    cfg_metrics = metric_definitions_from_config(cfg)
+    if cfg_metrics:
+        merged: Dict[str, MetricDefinition] = {m.name: m for m in _extended_metric_definitions()}
+        merged.update({m.name: m for m in cfg_metrics})
+        metric_definitions = list(merged.values())
+    else:
+        metric_definitions = _extended_metric_definitions()
+
+    layer_flags = metric_layer_flags(cfg)
+
+
 def _load_recent_samples_from_raw(limit: int = 200) -> List[MetricSample]:
     loaded: List[MetricSample] = []
 
@@ -105,10 +296,13 @@ def _load_recent_samples_from_raw(limit: int = 200) -> List[MetricSample]:
         return lines[-max_lines:]
 
     for layer in [
+        "service",
         "physical",
         "link",
         "network",
         "transport",
+        "session",
+        "presentation",
         "application",
         "control",
         "dataplane",
@@ -163,8 +357,15 @@ def _store_samples(samples: Sequence[MetricSample]) -> None:
     metric_samples.extend(normalized)
     _write_samples_to_raw(normalized)
     for sample in normalized:
+        try:
+            seen_metric_names.add(str(sample.metric))
+        except Exception:
+            pass
+    touched_run_ids: set[str] = set()
+    for sample in normalized:
         run_id = sample.labels.get("run_id") if sample.labels else None
         if run_id:
+            touched_run_ids.add(str(run_id))
             record = MetricRecord(
                 timestamp=sample.timestamp,
                 metric_name=sample.metric,
@@ -175,6 +376,12 @@ def _store_samples(samples: Sequence[MetricSample]) -> None:
             )
             run_metrics.setdefault(run_id, []).append(record)
             _append_run_log(run_id, f"metric:{sample.metric}")
+
+    for run_id in touched_run_ids:
+        try:
+            _persist_run_metrics(run_id)
+        except Exception:
+            pass
 
 
 def _run_cmd(cmd: List[str], timeout: int = 6) -> str:
@@ -439,6 +646,20 @@ def _collect_synthetic_full(topology: Topology | None, labels: Dict[str, Any] | 
                 samples.append(_mk("routes_count", "network", node.id, float(random.randint(1, 32))))
                 samples.append(_mk("arp_entries", "network", node.id, float(random.randint(1, 64))))
 
+    if layer_flags.get("service", True):
+        hosts = [n for n in topology.nodes if n.type == "host"]
+        if len(hosts) >= 2:
+            src = hosts[0].id
+            dst = hosts[1].id
+            service = "ping"
+            svc_labels = {**base_labels, "src": src, "dst": dst, "service": service}
+            samples.append(_mk("e2e_path_availability_pct", "service", "probe", round(random.uniform(98.5, 100.0), 3), labels=svc_labels))
+            samples.append(_mk("e2e_latency_ms_p50", "service", "probe", round(random.uniform(3.0, 30.0), 3), labels=svc_labels))
+            samples.append(_mk("e2e_latency_ms_p95", "service", "probe", round(random.uniform(6.0, 60.0), 3), labels=svc_labels))
+            samples.append(_mk("e2e_latency_ms_p99", "service", "probe", round(random.uniform(8.0, 90.0), 3), labels=svc_labels))
+            samples.append(_mk("e2e_jitter_ms_p95", "service", "probe", round(random.uniform(0.1, 8.0), 3), labels=svc_labels))
+            samples.append(_mk("e2e_loss_pct", "service", "probe", round(random.uniform(0.0, 2.0), 3), labels=svc_labels))
+
     if layer_flags.get("transport", True):
         for node in topology.nodes:
             if node.type == "host":
@@ -565,7 +786,24 @@ def _collect_synthetic_full(topology: Topology | None, labels: Dict[str, Any] | 
                 for key, val in udp_snmp.items():
                     samples.append(_mk(f"snmp_udp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
 
-    if layer_flags.get("application", False):
+    if layer_flags.get("session", True):
+        sess_labels = {**base_labels, "sni": "example.local", "service": "web"}
+        samples.append(_mk("tls_session_resumption_pct", "session", "edge", round(random.uniform(0, 100), 2), labels=sess_labels))
+        samples.append(_mk("tls_renegotiations_total", "session", "edge", float(random.randint(0, 3)), labels=sess_labels))
+        samples.append(_mk("tls_handshake_failures_total", "session", "edge", float(random.randint(0, 2)), labels={**base_labels, "sni": "example.local", "cert": "leaf"}))
+        samples.append(_mk("vpn_sessions_active", "session", "gw", float(random.randint(0, 200)), labels={**base_labels, "profile": "default", "tenant": "lab"}))
+        samples.append(_mk("aaa_auth_failures_total", "session", "aaa", float(random.randint(0, 5)), labels={**base_labels, "realm": "lab", "reason": "invalid_password"}))
+
+    if layer_flags.get("presentation", True):
+        pres_labels = {**base_labels, "sni": "example.local", "service": "web"}
+        samples.append(_mk("tls_handshake_latency_ms_p95", "presentation", "edge", round(random.uniform(20, 200), 2), labels=pres_labels))
+        samples.append(_mk("tls_handshake_latency_ms_p99", "presentation", "edge", round(random.uniform(40, 350), 2), labels=pres_labels))
+        samples.append(_mk("tls_version_connections_total", "presentation", "edge", float(random.randint(10, 1000)), labels={**base_labels, "version": "TLS1.3", "sni": "example.local"}))
+        samples.append(_mk("tls_cipher_connections_total", "presentation", "edge", float(random.randint(10, 1000)), labels={**base_labels, "cipher": "TLS_AES_128_GCM_SHA256", "sni": "example.local"}))
+        samples.append(_mk("cert_expiry_days", "presentation", "edge", float(random.randint(1, 365)), labels={**base_labels, "cert": "leaf", "sni": "example.local"}))
+        samples.append(_mk("http2_negotiation_success_pct", "presentation", "edge", round(random.uniform(80, 100), 2), labels={**base_labels, "service": "web"}))
+
+    if layer_flags.get("application", True):
         for node in topology.nodes:
             if node.type == "host":
                 samples.append(_mk("http_latency_ms", "application", node.id, round(random.uniform(20, 400), 2), {"status_code": 200}))
@@ -573,6 +811,10 @@ def _collect_synthetic_full(topology: Topology | None, labels: Dict[str, Any] | 
                 samples.append(_mk("dns_latency_ms", "application", node.id, round(random.uniform(5, 80), 2)))
                 samples.append(_mk("dns_success_pct", "application", node.id, 99.0))
                 samples.append(_mk("tls_handshake_ms", "application", node.id, round(random.uniform(30, 150), 2)))
+                samples.append(_mk("app_rps", "application", node.id, round(random.uniform(10, 2000), 2), labels={**base_labels, "service": "web", "route": "/api"}))
+                samples.append(_mk("app_latency_ms_p95", "application", node.id, round(random.uniform(20, 600), 2), labels={**base_labels, "service": "web", "route": "/api"}))
+                samples.append(_mk("app_latency_ms_p99", "application", node.id, round(random.uniform(30, 900), 2), labels={**base_labels, "service": "web", "route": "/api"}))
+                samples.append(_mk("app_error_rate_pct", "application", node.id, round(random.uniform(0, 5), 3), labels={**base_labels, "service": "web", "route": "/api"}))
 
     if layer_flags.get("control", True):
         for node in topology.nodes:
@@ -596,6 +838,70 @@ def _collect_synthetic_full(topology: Topology | None, labels: Dict[str, Any] | 
             samples.append(_mk("port_tx_pkts", "dataplane", port_path, float(random.randint(1_000, 100_000))))
             samples.append(_mk("port_rx_drops", "dataplane", port_path, float(random.randint(0, 500))))
             samples.append(_mk("port_tx_drops", "dataplane", port_path, float(random.randint(0, 500))))
+
+    # Seed: guarantee at least one sample per MetricDefinition name.
+    # This maximizes "Com dado" coverage for the dashboard taxonomy.
+    try:
+        batch_names = {s.metric for s in samples}
+        missing_defs = [d for d in metric_definitions if d.name not in seen_metric_names and d.name not in batch_names]
+        for d in missing_defs:
+            layer_name = str(d.layer or "network")
+            if not layer_flags.get(layer_name, True):
+                continue
+
+            unit = (d.unit or "").strip().lower()
+            kind = (d.kind or "").strip().lower()
+
+            if unit in {"%", "pct", "percent"} or "pct" in d.name:
+                value = round(random.uniform(0, 100), 3)
+            elif unit in {"ms", "millisecond", "milliseconds"} or d.name.endswith("_ms"):
+                value = round(random.uniform(0.1, 500.0), 3)
+            elif unit in {"s", "sec", "seconds"} or d.name.endswith("_s"):
+                value = round(random.uniform(0.1, 60.0), 3)
+            elif unit in {"bool", "boolean"}:
+                value = float(random.randint(0, 1))
+            elif unit in {"count", "count/s", "rps", "qps"} or kind == "counter":
+                value = float(random.randint(0, 1000))
+            elif unit in {"mbps", "gbps", "bps", "bits/s"}:
+                value = round(random.uniform(1.0, 1000.0), 2)
+            elif unit in {"bytes", "b", "kb", "mb", "gb"} or "bytes" in d.name:
+                value = float(random.randint(0, 5_000_000))
+            elif unit == "days":
+                value = float(random.randint(0, 365))
+            else:
+                value = round(random.uniform(0, 100), 3)
+
+            dim_labels = dict(base_labels)
+            for dim in d.dimensions or []:
+                if dim in dim_labels and dim_labels[dim] is not None:
+                    continue
+                if dim in {"src", "dst"}:
+                    hosts = [n for n in topology.nodes if n.type == "host"]
+                    if dim == "src" and hosts:
+                        dim_labels[dim] = hosts[0].id
+                    elif dim == "dst" and len(hosts) > 1:
+                        dim_labels[dim] = hosts[1].id
+                    else:
+                        dim_labels[dim] = "unknown"
+                elif dim in {"node", "switch", "host"}:
+                    dim_labels[dim] = topology.nodes[0].id if topology.nodes else "unknown"
+                elif dim == "service":
+                    dim_labels[dim] = "web"
+                elif dim == "route":
+                    dim_labels[dim] = "/api"
+                else:
+                    dim_labels.setdefault(dim, "default")
+
+            node_id = "probe"
+            if layer_name in {"physical", "link", "dataplane"} and topology.links:
+                node_id = f"{topology.links[0].source}->{topology.links[0].target}"
+            elif topology.nodes:
+                node_id = topology.nodes[0].id
+
+            samples.append(_mk(d.name, layer_name, node_id, float(value), labels=dim_labels))
+            seen_metric_names.add(d.name)
+    except Exception:
+        pass
 
     return samples
 
@@ -634,11 +940,23 @@ def _sample_to_dict(sample: MetricSample) -> Dict[str, Any]:
 async def _event_stream():
     while True:
         topology = next(iter(topologies.values()), None)
+
+        latest_by_metric: Dict[str, MetricSample] = {}
+        for s in metric_samples:
+            cur = latest_by_metric.get(s.metric)
+            if not cur or s.timestamp > cur.timestamp:
+                latest_by_metric[s.metric] = s
+        latest_for_defs: List[MetricSample] = []
+        for d in metric_definitions:
+            s = latest_by_metric.get(d.name)
+            if s is not None:
+                latest_for_defs.append(s)
+
         payload = {
             "type": "snapshot",
             "generated_at": datetime.utcnow().isoformat(),
             "topology": topology.model_dump() if topology else None,
-            "metrics": [_sample_to_dict(s) for s in metric_samples[-200:]],
+            "metrics": [_sample_to_dict(s) for s in latest_for_defs],
             "runs": [run.model_dump() for run in runs.values()],
         }
         yield f"data: {json.dumps(payload)}\n\n"
@@ -659,6 +977,7 @@ runs: Dict[str, ExperimentRun] = {}
 flows: Dict[str, FlowRule] = {}
 run_metrics: Dict[str, List[MetricRecord]] = {}
 metric_samples: List[MetricSample] = []
+seen_metric_names: set[str] = set()
 layer_flags: Dict[MetricLayer, bool] = metric_layer_flags({})
 real_collection_default = os.getenv("REAL_COLLECTION", "0") == "1"
 collection_interval_seconds = float(os.getenv("AUTO_COLLECT_INTERVAL", "5"))
@@ -666,113 +985,7 @@ _auto_collect_task: asyncio.Task | None = None
 
 
 def _extended_metric_definitions() -> List[MetricDefinition]:
-    return [
-        # Physical/interface
-        MetricDefinition(name="if_errors", description="Interface errors", unit="count", layer="physical"),
-        MetricDefinition(name="if_discards", description="Interface discards", unit="count", layer="physical"),
-        MetricDefinition(name="if_crc_errors", description="CRC errors", unit="count", layer="physical"),
-        MetricDefinition(name="if_in_util_pct", description="Ingress utilization", unit="%", layer="physical"),
-        MetricDefinition(name="if_out_util_pct", description="Egress utilization", unit="%", layer="physical"),
-        MetricDefinition(name="if_temp_c", description="Interface temperature", unit="C", layer="physical"),
-        MetricDefinition(name="if_optic_rx_dbm", description="Optical RX power", unit="dBm", layer="physical"),
-        MetricDefinition(name="if_optic_tx_dbm", description="Optical TX power", unit="dBm", layer="physical"),
-        # Link (L2)
-        MetricDefinition(name="link_util_pct", description="Link utilization", unit="%", layer="link"),
-        MetricDefinition(name="link_loss_pct", description="Link loss", unit="%", layer="link"),
-        MetricDefinition(name="link_jitter_ms", description="Link jitter", unit="ms", layer="link"),
-        MetricDefinition(name="queue_occupancy_pct", description="Queue occupancy", unit="%", layer="link"),
-        MetricDefinition(name="queue_drops", description="Queue drops", unit="count", layer="link"),
-        MetricDefinition(name="ecn_marked_pct", description="ECN marked traffic", unit="%", layer="link"),
-        # Network (L3)
-        MetricDefinition(name="latency_ms", description="Latency", unit="ms", layer="network"),
-        MetricDefinition(name="packet_loss_pct", description="Packet loss", unit="%", layer="network"),
-        MetricDefinition(name="jitter_ms", description="Jitter", unit="ms", layer="network"),
-        MetricDefinition(name="ttl_expired", description="TTL expired events", unit="count", layer="network"),
-        MetricDefinition(name="routes_count", description="Route entries", unit="count", layer="network"),
-        MetricDefinition(name="arp_entries", description="ARP/ND cache entries", unit="count", layer="network"),
-        # Transport (L4)
-        MetricDefinition(name="throughput_mbps", description="Throughput", unit="Mbps", layer="transport"),
-        MetricDefinition(name="tcp_retrans_pct", description="TCP retransmissions", unit="%", layer="transport"),
-        MetricDefinition(name="tcp_rtt_ms", description="TCP RTT", unit="ms", layer="transport"),
-        MetricDefinition(name="udp_jitter_ms", description="UDP jitter", unit="ms", layer="transport"),
-        MetricDefinition(name="udp_loss_pct", description="UDP loss", unit="%", layer="transport"),
-        MetricDefinition(name="ss_sockets_total", description="Total sockets from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="ss_tcp_states", description="TCP states from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="ss_udp_sockets_total", description="UDP sockets from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="ss_tcp_sockets_total", description="TCP sockets from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="ss_raw_sockets_total", description="RAW sockets from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="ss_inet_sockets_total", description="INET sockets from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="ss_frag_sockets_total", description="FRAG sockets from ss -s", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_in_receives", description="IP InReceives", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_in_hdr_errors", description="IP InHdrErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_in_addr_errors", description="IP InAddrErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_forw_datagrams", description="IP ForwDatagrams", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_in_unknown_protos", description="IP InUnknownProtos", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_in_discards", description="IP InDiscards", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_in_delivers", description="IP InDelivers", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_out_requests", description="IP OutRequests", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_out_discards", description="IP OutDiscards", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_out_no_routes", description="IP OutNoRoutes", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_reasm_timeout", description="IP ReasmTimeout", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_reasm_reqds", description="IP ReasmReqds", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_reasm_oks", description="IP ReasmOKs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_reasm_fails", description="IP ReasmFails", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_frag_oks", description="IP FragOKs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_frag_fails", description="IP FragFails", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_frag_creates", description="IP FragCreates", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_ip_out_transmits", description="IP OutTransmits", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_in_msgs", description="ICMP InMsgs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_out_msgs", description="ICMP OutMsgs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_in_errors", description="ICMP InErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_out_errors", description="ICMP OutErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_in_dest_unreachs", description="ICMP InDestUnreachs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_out_dest_unreachs", description="ICMP OutDestUnreachs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_in_time_excds", description="ICMP InTimeExcds", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_out_time_excds", description="ICMP OutTimeExcds", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_in_echo_reqs", description="ICMP InEchos", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_icmp_out_echo_reps", description="ICMP OutEchoReps", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_active_opens", description="TCP ActiveOpens", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_passive_opens", description="TCP PassiveOpens", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_attempt_fails", description="TCP AttemptFails", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_estab_resets", description="TCP EstabResets", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_curr_estab", description="TCP CurrEstab", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_in_segs", description="TCP InSegs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_out_segs", description="TCP OutSegs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_retrans_segs", description="TCP RetransSegs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_in_errs", description="TCP InErrs", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_out_rsts", description="TCP OutRsts", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_tcp_in_csum_errors", description="TCP InCsumErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_in_datagrams", description="UDP InDatagrams", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_no_ports", description="UDP NoPorts", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_in_errors", description="UDP InErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_out_datagrams", description="UDP OutDatagrams", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_rcvbuf_errors", description="UDP RcvbufErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_sndbuf_errors", description="UDP SndbufErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_in_csum_errors", description="UDP InCsumErrors", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_ignored_multi", description="UDP IgnoredMulti", unit="count", layer="transport"),
-        MetricDefinition(name="snmp_udp_mem_errors", description="UDP MemErrors", unit="count", layer="transport"),
-        # Application
-        MetricDefinition(name="http_latency_ms", description="HTTP latency", unit="ms", layer="application"),
-        MetricDefinition(name="http_success_pct", description="HTTP success", unit="%", layer="application"),
-        MetricDefinition(name="dns_latency_ms", description="DNS latency", unit="ms", layer="application"),
-        MetricDefinition(name="dns_success_pct", description="DNS success", unit="%", layer="application"),
-        MetricDefinition(name="tls_handshake_ms", description="TLS handshake", unit="ms", layer="application"),
-        # Control-plane
-        MetricDefinition(name="controller_latency_ms", description="Controller latency", unit="ms", layer="control"),
-        MetricDefinition(name="controller_conn_ok", description="Controller connectivity", unit="bool", layer="control"),
-        MetricDefinition(name="of_channel_reconnects", description="OpenFlow reconnects", unit="count", layer="control"),
-        MetricDefinition(name="flows_installed", description="Flows installed", unit="count", layer="control"),
-        MetricDefinition(name="flows_removed", description="Flows removed", unit="count", layer="control"),
-        # Dataplane
-        MetricDefinition(name="openflow_flow_packets", description="Flow packets", unit="packets", layer="dataplane"),
-        MetricDefinition(name="openflow_flow_bytes", description="Flow bytes", unit="bytes", layer="dataplane"),
-        MetricDefinition(name="table_hits", description="Table hits", unit="count", layer="dataplane"),
-        MetricDefinition(name="table_misses", description="Table misses", unit="count", layer="dataplane"),
-        MetricDefinition(name="port_rx_pkts", description="Port RX packets", unit="packets", layer="dataplane"),
-        MetricDefinition(name="port_tx_pkts", description="Port TX packets", unit="packets", layer="dataplane"),
-        MetricDefinition(name="port_rx_drops", description="Port RX drops", unit="packets", layer="dataplane"),
-        MetricDefinition(name="port_tx_drops", description="Port TX drops", unit="packets", layer="dataplane"),
-    ]
+    return catalog_metric_definitions()
 
 
 # Defaults; may be overridden/augmented by platform_config.json.
@@ -814,6 +1027,16 @@ def _bootstrap_from_config() -> None:
 
 _bootstrap_from_config()
 
+# Configs (multi-environment) support.
+_seed_default_config_if_missing()
+try:
+    _apply_active_config()
+except Exception:
+    pass
+
+# Restore researcher artifacts (experiments/runs) from temp folder.
+_load_experiments_and_runs_from_temp()
+
 for layer in layer_flags:
     _raw_file_for_layer(layer).touch(exist_ok=True)
 
@@ -822,6 +1045,18 @@ if not metric_samples:
     restored = _load_recent_samples_from_raw(limit=200)
     if restored:
         metric_samples.extend(restored)
+        for s in restored:
+            try:
+                seen_metric_names.add(str(s.metric))
+            except Exception:
+                pass
+
+        # Fill gaps: restored raw tends to be transport-heavy, which leaves many
+        # definitions without any sample. Do one synthetic pass to maximize coverage.
+        topology = next(iter(topologies.values()), None)
+        seeded = _collect_synthetic_full(topology, {"version": software_version})
+        if seeded:
+            _store_samples(seeded)
     else:
         seeded = _collect_synthetic_full(next(iter(topologies.values()), None), {"version": software_version})
         if seeded:
@@ -911,6 +1146,10 @@ async def create_experiment(payload: ExperimentCreate) -> Experiment:
     experiment_id = _generate_id("exp")
     experiment = Experiment(id=experiment_id, **payload.model_dump())
     experiments[experiment_id] = experiment
+    try:
+        _persist_experiment(experiment)
+    except Exception:
+        pass
     return experiment
 
 
@@ -937,6 +1176,10 @@ async def update_experiment(experiment_id: str, payload: ExperimentUpdate) -> Ex
     merged.update(update_data)
     updated = Experiment(id=experiment_id, **merged)
     experiments[experiment_id] = updated
+    try:
+        _persist_experiment(updated)
+    except Exception:
+        pass
     return updated
 
 
@@ -945,6 +1188,21 @@ async def delete_experiment(experiment_id: str) -> Response:
     if experiment_id not in experiments:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiment not found")
     experiments.pop(experiment_id)
+    try:
+        _delete_persisted_experiment(experiment_id)
+    except Exception:
+        pass
+
+    # Clean up any runs linked to this experiment.
+    for run_id, run in list(runs.items()):
+        if run.experiment_id != experiment_id:
+            continue
+        runs.pop(run_id, None)
+        run_metrics.pop(run_id, None)
+        try:
+            _delete_persisted_run(run_id)
+        except Exception:
+            pass
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -954,7 +1212,7 @@ async def delete_experiment(experiment_id: str) -> Response:
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(require_api_key)],
 )
-async def start_run(experiment_id: str) -> ExperimentRun:
+async def start_run(experiment_id: str, mode: str = "synthetic") -> ExperimentRun:
     experiment = experiments.get(experiment_id)
     if not experiment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiment not found")
@@ -963,13 +1221,49 @@ async def start_run(experiment_id: str) -> ExperimentRun:
         id=run_id,
         experiment_id=experiment_id,
         topology_id=experiment.topology_id,
-        status="CREATED",
+        status="RUNNING",
         started_at=datetime.utcnow(),
-        parameters={},
+        parameters={"mode": mode},
         logs=[],
     )
     runs[run_id] = run
     run_metrics.setdefault(run_id, [])
+
+    try:
+        _persist_run(run)
+    except Exception:
+        pass
+
+    # Snapshot collection (scientific record): collect once and finalize the run.
+    try:
+        labels = {
+            "run_id": run_id,
+            "experiment_id": experiment_id,
+            "topology_id": experiment.topology_id,
+            "version": software_version,
+        }
+        topology = topologies.get(experiment.topology_id)
+        use_real = mode == "real" or (real_collection_default and mode != "synthetic")
+        samples = _collect_real(topology, labels) if use_real else _collect_synthetic_full(topology, labels)
+        _store_samples(samples)
+        _append_run_log(run_id, f"metrics_collected:{len(samples)}")
+
+        merged = run.model_dump()
+        merged.update({"status": "COMPLETED", "ended_at": datetime.utcnow()})
+        run = ExperimentRun(**merged)
+        runs[run_id] = run
+    except Exception as exc:
+        _append_run_log(run_id, f"failed:{type(exc).__name__}")
+        merged = run.model_dump()
+        merged.update({"status": "FAILED", "ended_at": datetime.utcnow()})
+        run = ExperimentRun(**merged)
+        runs[run_id] = run
+
+    try:
+        _persist_run(run)
+        _persist_run_metrics(run_id)
+    except Exception:
+        pass
     return run
 
 
@@ -1030,7 +1324,71 @@ async def delete_flow(flow_id: str) -> Response:
 
 @app.get("/stream/events")
 async def stream_events() -> StreamingResponse:
-    return StreamingResponse(_event_stream(), media_type="text/event-stream")
+    return StreamingResponse(
+        _event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            # Helpful if served behind reverse proxies that buffer responses.
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@app.get("/configs")
+async def list_configs() -> List[Dict[str, Any]]:
+    return _list_configs()
+
+
+@app.get("/configs/active")
+async def get_active_config() -> Dict[str, Any]:
+    active_id = _load_active_config_id()
+    return {"active": active_id}
+
+
+@app.get("/configs/{config_id}")
+async def get_config(config_id: str) -> Dict[str, Any]:
+    return _read_config_payload(config_id)
+
+
+@app.post("/configs", dependencies=[Depends(require_api_key)])
+async def save_config(payload: Dict[str, Any]) -> Dict[str, Any]:
+    config_id = str(payload.get("id") or payload.get("name") or _generate_id("cfg"))
+    config_id = re.sub(r"[^a-zA-Z0-9_-]+", "_", config_id.strip()).strip("_")
+    if not config_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid config id")
+
+    set_active = bool(payload.get("set_active", False))
+    _write_config_payload(config_id, payload)
+    if set_active:
+        _set_active_config_id(config_id)
+        _apply_active_config()
+    return {"saved": True, "id": config_id, "active": _load_active_config_id()}
+
+
+@app.post("/configs/{config_id}/activate", dependencies=[Depends(require_api_key)])
+async def activate_config(config_id: str) -> Dict[str, Any]:
+    _read_config_payload(config_id)
+    _set_active_config_id(config_id)
+    _apply_active_config()
+    return {"active": config_id}
+
+
+@app.delete("/configs/{config_id}", dependencies=[Depends(require_api_key)])
+async def delete_config(config_id: str) -> Dict[str, Any]:
+    path = _config_path_for_id(config_id)
+    if not path.exists():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Config not found")
+    path.unlink(missing_ok=True)
+    if _load_active_config_id() == config_id:
+        # Pick next available config.
+        remaining = _list_configs()
+        if remaining:
+            _set_active_config_id(str(remaining[0]["id"]))
+        else:
+            active_config_path.unlink(missing_ok=True)
+    return {"deleted": True}
 
 
 @app.get("/health")

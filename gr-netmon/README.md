@@ -105,6 +105,19 @@ Cada publicação inclui pelo menos:
 ```
 Campos adicionais variam por bloco (`latency_s`, `flows`, `ifaces`, `snmp`, `containers`, etc.).
 
+## Integração com a Profissa SDN Platform (FastAPI)
+- A plataforma expõe `POST /metrics/samples` para ingestão de métricas no formato:
+  - `timestamp` (ISO-8601), `node`, `layer`, `metric`, `value` (+ `labels`/`details` opcionais)
+- As métricas persistem em `raw/metrics_{layer}.jsonl` e podem ser consumidas ao vivo via SSE `GET /stream/events`.
+
+Exemplo (ajuste `X-API-Key` se necessário):
+```bash
+curl -X POST "http://localhost:8000/metrics/samples" \
+  -H 'Content-Type: application/json' \
+  -H "X-API-Key: $API_KEY" \
+  -d '[{"timestamp":"2026-01-13T12:00:00Z","node":"h1","layer":"network","metric":"latency_ms","value":1.23}]'
+```
+
 ## Dicas de operação
 - Sem logs? Verifique `log_to_file=True` e permissões de escrita em `log_dir`.
 - `tcpdump` pode aguardar tráfego; reduza `count` ou aumente `interval` se necessário.

@@ -1,0 +1,34 @@
+% Auto-gerado (service) a partir de temp/metric_catalog_rows_clean.tex (count=33)
+\texttt{e2e\_path\_availability\_pct} & service & \% & ratio & e2e & src, dst, service & Disponibilidade do caminho (sucesso de probes sintéticos) \\
+\texttt{e2e\_latency\_ms\_p50} & service & ms & summary & e2e & src, dst, service & Latência E2E p50 \\
+\texttt{e2e\_latency\_ms\_p95} & service & ms & summary & e2e & src, dst, service & Latência E2E p95 \\
+\texttt{e2e\_latency\_ms\_p99} & service & ms & summary & e2e & src, dst, service & Latência E2E p99 \\
+\texttt{e2e\_jitter\_ms\_p95} & service & ms & summary & e2e & src, dst, service & Jitter E2E p95 \\
+\texttt{e2e\_loss\_pct} & service & \% & ratio & e2e & src, dst, service & Perda E2E \\
+\texttt{path\_changes\_total} & service & count & counter & e2e & src, dst, service & Mudanças de rota (path changes / ECMP hash changes) \\
+\texttt{mttd\_sec} & service & s & derived & reliability & service, incident\_id & Tempo médio de detecção (MTTD) \\
+\texttt{mttr\_sec} & service & s & derived & reliability & service, incident\_id & Tempo médio de restauração (MTTR) \\
+\texttt{worst\_path\_score} & service &  & derived & e2e & src, dst, service & Score derivado para rankear piores caminhos (loss/latency/jitter) \\
+\texttt{interface\_util\_p95\_pct} & service & \% & derived & capacity & node, interface & Interface utilization p95 \\
+\texttt{interface\_headroom\_pct} & service & \% & derived & capacity & node, interface & Interface headroom \\
+\texttt{queue\_depth} & service & count & gauge & capacity & node, interface, queue, qos\_class & Queue depth \\
+\texttt{buffer\_occupancy\_pct} & service & \% & gauge & capacity & node, asic & Buffer occupancy \\
+\texttt{ecn\_marks\_total} & service & count & counter & capacity & node, interface, qos\_class & ECN marks \\
+\texttt{elephant\_flows\_total} & service & count & derived & capacity & node, app & Elephant flows (classificação) \\
+\texttt{mice\_flows\_total} & service & count & derived & capacity & node, app & Mice flows (classificação) \\
+\texttt{hotspot\_score} & service &  & derived & capacity & node, interface, asic & Hotspot score (links/ASICs com maior utilização/drops) \\
+\texttt{slo\_error\_budget\_remaining\_pct} & service & \% & derived & reliability & slo, service & Error budget restante do SLO \\
+\texttt{incident\_rate} & service & count/s & derived & reliability & service & Taxa de incidentes \\
+\texttt{flap\_storm\_events\_total} & service & count & counter & reliability & node, interface & Flap storms \\
+\texttt{config\_drift\_score} & service &  & derived & reliability & node & Config drift vs golden config \\
+\texttt{firewall\_denies\_total} & service & count & counter & security & policy, rule\_id, node & Firewall/IDS denies por policy \\
+\texttt{scan\_spikes\_total} & service & count & counter & security & src, dst, port & Picos de scans \\
+\texttt{ddos\_syn\_rate\_pps} & service & pps & gauge & security & dst, service & DDoS signal: SYN rate \\
+\texttt{ddos\_udp\_flood\_pps} & service & pps & gauge & security & dst, service & DDoS signal: UDP flood indicators \\
+\texttt{abnormal\_pps} & service & pps & derived & security & node, interface & PPS anormal \\
+\texttt{anomaly\_new\_asns\_total} & service & count & counter & security & asn, prefix & Anomalias: novos ASNs \\
+\texttt{anomaly\_new\_countries\_total} & service & count & counter & security & country, service & Anomalias: novos países \\
+\texttt{anomaly\_new\_services\_total} & service & count & counter & security & service & Anomalias: novos serviços \\
+\texttt{anomaly\_new\_ports\_total} & service & count & counter & security & port, proto & Anomalias: novas portas \\
+\texttt{auth\_failures\_total} & service & count & counter & security & realm, profile & Falhas AAA/VPN (agregado) \\
+\texttt{cert\_errors\_total} & service & count & counter & security & sni, cert & Cert errors (agregado) \\

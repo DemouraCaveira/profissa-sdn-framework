@@ -22,3 +22,6 @@ dist/
 .DS_Store
 .idea/
 .vscode/
+
+# local large raw metrics (do not commit)
+/raw/metrics_transport.jsonl

@@ -46,7 +46,11 @@ export function useEventStream(path = "/stream/events") {
   useEffect(() => {
     const es = new EventSource(url, { withCredentials: false });
     es.onopen = () => setStatus("open");
-    es.onerror = () => setStatus("closed");
+    es.onerror = () => {
+      // EventSource uses onerror both for transient reconnects and permanent failures.
+      // Reflect that by showing "connecting" while retrying.
+      setStatus(es.readyState === EventSource.CLOSED ? "closed" : "connecting");
+    };
     es.onmessage = (evt) => {
       try {
         const payload: EventPayload = JSON.parse(evt.data);

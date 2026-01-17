@@ -1,0 +1,459 @@
+# Resultados preliminares do módulo *gr-netmon*
+
+<a id="sec-resultados-preliminares-gr-netmon"></a>
+
+Esta seção apresenta os resultados preliminares do *gr-netmon*, um módulo *out-of-tree* (OOT) do GNU Radio voltado ao monitoramento de redes em ambientes de laboratório com contêineres, com ênfase em cenários de Redes Definidas por Software (SDN). O objetivo do módulo é disponibilizar blocos reutilizáveis no GNU Radio Companion (GRC) para instrumentação e coleta de métricas em tempo (quase) real, permitindo correlacionar observações de desempenho e estado da rede com eventos de controle e encaminhamento típicos de topologias  SDN.
+
+O repositório do módulo encontra-se organizado em duas partes principais:
+
+- Implementação dos blocos em Python: `python/netmon/*.py`.
+- Definições de integração ao GRC: `grc/blocks/*.block.yml`, além de *flowgraphs* prontos para execução: `grc/flows/*.grc`.
+
+A instalação pode ser realizada via CMake (`cmake ..; make; sudo make install`), fazendo com que os blocos fiquem disponíveis no GRC na categoria `[Network]/Monitoring`. Alternativamente, há um procedimento manual de cópia para os diretórios de *site-packages* e de blocos do GRC.
+
+## Escopo e premissas do ambiente experimental
+
+Os resultados aqui descritos são considerados preliminares por se basearem na validação funcional e na observação inicial do comportamento dos blocos em laboratório com contêineres. O módulo assume como premissa que os alvos de monitoramento (hosts e switches em contêineres) disponibilizam utilitários de rede usuais, tais como `ping`, `ip` (iproute2), `ss`, `tcpdump` e, para cenários Open vSwitch, utilitários como `ovs-ofctl` e `ovs-vsctl`. Para o bloco de DNS, é necessária a dependência Python `dnspython`.
+
+Além disso, o *gr-netmon* adota uma convenção para persistência de logs baseada no parâmetro `log_dir`, cujo valor padrão é `${NETMON_LOG_DIR:-$PWD/raw}`, com criação automática do diretório quando ausente. Isso viabiliza execução reprodutível e coleta centralizada de artefatos (logs/pcaps) sem modificar o *flowgraph*.
+
+## Resultados de implementação: blocos e métricas disponibilizadas
+
+A principal evidência de maturidade inicial do módulo é a disponibilidade de um conjunto coeso de blocos de monitoramento, cobrindo diferentes camadas (aplicação/serviço, transporte, enlace e plano de encaminhamento SDN), além de *flowgraphs* que exercitam estes componentes. A tabela a seguir sumariza os blocos principais e seus objetivos.
+
+| Bloco | Finalidade e saída principal |
+|---|---|
+| `HostPingAuto` | Executa `ping` periódico em contêiner e produz latência (stream float) e métricas em JSON via porta de mensagens (`metrics`). |
+| `HostPingMsg` | Executa `ping` sob demanda após mensagem `tick`; emite texto em `out` e métricas JSON em `metrics`. |
+| `LinkInterfaceStats` | Coleta estatísticas de interfaces (via `ip -s link` e `/sys/class/net/*/statistics`) e publica JSON por interface, com opção de log. |
+| `TransportStats` | Coleta estatísticas de transporte (`ss -s` e `/proc/net/snmp`) e publica JSON com mapas TCP/UDP. |
+| `ForwardingTableS1` | Realiza *dump* de fluxos no Open vSwitch (tabela de encaminhamento), com execução periódica e/ou sob demanda (`tick`); gera texto e métricas JSON. |
+| `ForwardingTableS1 (msg)` | Variante dirigida por mensagens: recebe `tick` para disparar a coleta e emite a tabela formatada na saída `out` (útil para integração com *flowgraphs* hierárquicos). |
+| `OpenFlowSessionMonitor` | Captura informações de sessão/estado do OVS (`ovs-ofctl show` e `ovs-vsctl show`), publicando JSON e texto bruto. |
+| `IPHeaderCapture` | Amostra cabeçalhos IP via `tcpdump` em interface e contêiner definidos, produzindo log textual. |
+| `PCAPExporter` | Exporta PCAP de forma rotativa/segmentada por duração, com filtro BPF e diretório configurável. |
+| `DNSResolverMonitorBlock` | Mede latência de resolução DNS para um servidor/consulta, emitindo latência (stream float) e métricas em JSON. |
+| `DockerStats` | Coleta consumo de recursos via `docker stats --no-stream` (CPU/memória, etc.) e publica métricas em JSON. |
+| `Alerts (auto)` | Lê arquivos brutos (por exemplo, logs do `HostPingAuto`) e emite alertas quando limiares de latência/perda/jitter são excedidos, com persistência opcional em `alerts.txt`. |
+
+Do ponto de vista de integração com o GNU Radio, o resultado preliminar mais relevante é a padronização de uma saída de métricas em formato JSON (porta de mensagens `metrics`) em múltiplos blocos, permitindo:
+
+- Inspeção rápida por `Message Debug` no GRC.
+- Persistência opcional em arquivo (`log_to_file`).
+- Posterior ingestão por ferramentas externas (por exemplo, pipelines de análise, bancos de séries temporais ou scripts de pós-processamento).
+
+O formato mínimo de cada publicação inclui campos de carimbo de tempo (`ts`, `ts_iso`), identificação do módulo/bloco (`module`) e o contêiner associado (`container`), sobre o qual se agregam campos específicos (por exemplo, `latency_s`, `ifaces`, `snmp`, `flows`, `containers`). Essa estrutura é suficiente para correlacionar medições entre blocos e compor uma visão unificada de estado do laboratório.
+
+## Resultados de reprodutibilidade: *flowgraphs* de referência
+
+Outro resultado preliminar importante é a disponibilização de *flowgraphs* prontos (`grc/flows/netmon_*.grc`), que funcionam como artefatos de validação e como modelos de reuso. Entre eles, destacam-se:
+
+- Coleta automática de estatísticas de enlace e transporte em host: `netmon_link_interface_stats_auto.grc` e `netmon_transport_stats_auto.grc`.
+- Monitoramento de sessão OpenFlow no switch: `netmon_openflow_session_auto.grc`.
+- Inspeção/extração de tabela de fluxos: `netmon_forwarding_table_s1_auto.grc` e variante por mensagem.
+- Captura de cabeçalhos IP e exportação PCAP: `netmon_ip_header_capture_auto.grc` e `netmon_pcap_exporter_auto.grc`.
+- Fluxo de alertas baseado em leitura de logs de ping: `netmon_alerts_auto.grc`.
+
+Esses *flowgraphs* reduzem o custo de adoção do módulo e estabelecem uma linha-base experimental para repetição de medições, pois padronizam parâmetros de execução (contêiner padrão, diretório de logs e intervalos). Na prática, isso facilita a coleta de séries temporais comparáveis em diferentes execuções e topologias.
+
+## Discussão: aderência a requisitos típicos em SDN
+
+Os resultados preliminares indicam que o *gr-netmon* cobre três necessidades recorrentes em ambientes SDN de pesquisa:
+
+1. **Observabilidade fim a fim**: por meio de métricas ativas (latência de `ping`, latência de DNS) e passivas (estatísticas de enlace e transporte), é possível caracterizar degradações e transientes.
+2. **Visibilidade do plano de encaminhamento**: com coleta da tabela de fluxos e estado do OVS/OpenFlow, torna-se viável correlacionar alterações de política e eventos do controlador com efeitos no dataplane.
+3. **Coleta de evidências e auditoria**: a exportação de PCAP e a captura de cabeçalhos fornecem rastreabilidade e permitem validação posterior das hipóteses experimentais.
+
+Adicionalmente, a presença do bloco `DockerStats` permite controlar um fator de confusão comum em laboratórios containerizados: variações de desempenho causadas por contenção de CPU/memória, úteis para distinguir problemas de rede de limitações de recursos do host.
+
+## Limitações atuais e próximos passos
+
+Por se tratar de uma etapa inicial, os resultados ainda não contemplam uma avaliação quantitativa completa (por exemplo, precisão das métricas, custo de instrumentação, impacto de overhead e comparação com ferramentas dedicadas). Como próximos passos para evolução do trabalho, destacam-se:
+
+- Caracterização sistemática do overhead de coleta por bloco (CPU/memória no contêiner e no host).
+- Validação da consistência temporal das métricas (sincronização e jitter de amostragem).
+- Definição de um conjunto de cenários de teste SDN (falhas, congestionamento, mudanças de política) com *ground truth* controlada.
+- Padronização de um pipeline de pós-processamento para geração automática de figuras (CDF/boxplots/séries temporais) a partir dos JSON e PCAPs.
+
+## Referência do código-fonte
+
+O código do módulo está disponível no repositório do framework, no diretório `gr-netmon`, incluindo documentação de instalação e exemplos de execução via GRC:
+
+- [Link do repositório na revisão analisada](https://github.com/DemouraCaveira/profissa-sdn-framework/tree/b75be709e4dbb0adf6cc23af29ac7c8dce272520/gr-netmon)
+
+# Resultados preliminares da plataforma *NetOps*
+
+<a id="sec-resultados-preliminares-profissa-platform"></a>
+
+Além do módulo *gr-netmon*, o framework incorpora a plataforma *NetOps* (*NetOps Studio*), composta por backend (FastAPI) e frontend web (Vite + React/TypeScript). Os resultados descritos nesta seção são preliminares por priorizarem evidências de implementação e de completude do catálogo de observabilidade (métricas), ainda sem uma avaliação quantitativa de overhead, latência do pipeline e escalabilidade.
+
+## Resultados de implementação: arquitetura, API e persistência
+
+A *NetOps* estrutura (i) inventário e configuração, (ii) execução de experimentos e (iii) telemetria por meio de endpoints REST e um canal de eventos em tempo (quase) real via SSE. No backend (núcleo em `platform/backend/api/app.py`), destacam-se:
+
+- **Inventário e operação**: saúde do serviço (`GET /health`), topologias, fluxos e configurações (incluindo o conceito de *config ativa*).
+- **Experimentos e runs**: criação/execução e consulta de execuções reprodutíveis, associando resultados (métricas) a *snapshots* do contexto experimental.
+- **Métricas**: catálogo (`GET /metrics/definitions`), ingestão (`POST /metrics/samples`), consulta e exportação, além de suporte a último valor e coleta sob demanda.
+- **Streaming**: entrega de eventos via `GET /stream/events` para consumo no frontend.
+
+Do ponto de vista de persistência, os resultados se materializam em artefatos do tipo JSONL sob `raw/` (por camada, em `raw/metrics_{layer}.jsonl`) e em `temp/` (configs e registros de execuções). Essa organização favorece reprodutibilidade (artefatos auditáveis), *post-mortem* offline e reinicialização sem exigir TSDB externa.
+
+## Resultados de implementação: interface (páginas existentes e papel de cada uma)
+
+O frontend consolida os fluxos principais em páginas com papéis distintos, mantendo coerência entre telemetria ao vivo (SSE) e operações (REST):
+
+- **Dashboard (Observabilidade)**: ponto de entrada para inspeção do *stream* e do catálogo; expõe estado do SSE, indicadores de disponibilidade de dados e visão por camadas (definições vs. métricas observadas).
+- **Topologia**: visualização do inventário atual (hosts, switches e controlador) e seus relacionamentos; serve como referência para interpretação de métricas por nó/caminho.
+- **Experimentos**: estrutura experimentação como registro reprodutível, incluindo criação e execução de *runs* e inspeção de resultados associados.
+- **Lab**: vista orientada a *workflows* por blocos (ex.: Ping/TCP/DNS/SDN), filtrando o *stream* para investigação incremental por hipótese.
+- **Monitor**: tela operacional ao vivo (SSE), com filtros por camada/nó e tabela de eventos recentes para triagem rápida.
+- **Configurações (Settings)**: criação/edição/ativação de perfis `platform_config` (nós, links, camadas habilitadas e plano de métricas).
+- **Histórico**: no estado atual, delimita uma extensão natural do produto (relatórios e recortes temporais), conectando-se conceitualmente aos exports e aos arquivos `raw/*.jsonl`.
+
+## Métricas contempladas por camada (L0–L7) e total de métricas
+
+Um resultado central da *NetOps* é a existência de um catálogo canônico de métricas, usado como contrato entre coleta, persistência e visualização. Na revisão analisada, o catálogo contém **267 definições** (evidência auto-gerada em `temp/metric_catalog_rows_clean.tex`). Caso existam contagens maiores em outras medições (por exemplo, **293**), isso tende a decorrer de métricas derivadas/agregadas em *runtime*, variações de versão ou inclusão de artefatos fora do catálogo canônico.
+
+Para organizar a cobertura conforme solicitado (L0–L7), adota-se a equivalência prática:
+
+- **L0** (`physical`)
+- **L1** (`link`)
+- **L2** (`network`)
+- **L3** (`transport`)
+- **L4** (`session`)
+- **L5** (`presentation`)
+- **L6** (`application`)
+- **L7** (`service`)
+
+Além disso, a plataforma contempla planos `control` e `dataplane`.
+
+A seguir, apresenta-se o catálogo completo por camada/plano.
+
+### L0 — Physical (28 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`if_link_up`|physical|bool|gauge|health|node, interface|Status do link (up=1/down=0)|
+|`if_flaps_total`|physical|count|counter|health|node, interface|Contagem de flaps (up/down)|
+|`if_speed_mbps`|physical|Mbps|gauge|capacity|node, interface|Velocidade negociada|
+|`if_duplex_mismatch`|physical|bool|gauge|health|node, interface|Mismatch de duplex (1=sim)|
+|`if_in_bps`|physical|bps|gauge|capacity|node, interface|Tráfego de entrada (bits/s)|
+|`if_out_bps`|physical|bps|gauge|capacity|node, interface|Tráfego de saída (bits/s)|
+|`if_in_bps_p95`|physical|bps|derived|capacity|node, interface|Utilização de entrada p95 (bits/s)|
+|`if_in_bps_p99`|physical|bps|derived|capacity|node, interface|Utilização de entrada p99 (bits/s)|
+|`if_out_bps_p95`|physical|bps|derived|capacity|node, interface|Utilização de saída p95 (bits/s)|
+|`if_out_bps_p99`|physical|bps|derived|capacity|node, interface|Utilização de saída p99 (bits/s)|
+|`if_errors`|physical|count|counter|errors|node, interface|Interface errors|
+|`if_discards`|physical|count|counter|errors|node, interface|Interface discards|
+|`if_crc_errors`|physical|count|counter|errors|node, interface|CRC errors|
+|`if_fcs_errors_total`|physical|count|counter|errors|node, interface|FCS errors|
+|`if_alignment_errors_total`|physical|count|counter|errors|node, interface|Alignment errors|
+|`if_symbol_errors_total`|physical|count|counter|errors|node, interface|Symbol errors|
+|`if_physical_drops_total`|physical|count|counter|errors|node, interface|Drops físicos (quando possível separar de congestionamento)|
+|`if_optic_rx_dbm`|physical|dBm|gauge|health|node, interface|Optical RX power|
+|`if_optic_tx_dbm`|physical|dBm|gauge|health|node, interface|Optical TX power|
+|`if_optic_osnr_db`|physical|dB|gauge|health|node, interface|Optical OSNR|
+|`if_optic_bias_ma`|physical|mA|gauge|health|node, interface|Optical bias current|
+|`if_optic_temp_c`|physical|C|gauge|health|node, interface|Optical module temperature|
+|`if_optic_threshold_violations_total`|physical|count|counter|health|node, interface|Optical threshold violations|
+|`if_temp_c`|physical|C|gauge|health|node, interface|Interface temperature|
+|`if_mtu_effective_bytes`|physical|bytes|gauge|health|node, interface|MTU efetivo (detecção de inconsistências)|
+|`poe_power_w`|physical|W|gauge|capacity|node, interface|Consumo PoE|
+|`poe_events_total`|physical|count|counter|health|node, interface|Eventos PoE|
+|`poe_budget_w`|physical|W|gauge|capacity|node|Budget PoE|
+
+### L1 — Link (31 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`mac_table_size`|link|count|gauge|l2|node, vlan|Tamanho da MAC table|
+|`mac_churn_rate`|link|count/s|derived|l2|node, vlan|MAC churn rate|
+|`mac_moves_total`|link|count|counter|l2|node, vlan|MAC moves|
+|`stp_root_changes_total`|link|count|counter|l2|node, instance|STP root changes|
+|`stp_topology_changes_total`|link|count|counter|l2|node, instance|STP topology changes|
+|`stp_blocked_ports`|link|count|gauge|l2|node|STP blocked ports|
+|`lacp_members_up`|link|count|gauge|l2|node, portchannel|LACP members up|
+|`lacp_members_down`|link|count|gauge|l2|node, portchannel|LACP members down|
+|`lacp_imbalance_pct`|link|%|ratio|capacity|node, portchannel|LACP imbalance|
+|`lacp_renegotiations_total`|link|count|counter|l2|node, portchannel|LACP renegotiations|
+|`vlan_active_count`|link|count|gauge|l2|node, trunk|VLANs ativas por trunk|
+|`vlan_allowed_mismatch_total`|link|count|counter|l2|node, trunk|Inconsistência de VLANs allowed|
+|`vlan_native_mismatch_total`|link|count|counter|l2|node, trunk|Inconsistência de VLAN native|
+|`bum_rate_pps`|link|pps|gauge|capacity|node, vlan, type|Taxa de BUM (broadcast/multicast/unknown)|
+|`bum_peak_pps`|link|pps|derived|capacity|node, vlan, type|Pico de BUM|
+|`arp_cache_util_pct`|link|%|ratio|l2|node, vrf|ARP cache utilization|
+|`arp_miss_rate`|link|count/s|derived|l2|node, vrf|ARP miss rate|
+|`arp_duplicates_total`|link|count|counter|l2|node, vrf|ARP duplicados|
+|`arp_gratuitous_spikes_total`|link|count|counter|l2|node, vrf|Picos de gratuitous ARP|
+|`nd_cache_util_pct`|link|%|ratio|l2|node, vrf|ND (IPv6) cache utilization|
+|`nd_miss_rate`|link|count/s|derived|l2|node, vrf|ND miss rate|
+|`nd_duplicates_total`|link|count|counter|l2|node, vrf|ND duplicados|
+|`lldp_neighbors_expected_pct`|link|%|ratio|l2|node|LLDP/CDP expected vs real|
+|`lldp_drift_total`|link|count|counter|l2|node|LLDP/CDP drift events|
+|`microburst_queue_occupancy_pct_peak`|link|%|derived|capacity|node, interface, queue|Microbursts: pico de fila/ocupação|
+|`link_util_pct`|link|%|gauge|capacity|node, interface|Link utilization|
+|`link_loss_pct`|link|%|ratio|errors|node, interface|Link loss|
+|`link_jitter_ms`|link|ms|gauge|performance|node, interface|Link jitter|
+|`queue_occupancy_pct`|link|%|gauge|capacity|node, interface, queue, qos_class|Queue occupancy|
+|`queue_drops`|link|count|counter|errors|node, interface, queue, qos_class|Queue drops|
+|`ecn_marked_pct`|link|%|ratio|capacity|node, interface, qos_class|ECN marked traffic|
+
+### L2 — Network (32 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`prefix_reachability_pct`|network|%|ratio|l3|prefix, vrf, tenant, src, dst|Reachability por prefixo|
+|`routing_convergence_ms`|network|ms|derived|l3|protocol, vrf|Tempo de convergência de roteamento|
+|`route_count`|network|count|gauge|l3|protocol, afi, safi, vrf|Route count (total/por AFI/SAFI/VRF)|
+|`route_churn_rate`|network|count/s|derived|l3|protocol, vrf|Route churn rate|
+|`bgp_session_up`|network|bool|gauge|routing|peer, vrf, afi, safi|BGP session up (1/0)|
+|`bgp_session_flaps_total`|network|count|counter|routing|peer, vrf|BGP session flaps|
+|`bgp_updates_total`|network|count|counter|routing|peer, vrf, afi, safi|BGP updates|
+|`bgp_withdraws_total`|network|count|counter|routing|peer, vrf, afi, safi|BGP withdraws|
+|`bgp_prefix_limit_hits_total`|network|count|counter|routing|peer, vrf|BGP prefix limit hits|
+|`bgp_as_path_changes_total`|network|count|counter|routing|prefix, peer, vrf|BGP AS-path changes|
+|`ospf_session_up`|network|bool|gauge|routing|neighbor, area, vrf|OSPF adjacency up (1/0)|
+|`ospf_flaps_total`|network|count|counter|routing|neighbor, area, vrf|OSPF adjacency flaps|
+|`isis_session_up`|network|bool|gauge|routing|neighbor, level, vrf|IS-IS adjacency up (1/0)|
+|`isis_flaps_total`|network|count|counter|routing|neighbor, level, vrf|IS-IS adjacency flaps|
+|`icmp_unreachable_total`|network|count|counter|errors|src, dst, code|ICMP unreachable|
+|`icmp_frag_needed_total`|network|count|counter|errors|src, dst|ICMP frag needed (PMTUD)|
+|`ip_fragments_total`|network|count|counter|errors|src, dst|IP fragments|
+|`ip_fragment_drops_total`|network|count|counter|errors|node|Drops por MTU/fragmentação|
+|`dscp_packets_total`|network|count|counter|qos|dscp, node, interface|Distribuição DSCP (contagem por classe)|
+|`dscp_remark_events_total`|network|count|counter|qos|from, to, policy|Eventos de remarking DSCP|
+|`acl_drops_total`|network|count|counter|security|rule_id, node|ACL/Policy drops por regra|
+|`tunnel_up`|network|bool|gauge|overlay|tunnel, type, vrf|Tunnel up/down|
+|`tunnel_keepalive_loss_total`|network|count|counter|overlay|tunnel, type, vrf|Tunnel keepalive loss|
+|`tunnel_encap_errors_total`|network|count|counter|overlay|tunnel, type|Encapsulation errors|
+|`tunnel_decap_errors_total`|network|count|counter|overlay|tunnel, type|Decapsulation errors|
+|`vxlan_vni_mapping_ok`|network|bool|gauge|overlay|vni, vrf|VNI/VRF mapping health|
+|`latency_ms`|network|ms|gauge|performance|src, dst|Latency|
+|`packet_loss_pct`|network|%|ratio|performance|src, dst|Packet loss|
+|`jitter_ms`|network|ms|gauge|performance|src, dst|Jitter|
+|`ttl_expired`|network|count|counter|errors|src, dst|TTL expired events|
+|`routes_count`|network|count|gauge|routing|node, vrf|Route entries|
+|`arp_entries`|network|count|gauge|l3|node, vrf|ARP/ND cache entries|
+
+### L3 — Transport (77 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`tcp_retrans_pct`|transport|%|ratio|transport|src, dst, flow|TCP retransmissions (%)|
+|`tcp_retrans_total`|transport|count|counter|transport|src, dst, flow|TCP retransmissions (count)|
+|`tcp_fast_retrans_total`|transport|count|counter|transport|src, dst, flow|TCP fast retransmit|
+|`tcp_dup_acks_total`|transport|count|counter|transport|src, dst, flow|TCP duplicate ACKs|
+|`tcp_handshake_success_pct`|transport|%|ratio|transport|dst, port|TCP handshake success rate|
+|`tcp_handshake_latency_ms`|transport|ms|gauge|transport|dst, port|TCP handshake latency|
+|`tcp_resets_total`|transport|count|counter|transport|src, dst, flow|Resets (RST)|
+|`tcp_out_of_order_total`|transport|count|counter|transport|src, dst, flow|TCP out-of-order|
+|`tcp_zero_window_total`|transport|count|counter|transport|src, dst, flow|TCP zero window|
+|`tcp_window_scaling_anomalies_total`|transport|count|counter|transport|src, dst, flow|TCP window scaling anomalies|
+|`udp_loss_pct`|transport|%|ratio|transport|src, dst, flow|UDP loss|
+|`udp_jitter_ms`|transport|ms|gauge|transport|src, dst, flow|UDP jitter|
+|`nat_table_util_pct`|transport|%|ratio|nat|node, nat_pool|NAT table utilization|
+|`nat_port_exhaustion_events_total`|transport|count|counter|nat|node, nat_pool|NAT port exhaustion events|
+|`nat_translation_failures_total`|transport|count|counter|nat|node|NAT translation failures|
+|`lb_healthcheck_success_pct`|transport|%|ratio|lb|lb, pool, backend|Load balancer health checks success|
+|`lb_connection_rate`|transport|count/s|gauge|lb|lb, vip|Load balancer connection rate|
+|`lb_concurrent_connections`|transport|count|gauge|lb|lb, vip|Load balancer concurrent connections|
+|`lb_backend_connect_errors_total`|transport|count|counter|lb|lb, backend|LB backend connect errors|
+|`lb_backend_timeouts_total`|transport|count|counter|lb|lb, backend|LB backend timeouts|
+|`throughput_mbps`|transport|Mbps|gauge|performance|src, dst|Throughput|
+|`tcp_rtt_ms`|transport|ms|gauge|transport|src, dst, flow|TCP RTT|
+|`ss_sockets_total`|transport|count|gauge|host|node|Total sockets from ss -s|
+|`ss_tcp_states`|transport|count|gauge|host|node|TCP states from ss -s|
+|`ss_udp_sockets_total`|transport|count|gauge|host|node|UDP sockets from ss -s|
+|`ss_tcp_sockets_total`|transport|count|gauge|host|node|TCP sockets from ss -s|
+|`ss_raw_sockets_total`|transport|count|gauge|host|node|RAW sockets from ss -s|
+|`ss_inet_sockets_total`|transport|count|gauge|host|node|INET sockets from ss -s|
+|`ss_frag_sockets_total`|transport|count|gauge|host|node|FRAG sockets from ss -s|
+|`snmp_ip_in_receives`|transport|count|counter|snmp|node|IP InReceives|
+|`snmp_ip_in_hdr_errors`|transport|count|counter|snmp|node|IP InHdrErrors|
+|`snmp_ip_in_addr_errors`|transport|count|counter|snmp|node|IP InAddrErrors|
+|`snmp_ip_forw_datagrams`|transport|count|counter|snmp|node|IP ForwDatagrams|
+|`snmp_ip_in_unknown_protos`|transport|count|counter|snmp|node|IP InUnknownProtos|
+|`snmp_ip_in_discards`|transport|count|counter|snmp|node|IP InDiscards|
+|`snmp_ip_in_delivers`|transport|count|counter|snmp|node|IP InDelivers|
+|`snmp_ip_out_requests`|transport|count|counter|snmp|node|IP OutRequests|
+|`snmp_ip_out_discards`|transport|count|counter|snmp|node|IP OutDiscards|
+|`snmp_ip_out_no_routes`|transport|count|counter|snmp|node|IP OutNoRoutes|
+|`snmp_ip_reasm_timeout`|transport|count|counter|snmp|node|IP ReasmTimeout|
+|`snmp_ip_reasm_reqds`|transport|count|counter|snmp|node|IP ReasmReqds|
+|`snmp_ip_reasm_oks`|transport|count|counter|snmp|node|IP ReasmOKs|
+|`snmp_ip_reasm_fails`|transport|count|counter|snmp|node|IP ReasmFails|
+|`snmp_ip_frag_oks`|transport|count|counter|snmp|node|IP FragOKs|
+|`snmp_ip_frag_fails`|transport|count|counter|snmp|node|IP FragFails|
+|`snmp_ip_frag_creates`|transport|count|counter|snmp|node|IP FragCreates|
+|`snmp_ip_out_transmits`|transport|count|counter|snmp|node|IP OutTransmits|
+|`snmp_icmp_in_msgs`|transport|count|counter|snmp|node|ICMP InMsgs|
+|`snmp_icmp_out_msgs`|transport|count|counter|snmp|node|ICMP OutMsgs|
+|`snmp_icmp_in_errors`|transport|count|counter|snmp|node|ICMP InErrors|
+|`snmp_icmp_out_errors`|transport|count|counter|snmp|node|ICMP OutErrors|
+|`snmp_icmp_in_dest_unreachs`|transport|count|counter|snmp|node|ICMP InDestUnreachs|
+|`snmp_icmp_out_dest_unreachs`|transport|count|counter|snmp|node|ICMP OutDestUnreachs|
+|`snmp_icmp_in_time_excds`|transport|count|counter|snmp|node|ICMP InTimeExcds|
+|`snmp_icmp_out_time_excds`|transport|count|counter|snmp|node|ICMP OutTimeExcds|
+|`snmp_icmp_in_echo_reqs`|transport|count|counter|snmp|node|ICMP InEchos|
+|`snmp_icmp_out_echo_reps`|transport|count|counter|snmp|node|ICMP OutEchoReps|
+|`snmp_tcp_active_opens`|transport|count|counter|snmp|node|TCP ActiveOpens|
+|`snmp_tcp_passive_opens`|transport|count|counter|snmp|node|TCP PassiveOpens|
+|`snmp_tcp_attempt_fails`|transport|count|counter|snmp|node|TCP AttemptFails|
+|`snmp_tcp_estab_resets`|transport|count|counter|snmp|node|TCP EstabResets|
+|`snmp_tcp_curr_estab`|transport|count|gauge|snmp|node|TCP CurrEstab|
+|`snmp_tcp_in_segs`|transport|count|counter|snmp|node|TCP InSegs|
+|`snmp_tcp_out_segs`|transport|count|counter|snmp|node|TCP OutSegs|
+|`snmp_tcp_retrans_segs`|transport|count|counter|snmp|node|TCP RetransSegs|
+|`snmp_tcp_in_errs`|transport|count|counter|snmp|node|TCP InErrs|
+|`snmp_tcp_out_rsts`|transport|count|counter|snmp|node|TCP OutRsts|
+|`snmp_tcp_in_csum_errors`|transport|count|counter|snmp|node|TCP InCsumErrors|
+|`snmp_udp_in_datagrams`|transport|count|counter|snmp|node|UDP InDatagrams|
+|`snmp_udp_no_ports`|transport|count|counter|snmp|node|UDP NoPorts|
+|`snmp_udp_in_errors`|transport|count|counter|snmp|node|UDP InErrors|
+|`snmp_udp_out_datagrams`|transport|count|counter|snmp|node|UDP OutDatagrams|
+|`snmp_udp_rcvbuf_errors`|transport|count|counter|snmp|node|UDP RcvbufErrors|
+|`snmp_udp_sndbuf_errors`|transport|count|counter|snmp|node|UDP SndbufErrors|
+|`snmp_udp_in_csum_errors`|transport|count|counter|snmp|node|UDP InCsumErrors|
+|`snmp_udp_ignored_multi`|transport|count|counter|snmp|node|UDP IgnoredMulti|
+|`snmp_udp_mem_errors`|transport|count|counter|snmp|node|UDP MemErrors|
+
+### L4 — Session (10 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`tls_session_resumption_pct`|session|%|ratio|tls|sni, service|TLS session resumption rate|
+|`tls_renegotiations_total`|session|count|counter|tls|sni, service|TLS renegotiations|
+|`tls_handshake_failures_total`|session|count|counter|tls|sni, cert|TLS handshake failures (por SNI/cert)|
+|`vpn_sessions_active`|session|count|gauge|vpn|profile, tenant|VPN sessions active|
+|`vpn_session_establish_rate`|session|count/s|gauge|vpn|profile, tenant|VPN session establish rate|
+|`vpn_session_failures_total`|session|count|counter|vpn|profile, tenant, reason|VPN session failures|
+|`aaa_auth_failures_total`|session|count|counter|aaa|realm, reason|Falhas de autenticação AAA|
+|`session_idle_timeouts_total`|session|count|counter|session|policy, profile|Idle/timeout expirations|
+|`fw_state_table_util_pct`|session|%|ratio|security|node|Firewall state table usage|
+|`fw_state_table_drops_total`|session|count|counter|security|node|Drops por overflow de state table|
+
+### L5 — Presentation (13 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`tls_handshake_latency_ms_p95`|presentation|ms|summary|tls|sni, service|TLS handshake latency p95|
+|`tls_handshake_latency_ms_p99`|presentation|ms|summary|tls|sni, service|TLS handshake latency p99|
+|`tls_version_connections_total`|presentation|count|counter|tls|version, sni|Distribuição de versões TLS|
+|`tls_cipher_connections_total`|presentation|count|counter|tls|cipher, sni|Distribuição de ciphers|
+|`cert_expiry_days`|presentation|days|gauge|tls|cert, sni|Certificados: dias até expiração|
+|`cert_validation_errors_total`|presentation|count|counter|tls|cert, sni|Certificados: validation errors|
+|`cert_chain_errors_total`|presentation|count|counter|tls|cert, sni|Certificados: chain errors|
+|`sni_mismatch_total`|presentation|count|counter|tls|sni, cert|SNI mismatch|
+|`compression_errors_total`|presentation|count|counter|encoding|algo|Erro de compressão (gzip/br)|
+|`encoding_errors_total`|presentation|count|counter|encoding|codec|Erro de encoding/codec|
+|`http2_negotiation_success_pct`|presentation|%|ratio|http|service|HTTP/2 negotiation success|
+|`http3_quic_negotiation_success_pct`|presentation|%|ratio|http|service|HTTP/3 (QUIC) negotiation success|
+|`quic_fallback_rate_pct`|presentation|%|ratio|http|service|HTTP/3 fallback rate|
+
+### L6 — Application (25 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`app_rps`|application|rps|gauge|app|service, route|Taxa de requisições (RPS/QPS)|
+|`app_latency_ms_p95`|application|ms|summary|app|service, route|Latência p95 (app)|
+|`app_latency_ms_p99`|application|ms|summary|app|service, route|Latência p99 (app)|
+|`http_responses_total`|application|count|counter|http|service, route, code|Códigos HTTP (por classe/rota)|
+|`http_errors_total`|application|count|counter|http|service, route, code|HTTP errors (4xx/5xx)|
+|`dns_qps`|application|qps|gauge|dns|server, zone|DNS QPS|
+|`dns_latency_ms_p95`|application|ms|summary|dns|server, zone|DNS latency p95|
+|`dns_servfail_total`|application|count|counter|dns|server, zone|DNS SERVFAIL|
+|`dns_nxdomain_total`|application|count|counter|dns|server, zone|DNS NXDOMAIN|
+|`dns_cache_hit_ratio_pct`|application|%|ratio|dns|server|DNS cache hit ratio|
+|`dhcp_success_pct`|application|%|ratio|dhcp|scope, server|DHCP success rate (DORA)|
+|`dhcp_dora_latency_ms`|application|ms|gauge|dhcp|scope, server|DHCP DORA latency|
+|`dhcp_pool_util_pct`|application|%|ratio|dhcp|scope|DHCP pool utilization|
+|`dhcp_conflicts_total`|application|count|counter|dhcp|scope|DHCP conflicts|
+|`ntp_offset_ms`|application|ms|gauge|ntp|server|NTP offset/drift|
+|`ntp_drift_ppm`|application|ppm|gauge|ntp|server|NTP drift|
+|`ntp_stratum_changes_total`|application|count|counter|ntp|server|NTP stratum changes|
+|`ntp_reachability_pct`|application|%|ratio|ntp|server|NTP reachability|
+|`http_ttfb_ms`|application|ms|gauge|http|service, route|HTTP time-to-first-byte|
+|`http_ttlb_ms`|application|ms|gauge|http|service, route|HTTP time-to-last-byte|
+|`http_payload_bytes_p95`|application|bytes|summary|http|service, route|HTTP payload size p95|
+|`grpc_status_total`|application|count|counter|grpc|service, method, status|gRPC status codes|
+|`grpc_deadlines_exceeded_total`|application|count|counter|grpc|service, method|gRPC deadlines exceeded|
+|`db_connection_errors_total`|application|count|counter|db|db, service|Database connection errors (alto nível)|
+|`db_query_latency_ms_p95`|application|ms|summary|db|db, service|Database query latency p95 (alto nível)|
+
+### L7 — Service (33 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`e2e_path_availability_pct`|service|%|ratio|e2e|src, dst, service|Disponibilidade do caminho (sucesso de probes sintéticos)|
+|`e2e_latency_ms_p50`|service|ms|summary|e2e|src, dst, service|Latência E2E p50|
+|`e2e_latency_ms_p95`|service|ms|summary|e2e|src, dst, service|Latência E2E p95|
+|`e2e_latency_ms_p99`|service|ms|summary|e2e|src, dst, service|Latência E2E p99|
+|`e2e_jitter_ms_p95`|service|ms|summary|e2e|src, dst, service|Jitter E2E p95|
+|`e2e_loss_pct`|service|%|ratio|e2e|src, dst, service|Perda E2E|
+|`path_changes_total`|service|count|counter|e2e|src, dst, service|Mudanças de rota (path changes / ECMP hash changes)|
+|`mttd_sec`|service|s|derived|reliability|service, incident_id|Tempo médio de detecção (MTTD)|
+|`mttr_sec`|service|s|derived|reliability|service, incident_id|Tempo médio de restauração (MTTR)|
+|`worst_path_score`|service||derived|e2e|src, dst, service|Score derivado para rankear piores caminhos (loss/latency/jitter)|
+|`interface_util_p95_pct`|service|%|derived|capacity|node, interface|Interface utilization p95|
+|`interface_headroom_pct`|service|%|derived|capacity|node, interface|Interface headroom|
+|`queue_depth`|service|count|gauge|capacity|node, interface, queue, qos_class|Queue depth|
+|`buffer_occupancy_pct`|service|%|gauge|capacity|node, asic|Buffer occupancy|
+|`ecn_marks_total`|service|count|counter|capacity|node, interface, qos_class|ECN marks|
+|`elephant_flows_total`|service|count|derived|capacity|node, app|Elephant flows (classificação)|
+|`mice_flows_total`|service|count|derived|capacity|node, app|Mice flows (classificação)|
+|`hotspot_score`|service||derived|capacity|node, interface, asic|Hotspot score (links/ASICs com maior utilização/drops)|
+|`slo_error_budget_remaining_pct`|service|%|derived|reliability|slo, service|Error budget restante do SLO|
+|`incident_rate`|service|count/s|derived|reliability|service|Taxa de incidentes|
+|`flap_storm_events_total`|service|count|counter|reliability|node, interface|Flap storms|
+|`config_drift_score`|service||derived|reliability|node|Config drift vs golden config|
+|`firewall_denies_total`|service|count|counter|security|policy, rule_id, node|Firewall/IDS denies por policy|
+|`scan_spikes_total`|service|count|counter|security|src, dst, port|Picos de scans|
+|`ddos_syn_rate_pps`|service|pps|gauge|security|dst, service|DDoS signal: SYN rate|
+|`ddos_udp_flood_pps`|service|pps|gauge|security|dst, service|DDoS signal: UDP flood indicators|
+|`abnormal_pps`|service|pps|derived|security|node, interface|PPS anormal|
+|`anomaly_new_asns_total`|service|count|counter|security|asn, prefix|Anomalias: novos ASNs|
+|`anomaly_new_countries_total`|service|count|counter|security|country, service|Anomalias: novos países|
+|`anomaly_new_services_total`|service|count|counter|security|service|Anomalias: novos serviços|
+|`anomaly_new_ports_total`|service|count|counter|security|port, proto|Anomalias: novas portas|
+|`auth_failures_total`|service|count|counter|security|realm, profile|Falhas AAA/VPN (agregado)|
+|`cert_errors_total`|service|count|counter|security|sni, cert|Cert errors (agregado)|
+
+### Plano — Control (7 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`controller_latency_ms`|control|ms|gauge|control|controller, endpoint|Controller latency|
+|`controller_conn_ok`|control|bool|gauge|control|controller|Controller connectivity|
+|`of_channel_reconnects`|control|count|counter|control|switch|OpenFlow reconnects|
+|`flows_installed`|control|count|counter|control|controller, switch|Flows installed|
+|`flows_removed`|control|count|counter|control|controller, switch|Flows removed|
+|`cpu_util_pct`|control|%|gauge|host|node|CPU utilization|
+|`mem_util_pct`|control|%|gauge|host|node|Memory utilization|
+
+### Plano — Dataplane (11 métricas)
+
+|Nome|Camada|Unid.|Kind|Categoria|Dimensões|Descrição|
+|---|---|---|---|---|---|---|
+|`openflow_flow_packets`|dataplane|packets|counter|dataplane|switch, table, flow|Flow packets|
+|`openflow_flow_bytes`|dataplane|bytes|counter|dataplane|switch, table, flow|Flow bytes|
+|`table_hits`|dataplane|count|counter|dataplane|switch, table|Table hits|
+|`table_misses`|dataplane|count|counter|dataplane|switch, table|Table misses|
+|`port_rx_pkts`|dataplane|packets|counter|dataplane|switch, port|Port RX packets|
+|`port_tx_pkts`|dataplane|packets|counter|dataplane|switch, port|Port TX packets|
+|`port_rx_drops`|dataplane|packets|counter|dataplane|switch, port|Port RX drops|
+|`port_tx_drops`|dataplane|packets|counter|dataplane|switch, port|Port TX drops|
+|`flow_bytes`|dataplane|bytes|counter|dataplane|src, dst, 5tuple|Flow byte counter|
+|`flow_packets`|dataplane|packets|counter|dataplane|src, dst, 5tuple|Flow packet counter|
+|`flow_duration_sec`|dataplane|s|gauge|dataplane|src, dst, 5tuple|Flow duration|
+
+## Resultados de integração: ingestão e convergência com o *gr-netmon*
+
+Como evidência de integração, a plataforma oferece um endpoint de ingestão (`POST /metrics/samples`) adequado para incorporar medições de fontes externas, incluindo blocos do *gr-netmon*. Em termos práticos, as publicações JSON dos blocos (porta `metrics`) podem ser normalizadas para o formato canônico de amostra (`timestamp`, `node`, `layer`, `metric`, `value`, com `labels`/`details`) e persistidas em JSONL, unificando a análise entre métricas de rede, plano de controle e evidências de captura.
+
+## Limitações atuais e próximos passos
+
+Os resultados ainda carecem de avaliação quantitativa completa. Como próximos passos, destacam-se:
+
+- Caracterização do overhead de coleta e do atraso de propagação (coleta → persistência → SSE → UI).
+- Validação sistemática da qualidade dos dados (consistência temporal, completude de rótulos e normalização de unidades).
+- Integração operacional mais direta entre os *flowgraphs* do *gr-netmon* e o pipeline de ingestão da *NetOps*, reduzindo fricção e ampliando cobertura em ambiente real.

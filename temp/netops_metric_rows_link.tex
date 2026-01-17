@@ -1,0 +1,32 @@
+% Auto-gerado (link) a partir de temp/metric_catalog_rows_clean.tex (count=31)
+\texttt{mac\_table\_size} & link & count & gauge & l2 & node, vlan & Tamanho da MAC table \\
+\texttt{mac\_churn\_rate} & link & count/s & derived & l2 & node, vlan & MAC churn rate \\
+\texttt{mac\_moves\_total} & link & count & counter & l2 & node, vlan & MAC moves \\
+\texttt{stp\_root\_changes\_total} & link & count & counter & l2 & node, instance & STP root changes \\
+\texttt{stp\_topology\_changes\_total} & link & count & counter & l2 & node, instance & STP topology changes \\
+\texttt{stp\_blocked\_ports} & link & count & gauge & l2 & node & STP blocked ports \\
+\texttt{lacp\_members\_up} & link & count & gauge & l2 & node, portchannel & LACP members up \\
+\texttt{lacp\_members\_down} & link & count & gauge & l2 & node, portchannel & LACP members down \\
+\texttt{lacp\_imbalance\_pct} & link & \% & ratio & capacity & node, portchannel & LACP imbalance \\
+\texttt{lacp\_renegotiations\_total} & link & count & counter & l2 & node, portchannel & LACP renegotiations \\
+\texttt{vlan\_active\_count} & link & count & gauge & l2 & node, trunk & VLANs ativas por trunk \\
+\texttt{vlan\_allowed\_mismatch\_total} & link & count & counter & l2 & node, trunk & Inconsistência de VLANs allowed \\
+\texttt{vlan\_native\_mismatch\_total} & link & count & counter & l2 & node, trunk & Inconsistência de VLAN native \\
+\texttt{bum\_rate\_pps} & link & pps & gauge & capacity & node, vlan, type & Taxa de BUM (broadcast/multicast/unknown) \\
+\texttt{bum\_peak\_pps} & link & pps & derived & capacity & node, vlan, type & Pico de BUM \\
+\texttt{arp\_cache\_util\_pct} & link & \% & ratio & l2 & node, vrf & ARP cache utilization \\
+\texttt{arp\_miss\_rate} & link & count/s & derived & l2 & node, vrf & ARP miss rate \\
+\texttt{arp\_duplicates\_total} & link & count & counter & l2 & node, vrf & ARP duplicados \\
+\texttt{arp\_gratuitous\_spikes\_total} & link & count & counter & l2 & node, vrf & Picos de gratuitous ARP \\
+\texttt{nd\_cache\_util\_pct} & link & \% & ratio & l2 & node, vrf & ND (IPv6) cache utilization \\
+\texttt{nd\_miss\_rate} & link & count/s & derived & l2 & node, vrf & ND miss rate \\
+\texttt{nd\_duplicates\_total} & link & count & counter & l2 & node, vrf & ND duplicados \\
+\texttt{lldp\_neighbors\_expected\_pct} & link & \% & ratio & l2 & node & LLDP/CDP expected vs real \\
+\texttt{lldp\_drift\_total} & link & count & counter & l2 & node & LLDP/CDP drift events \\
+\texttt{microburst\_queue\_occupancy\_pct\_peak} & link & \% & derived & capacity & node, interface, queue & Microbursts: pico de fila/ocupação \\
+\texttt{link\_util\_pct} & link & \% & gauge & capacity & node, interface & Link utilization \\
+\texttt{link\_loss\_pct} & link & \% & ratio & errors & node, interface & Link loss \\
+\texttt{link\_jitter\_ms} & link & ms & gauge & performance & node, interface & Link jitter \\
+\texttt{queue\_occupancy\_pct} & link & \% & gauge & capacity & node, interface, queue, qos\_class & Queue occupancy \\
+\texttt{queue\_drops} & link & count & counter & errors & node, interface, queue, qos\_class & Queue drops \\
+\texttt{ecn\_marked\_pct} & link & \% & ratio & capacity & node, interface, qos\_class & ECN marked traffic \\

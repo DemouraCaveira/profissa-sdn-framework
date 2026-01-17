@@ -1,0 +1,26 @@
+% Auto-gerado (application) a partir de temp/metric_catalog_rows_clean.tex (count=25)
+\texttt{app\_rps} & application & rps & gauge & app & service, route & Taxa de requisições (RPS/QPS) \\
+\texttt{app\_latency\_ms\_p95} & application & ms & summary & app & service, route & Latência p95 (app) \\
+\texttt{app\_latency\_ms\_p99} & application & ms & summary & app & service, route & Latência p99 (app) \\
+\texttt{http\_responses\_total} & application & count & counter & http & service, route, code & Códigos HTTP (por classe/rota) \\
+\texttt{http\_errors\_total} & application & count & counter & http & service, route, code & HTTP errors (4xx/5xx) \\
+\texttt{dns\_qps} & application & qps & gauge & dns & server, zone & DNS QPS \\
+\texttt{dns\_latency\_ms\_p95} & application & ms & summary & dns & server, zone & DNS latency p95 \\
+\texttt{dns\_servfail\_total} & application & count & counter & dns & server, zone & DNS SERVFAIL \\
+\texttt{dns\_nxdomain\_total} & application & count & counter & dns & server, zone & DNS NXDOMAIN \\
+\texttt{dns\_cache\_hit\_ratio\_pct} & application & \% & ratio & dns & server & DNS cache hit ratio \\
+\texttt{dhcp\_success\_pct} & application & \% & ratio & dhcp & scope, server & DHCP success rate (DORA) \\
+\texttt{dhcp\_dora\_latency\_ms} & application & ms & gauge & dhcp & scope, server & DHCP DORA latency \\
+\texttt{dhcp\_pool\_util\_pct} & application & \% & ratio & dhcp & scope & DHCP pool utilization \\
+\texttt{dhcp\_conflicts\_total} & application & count & counter & dhcp & scope & DHCP conflicts \\
+\texttt{ntp\_offset\_ms} & application & ms & gauge & ntp & server & NTP offset/drift \\
+\texttt{ntp\_drift\_ppm} & application & ppm & gauge & ntp & server & NTP drift \\
+\texttt{ntp\_stratum\_changes\_total} & application & count & counter & ntp & server & NTP stratum changes \\
+\texttt{ntp\_reachability\_pct} & application & \% & ratio & ntp & server & NTP reachability \\
+\texttt{http\_ttfb\_ms} & application & ms & gauge & http & service, route & HTTP time-to-first-byte \\
+\texttt{http\_ttlb\_ms} & application & ms & gauge & http & service, route & HTTP time-to-last-byte \\
+\texttt{http\_payload\_bytes\_p95} & application & bytes & summary & http & service, route & HTTP payload size p95 \\
+\texttt{grpc\_status\_total} & application & count & counter & grpc & service, method, status & gRPC status codes \\
+\texttt{grpc\_deadlines\_exceeded\_total} & application & count & counter & grpc & service, method & gRPC deadlines exceeded \\
+\texttt{db\_connection\_errors\_total} & application & count & counter & db & db, service & Database connection errors (alto nível) \\
+\texttt{db\_query\_latency\_ms\_p95} & application & ms & summary & db & db, service & Database query latency p95 (alto nível) \\

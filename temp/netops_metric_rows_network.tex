@@ -1,0 +1,33 @@
+% Auto-gerado (network) a partir de temp/metric_catalog_rows_clean.tex (count=32)
+\texttt{prefix\_reachability\_pct} & network & \% & ratio & l3 & prefix, vrf, tenant, src, dst & Reachability por prefixo \\
+\texttt{routing\_convergence\_ms} & network & ms & derived & l3 & protocol, vrf & Tempo de convergência de roteamento \\
+\texttt{route\_count} & network & count & gauge & l3 & protocol, afi, safi, vrf & Route count (total/por AFI/SAFI/VRF) \\
+\texttt{route\_churn\_rate} & network & count/s & derived & l3 & protocol, vrf & Route churn rate \\
+\texttt{bgp\_session\_up} & network & bool & gauge & routing & peer, vrf, afi, safi & BGP session up (1/0) \\
+\texttt{bgp\_session\_flaps\_total} & network & count & counter & routing & peer, vrf & BGP session flaps \\
+\texttt{bgp\_updates\_total} & network & count & counter & routing & peer, vrf, afi, safi & BGP updates \\
+\texttt{bgp\_withdraws\_total} & network & count & counter & routing & peer, vrf, afi, safi & BGP withdraws \\
+\texttt{bgp\_prefix\_limit\_hits\_total} & network & count & counter & routing & peer, vrf & BGP prefix limit hits \\
+\texttt{bgp\_as\_path\_changes\_total} & network & count & counter & routing & prefix, peer, vrf & BGP AS-path changes \\
+\texttt{ospf\_session\_up} & network & bool & gauge & routing & neighbor, area, vrf & OSPF adjacency up (1/0) \\
+\texttt{ospf\_flaps\_total} & network & count & counter & routing & neighbor, area, vrf & OSPF adjacency flaps \\
+\texttt{isis\_session\_up} & network & bool & gauge & routing & neighbor, level, vrf & IS-IS adjacency up (1/0) \\
+\texttt{isis\_flaps\_total} & network & count & counter & routing & neighbor, level, vrf & IS-IS adjacency flaps \\
+\texttt{icmp\_unreachable\_total} & network & count & counter & errors & src, dst, code & ICMP unreachable \\
+\texttt{icmp\_frag\_needed\_total} & network & count & counter & errors & src, dst & ICMP frag needed (PMTUD) \\
+\texttt{ip\_fragments\_total} & network & count & counter & errors & src, dst & IP fragments \\
+\texttt{ip\_fragment\_drops\_total} & network & count & counter & errors & node & Drops por MTU/fragmentação \\
+\texttt{dscp\_packets\_total} & network & count & counter & qos & dscp, node, interface & Distribuição DSCP (contagem por classe) \\
+\texttt{dscp\_remark\_events\_total} & network & count & counter & qos & from, to, policy & Eventos de remarking DSCP \\
+\texttt{acl\_drops\_total} & network & count & counter & security & rule\_id, node & ACL/Policy drops por regra \\
+\texttt{tunnel\_up} & network & bool & gauge & overlay & tunnel, type, vrf & Tunnel up/down \\
+\texttt{tunnel\_keepalive\_loss\_total} & network & count & counter & overlay & tunnel, type, vrf & Tunnel keepalive loss \\
+\texttt{tunnel\_encap\_errors\_total} & network & count & counter & overlay & tunnel, type & Encapsulation errors \\
+\texttt{tunnel\_decap\_errors\_total} & network & count & counter & overlay & tunnel, type & Decapsulation errors \\
+\texttt{vxlan\_vni\_mapping\_ok} & network & bool & gauge & overlay & vni, vrf & VNI/VRF mapping health \\
+\texttt{latency\_ms} & network & ms & gauge & performance & src, dst & Latency \\
+\texttt{packet\_loss\_pct} & network & \% & ratio & performance & src, dst & Packet loss \\
+\texttt{jitter\_ms} & network & ms & gauge & performance & src, dst & Jitter \\
+\texttt{ttl\_expired} & network & count & counter & errors & src, dst & TTL expired events \\
+\texttt{routes\_count} & network & count & gauge & routing & node, vrf & Route entries \\
+\texttt{arp\_entries} & network & count & gauge & l3 & node, vrf & ARP/ND cache entries \\

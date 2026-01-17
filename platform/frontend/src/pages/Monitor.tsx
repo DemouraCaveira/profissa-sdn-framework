@@ -3,6 +3,7 @@ import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import MetricCard from "../components/MetricCard";
 import { useEventStream } from "../hooks/useEventStream";
+import StatusDot from "../components/StatusDot";
 
 const formatValue = (val: number | string | undefined) =>
   typeof val === "number" ? Number(val).toFixed(2) : val ?? "-";
@@ -21,7 +22,18 @@ const brTime = (ts: string) =>
 
 const Monitor: React.FC = () => {
   const { data, status } = useEventStream();
-  const allLayers = ["application", "control", "dataplane", "link", "network", "physical", "transport"] as const;
+  const allLayers = [
+    "service",
+    "physical",
+    "link",
+    "network",
+    "transport",
+    "session",
+    "presentation",
+    "application",
+    "control",
+    "dataplane",
+  ] as const;
   const [layers, setLayers] = useState<string[]>([...allLayers]);
   const [nodes, setNodes] = useState<string[]>([]);
 
@@ -98,21 +110,28 @@ const Monitor: React.FC = () => {
     <div className="page">
       <PageHeader
         title="Monitor"
-        subtitle={`Métricas em tempo real e alertas · stream ${status}`}
+        subtitle="Métricas em tempo real via SSE (/stream/events)"
+        right={
+          <>
+            <span className="tag" style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text)" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <StatusDot status={status === "open" ? "ok" : status === "connecting" ? "warn" : "down"} />
+                {status}
+              </span>
+            </span>
+            <span className="tag" style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text)" }}>
+              eventos: {(data?.metrics ?? []).length}
+            </span>
+          </>
+        }
       />
 
-      <Section title="Camadas" subtitle="Escolha quais camadas quer ver nos KPIs e tabela.">
-        <div className="card" style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-          <button
-            onClick={selectAll}
-            style={{ borderRadius: 10, padding: "6px 10px", border: "1px solid var(--border)", background: "transparent", color: "var(--text)", cursor: "pointer" }}
-          >
+      <Section title="Camadas" subtitle="Controla quais camadas entram nos KPIs e na tabela de eventos.">
+        <div className="card chip-row">
+          <button onClick={selectAll} className="btn">
             Selecionar todas
           </button>
-          <button
-            onClick={clearAll}
-            style={{ borderRadius: 10, padding: "6px 10px", border: "1px solid var(--border)", background: "transparent", color: "var(--text)", cursor: "pointer" }}
-          >
+          <button onClick={clearAll} className="btn">
             Limpar
           </button>
           {allLayers.map((layer) => {
@@ -121,14 +140,7 @@ const Monitor: React.FC = () => {
               <button
                 key={layer}
                 onClick={() => toggleLayer(layer)}
-                style={{
-                  borderRadius: 10,
-                  padding: "6px 10px",
-                  border: active ? "1px solid var(--accent)" : "1px solid var(--border)",
-                  background: active ? "rgba(56, 189, 248, 0.12)" : "transparent",
-                  color: "var(--text)",
-                  cursor: "pointer",
-                }}
+                className={active ? "chip chip-active" : "chip"}
               >
                 {layer}
               </button>
@@ -155,18 +167,12 @@ const Monitor: React.FC = () => {
         </div>
       </Section>
 
-      <Section title="Nós" subtitle="Filtre por hosts/controladores/switches da topologia.">
-        <div className="card" style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-          <button
-            onClick={selectAllNodes}
-            style={{ borderRadius: 10, padding: "6px 10px", border: "1px solid var(--border)", background: "transparent", color: "var(--text)", cursor: "pointer" }}
-          >
+      <Section title="Nós" subtitle="Seleciona o subconjunto de nós para KPIs e tabela.">
+        <div className="card chip-row">
+          <button onClick={selectAllNodes} className="btn">
             Selecionar todos
           </button>
-          <button
-            onClick={clearNodes}
-            style={{ borderRadius: 10, padding: "6px 10px", border: "1px solid var(--border)", background: "transparent", color: "var(--text)", cursor: "pointer" }}
-          >
+          <button onClick={clearNodes} className="btn">
             Limpar
           </button>
           {availableNodes.length === 0 && <span className="muted">Sem nós detectados ainda</span>}
@@ -176,14 +182,7 @@ const Monitor: React.FC = () => {
               <button
                 key={node}
                 onClick={() => toggleNode(node)}
-                style={{
-                  borderRadius: 10,
-                  padding: "6px 10px",
-                  border: selected ? "1px solid var(--accent)" : "1px solid var(--border)",
-                  background: selected ? "rgba(52, 211, 153, 0.15)" : "transparent",
-                  color: "var(--text)",
-                  cursor: "pointer",
-                }}
+                className={selected ? "chip chip-selected" : "chip"}
               >
                 {node}
               </button>

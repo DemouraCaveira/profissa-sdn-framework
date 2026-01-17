@@ -121,9 +121,11 @@ Exemplos de campos específicos: \texttt{latency_s}, \texttt{loss_pct}, \texttt{
 
 \section{Integração com Profissa SDN Platform}
 \begin{itemize}[leftmargin=1.5em]
-  \item As mensagens \texttt{metrics} podem ser ingeridas via \texttt{/metrics/samples} no backend FastAPI ou gravadas em JSONL \texttt{raw/metrics_{layer}.jsonl} para backfill.
-  \item As camadas mapeiam direto: physical, link, network, transport, application, control, dataplane.
-  \item A UI (Monitor/Lab) consome SSE \texttt{/stream/events}; manter coleta contínua em gr-netmon garante preenchimento ao vivo.
+  \item As mensagens \texttt{metrics} podem ser ingeridas via \texttt{/metrics/samples} no backend FastAPI (modo ingestão) ou gravadas em JSONL \texttt{raw/metrics_{layer}.jsonl} para backfill (modo arquivo).
+  \item A plataforma opera com camadas OSI L0--L7 (\texttt{service}, \texttt{physical}, \texttt{link}, \texttt{network}, \texttt{transport}, \texttt{session}, \texttt{presentation}, \texttt{application}) e planos SDN (\texttt{control}, \texttt{dataplane}). Blocos do gr-netmon tipicamente alimentam \texttt{physical/link/network/transport/application/control/dataplane}; camadas superiores podem ser derivadas/compostas na plataforma.
+  \item A UI (Monitor/Lab/Experimentos) consome SSE \texttt{/stream/events}; manter coleta contínua (ou auto-coleta no backend) melhora preenchimento ao vivo.
+  \item Experimentos na plataforma: biblioteca de templates executáveis (1 clique) e modo manual para casos específicos; artefatos persistem em \texttt{temp/experiments/}.
+  \item Configurações multi-ambiente: perfis persistidos em \texttt{temp/configs/} com uma configuração ativa aplicada à coleta.
 \end{itemize}
 
 \section{Considerações operacionais}

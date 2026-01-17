@@ -1,0 +1,46 @@
+{
+  "id": "exp_45ee4faa",
+  "topology_id": "platform-topology",
+  "name": "exp-baseline-l3-icmp",
+  "description": "Experimento reprodutível ICMP para caracterizar latência, jitter e perda entre dois hosts.",
+  "hypotheses": "H0: latência/perda estável; H1: degrada sob variação de carga/falhas.",
+  "traffic": [
+    {
+      "generator": "ping",
+      "src": "h1",
+      "dst": "h2",
+      "protocol": "icmp",
+      "rate": null,
+      "duration_sec": 10,
+      "params": {}
+    }
+  ],
+  "metrics": {
+    "metrics": [
+      "latency_ms",
+      "jitter_ms",
+      "packet_loss_pct",
+      "mac_table_size",
+      "mac_churn_rate",
+      "mac_moves_total",
+      "stp_root_changes_total",
+      "stp_topology_changes_total",
+      "stp_blocked_ports",
+      "lacp_members_up"
+    ],
+    "interval_sec": 5.0,
+    "labels": [
+      "experiment_id",
+      "run_id",
+      "topology_id"
+    ]
+  },
+  "duration_sec": 30,
+  "tags": [
+    "baseline",
+    "reprodutivel",
+    "icmp",
+    "L3"
+  ],
+  "template_version": null
+}

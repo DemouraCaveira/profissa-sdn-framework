@@ -1,0 +1,29 @@
+% Auto-gerado (physical) a partir de temp/metric_catalog_rows_clean.tex (count=28)
+\texttt{if\_link\_up} & physical & bool & gauge & health & node, interface & Status do link (up=1/down=0) \\
+\texttt{if\_flaps\_total} & physical & count & counter & health & node, interface & Contagem de flaps (up/down) \\
+\texttt{if\_speed\_mbps} & physical & Mbps & gauge & capacity & node, interface & Velocidade negociada \\
+\texttt{if\_duplex\_mismatch} & physical & bool & gauge & health & node, interface & Mismatch de duplex (1=sim) \\
+\texttt{if\_in\_bps} & physical & bps & gauge & capacity & node, interface & Tráfego de entrada (bits/s) \\
+\texttt{if\_out\_bps} & physical & bps & gauge & capacity & node, interface & Tráfego de saída (bits/s) \\
+\texttt{if\_in\_bps\_p95} & physical & bps & derived & capacity & node, interface & Utilização de entrada p95 (bits/s) \\
+\texttt{if\_in\_bps\_p99} & physical & bps & derived & capacity & node, interface & Utilização de entrada p99 (bits/s) \\
+\texttt{if\_out\_bps\_p95} & physical & bps & derived & capacity & node, interface & Utilização de saída p95 (bits/s) \\
+\texttt{if\_out\_bps\_p99} & physical & bps & derived & capacity & node, interface & Utilização de saída p99 (bits/s) \\
+\texttt{if\_errors} & physical & count & counter & errors & node, interface & Interface errors \\
+\texttt{if\_discards} & physical & count & counter & errors & node, interface & Interface discards \\
+\texttt{if\_crc\_errors} & physical & count & counter & errors & node, interface & CRC errors \\
+\texttt{if\_fcs\_errors\_total} & physical & count & counter & errors & node, interface & FCS errors \\
+\texttt{if\_alignment\_errors\_total} & physical & count & counter & errors & node, interface & Alignment errors \\
+\texttt{if\_symbol\_errors\_total} & physical & count & counter & errors & node, interface & Symbol errors \\
+\texttt{if\_physical\_drops\_total} & physical & count & counter & errors & node, interface & Drops físicos (quando possível separar de congestionamento) \\
+\texttt{if\_optic\_rx\_dbm} & physical & dBm & gauge & health & node, interface & Optical RX power \\
+\texttt{if\_optic\_tx\_dbm} & physical & dBm & gauge & health & node, interface & Optical TX power \\
+\texttt{if\_optic\_osnr\_db} & physical & dB & gauge & health & node, interface & Optical OSNR \\
+\texttt{if\_optic\_bias\_ma} & physical & mA & gauge & health & node, interface & Optical bias current \\
+\texttt{if\_optic\_temp\_c} & physical & C & gauge & health & node, interface & Optical module temperature \\
+\texttt{if\_optic\_threshold\_violations\_total} & physical & count & counter & health & node, interface & Optical threshold violations \\
+\texttt{if\_temp\_c} & physical & C & gauge & health & node, interface & Interface temperature \\
+\texttt{if\_mtu\_effective\_bytes} & physical & bytes & gauge & health & node, interface & MTU efetivo (detecção de inconsistências) \\
+\texttt{poe\_power\_w} & physical & W & gauge & capacity & node, interface & Consumo PoE \\
+\texttt{poe\_events\_total} & physical & count & counter & health & node, interface & Eventos PoE \\
+\texttt{poe\_budget\_w} & physical & W & gauge & capacity & node & Budget PoE \\

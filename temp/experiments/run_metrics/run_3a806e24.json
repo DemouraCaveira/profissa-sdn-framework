@@ -1,0 +1,4426 @@
+[
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_errors",
+    "value": 0.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_discards",
+    "value": 0.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_crc_errors",
+    "value": 0.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_in_util_pct",
+    "value": 22.642,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_out_util_pct",
+    "value": 30.172,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_temp_c",
+    "value": 46.78,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_optic_rx_dbm",
+    "value": -4.52,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_optic_tx_dbm",
+    "value": 1.39,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_errors",
+    "value": 1.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_discards",
+    "value": 3.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_crc_errors",
+    "value": 1.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_in_util_pct",
+    "value": 50.158,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_out_util_pct",
+    "value": 14.691,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_temp_c",
+    "value": 55.32,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_optic_rx_dbm",
+    "value": -1.19,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_optic_tx_dbm",
+    "value": -0.23,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_errors",
+    "value": 1.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_discards",
+    "value": 2.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_crc_errors",
+    "value": 0.0,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_in_util_pct",
+    "value": 59.974,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_out_util_pct",
+    "value": 25.161,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_temp_c",
+    "value": 62.04,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_optic_rx_dbm",
+    "value": -2.22,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "if_optic_tx_dbm",
+    "value": -0.41,
+    "layer": "physical",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_util_pct",
+    "value": 79.15,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "direction": "bidirectional"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_loss_pct",
+    "value": 1.783,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_jitter_ms",
+    "value": 3.342,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "queue_occupancy_pct",
+    "value": 43.75,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "queue_drops",
+    "value": 4.0,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ecn_marked_pct",
+    "value": 0.934,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_util_pct",
+    "value": 12.15,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "direction": "bidirectional"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_loss_pct",
+    "value": 0.424,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_jitter_ms",
+    "value": 2.16,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "queue_occupancy_pct",
+    "value": 13.29,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "queue_drops",
+    "value": 16.0,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ecn_marked_pct",
+    "value": 0.756,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_util_pct",
+    "value": 81.61,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "direction": "bidirectional"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_loss_pct",
+    "value": 1.576,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "link_jitter_ms",
+    "value": 4.988,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "queue_occupancy_pct",
+    "value": 65.41,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "queue_drops",
+    "value": 19.0,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ecn_marked_pct",
+    "value": 0.635,
+    "layer": "link",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "latency_ms",
+    "value": 0.858,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "packet_loss_pct",
+    "value": 0.91,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "jitter_ms",
+    "value": 0.406,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ttl_expired",
+    "value": 0.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "routes_count",
+    "value": 20.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "arp_entries",
+    "value": 21.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "latency_ms",
+    "value": 7.249,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "packet_loss_pct",
+    "value": 1.555,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "jitter_ms",
+    "value": 0.004,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ttl_expired",
+    "value": 0.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "routes_count",
+    "value": 14.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "arp_entries",
+    "value": 22.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "latency_ms",
+    "value": 0.998,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "packet_loss_pct",
+    "value": 2.809,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "jitter_ms",
+    "value": 1.801,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ttl_expired",
+    "value": 2.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "routes_count",
+    "value": 4.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "arp_entries",
+    "value": 43.0,
+    "layer": "network",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "e2e_path_availability_pct",
+    "value": 99.69,
+    "layer": "service",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": "h1",
+      "dst": "h2",
+      "collector": null,
+      "version": "0.1.0",
+      "service": "ping"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "e2e_latency_ms_p50",
+    "value": 5.893,
+    "layer": "service",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": "h1",
+      "dst": "h2",
+      "collector": null,
+      "version": "0.1.0",
+      "service": "ping"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "e2e_latency_ms_p95",
+    "value": 11.403,
+    "layer": "service",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": "h1",
+      "dst": "h2",
+      "collector": null,
+      "version": "0.1.0",
+      "service": "ping"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "e2e_latency_ms_p99",
+    "value": 62.072,
+    "layer": "service",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": "h1",
+      "dst": "h2",
+      "collector": null,
+      "version": "0.1.0",
+      "service": "ping"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "e2e_jitter_ms_p95",
+    "value": 6.81,
+    "layer": "service",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": "h1",
+      "dst": "h2",
+      "collector": null,
+      "version": "0.1.0",
+      "service": "ping"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "e2e_loss_pct",
+    "value": 1.046,
+    "layer": "service",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": "h1",
+      "dst": "h2",
+      "collector": null,
+      "version": "0.1.0",
+      "service": "ping"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "throughput_mbps",
+    "value": 172.88,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tcp_retrans_pct",
+    "value": 4.609,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tcp_rtt_ms",
+    "value": 10.861,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "udp_jitter_ms",
+    "value": 4.816,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "udp_loss_pct",
+    "value": 2.504,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_sockets_total",
+    "value": 8.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_tcp_states",
+    "value": 3.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "estab": 1,
+      "closed": 8,
+      "orphaned": 0,
+      "timewait": 4,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_udp_sockets_total",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 0,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_tcp_sockets_total",
+    "value": 3.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 3,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_raw_sockets_total",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 1,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_inet_sockets_total",
+    "value": 3.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 3,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_frag_sockets_total",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 1,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_receives",
+    "value": 154.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_hdr_errors",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_addr_errors",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_forw_datagrams",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_unknown_protos",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_discards",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_delivers",
+    "value": 15.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_requests",
+    "value": 20.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_discards",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_no_routes",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_timeout",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_reqds",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_oks",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_fails",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_frag_oks",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_frag_fails",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_frag_creates",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_transmits",
+    "value": 14.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_msgs",
+    "value": 6.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_msgs",
+    "value": 5.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_errors",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_dest_unreachs",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_dest_unreachs",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_time_excds",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_time_excds",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_echo_reqs",
+    "value": 4.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_echo_reps",
+    "value": 3.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_active_opens",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_passive_opens",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_attempt_fails",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_estab_resets",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_curr_estab",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_in_segs",
+    "value": 21.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_out_segs",
+    "value": 13.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_retrans_segs",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_in_errs",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_out_rsts",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_in_csum_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_in_datagrams",
+    "value": 6.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_no_ports",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_in_errors",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_out_datagrams",
+    "value": 7.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_rcvbuf_errors",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_sndbuf_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_in_csum_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_ignored_multi",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_mem_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "throughput_mbps",
+    "value": 323.97,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tcp_retrans_pct",
+    "value": 4.15,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tcp_rtt_ms",
+    "value": 22.678,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "udp_jitter_ms",
+    "value": 2.9,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "udp_loss_pct",
+    "value": 0.195,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_sockets_total",
+    "value": 11.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_tcp_states",
+    "value": 6.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "estab": 4,
+      "closed": 14,
+      "orphaned": 0,
+      "timewait": 2,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_udp_sockets_total",
+    "value": 4.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 1,
+      "ipv6": 3,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_tcp_sockets_total",
+    "value": 3.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 1,
+      "ipv6": 2,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_raw_sockets_total",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 1,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_inet_sockets_total",
+    "value": 7.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 2,
+      "ipv6": 5,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "ss_frag_sockets_total",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ip": 1,
+      "ipv6": 0,
+      "source": "ss -s"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_receives",
+    "value": 122.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_hdr_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_addr_errors",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_forw_datagrams",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_unknown_protos",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_discards",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_in_delivers",
+    "value": 11.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_requests",
+    "value": 18.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_discards",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_no_routes",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_timeout",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_reqds",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_oks",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_reasm_fails",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_frag_oks",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_frag_fails",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_frag_creates",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_ip_out_transmits",
+    "value": 7.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_msgs",
+    "value": 10.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_msgs",
+    "value": 6.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_dest_unreachs",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_dest_unreachs",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_time_excds",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_time_excds",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_in_echo_reqs",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_icmp_out_echo_reps",
+    "value": 3.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_active_opens",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_passive_opens",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_attempt_fails",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_estab_resets",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_curr_estab",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_in_segs",
+    "value": 24.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_out_segs",
+    "value": 21.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_retrans_segs",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_in_errs",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_out_rsts",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_tcp_in_csum_errors",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_in_datagrams",
+    "value": 2.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_no_ports",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_in_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_out_datagrams",
+    "value": 9.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_rcvbuf_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_sndbuf_errors",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_in_csum_errors",
+    "value": 1.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_ignored_multi",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "snmp_udp_mem_errors",
+    "value": 0.0,
+    "layer": "transport",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "source": "/proc/net/snmp"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_session_resumption_pct",
+    "value": 44.38,
+    "layer": "session",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "sni": "example.local",
+      "service": "web"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_renegotiations_total",
+    "value": 1.0,
+    "layer": "session",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "sni": "example.local",
+      "service": "web"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_handshake_failures_total",
+    "value": 0.0,
+    "layer": "session",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "sni": "example.local",
+      "cert": "leaf"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "vpn_sessions_active",
+    "value": 36.0,
+    "layer": "session",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "profile": "default",
+      "tenant": "lab"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "aaa_auth_failures_total",
+    "value": 4.0,
+    "layer": "session",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "realm": "lab",
+      "reason": "invalid_password"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_handshake_latency_ms_p95",
+    "value": 72.63,
+    "layer": "presentation",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "sni": "example.local",
+      "service": "web"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_handshake_latency_ms_p99",
+    "value": 55.41,
+    "layer": "presentation",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "sni": "example.local",
+      "service": "web"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_version_connections_total",
+    "value": 680.0,
+    "layer": "presentation",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "TLS1.3",
+      "sni": "example.local"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_cipher_connections_total",
+    "value": 641.0,
+    "layer": "presentation",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "cipher": "TLS_AES_128_GCM_SHA256",
+      "sni": "example.local"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "cert_expiry_days",
+    "value": 163.0,
+    "layer": "presentation",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "cert": "leaf",
+      "sni": "example.local"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "http2_negotiation_success_pct",
+    "value": 97.54,
+    "layer": "presentation",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "http_latency_ms",
+    "value": 98.43,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "status_code": 200
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "http_success_pct",
+    "value": 99.0,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "dns_latency_ms",
+    "value": 57.21,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "dns_success_pct",
+    "value": 99.0,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_handshake_ms",
+    "value": 72.52,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_rps",
+    "value": 1391.09,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_latency_ms_p95",
+    "value": 326.17,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_latency_ms_p99",
+    "value": 224.35,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_error_rate_pct",
+    "value": 1.295,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "http_latency_ms",
+    "value": 268.97,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "status_code": 200
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "http_success_pct",
+    "value": 99.0,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "dns_latency_ms",
+    "value": 54.14,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "dns_success_pct",
+    "value": 99.0,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "tls_handshake_ms",
+    "value": 134.29,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_rps",
+    "value": 291.29,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_latency_ms_p95",
+    "value": 86.14,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_latency_ms_p99",
+    "value": 348.07,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "app_error_rate_pct",
+    "value": 4.882,
+    "layer": "application",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0",
+      "service": "web",
+      "route": "/api"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "controller_latency_ms",
+    "value": 17.238,
+    "layer": "control",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "controller_conn_ok",
+    "value": 1.0,
+    "layer": "control",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "ok": true
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "of_channel_reconnects",
+    "value": 0.0,
+    "layer": "control",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "flows_installed",
+    "value": 67.0,
+    "layer": "control",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "flows_removed",
+    "value": 43.0,
+    "layer": "control",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "openflow_flow_packets",
+    "value": 5279.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "flow_id": "flow_0ec7eafd"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "openflow_flow_bytes",
+    "value": 3425016.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "flow_id": "flow_0ec7eafd"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "openflow_flow_packets",
+    "value": 513.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "flow_id": "flow_20eb9bf2"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "openflow_flow_bytes",
+    "value": 4324241.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {
+      "flow_id": "flow_20eb9bf2"
+    }
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "table_hits",
+    "value": 1174.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "table_misses",
+    "value": 271.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_rx_pkts",
+    "value": 29733.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_tx_pkts",
+    "value": 47838.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_rx_drops",
+    "value": 317.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_tx_drops",
+    "value": 284.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "table_hits",
+    "value": 7897.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "table_misses",
+    "value": 57.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_rx_pkts",
+    "value": 85824.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_tx_pkts",
+    "value": 18107.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_rx_drops",
+    "value": 0.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_tx_drops",
+    "value": 293.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "table_hits",
+    "value": 5736.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "table_misses",
+    "value": 147.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_rx_pkts",
+    "value": 77820.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_tx_pkts",
+    "value": 74208.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_rx_drops",
+    "value": 169.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  },
+  {
+    "timestamp": "2026-01-14T00:24:37.932876",
+    "metric_name": "port_tx_drops",
+    "value": 320.0,
+    "layer": "dataplane",
+    "node": null,
+    "labels": {
+      "experiment_id": "exp_45ee4faa",
+      "run_id": "run_3a806e24",
+      "topology_id": "platform-topology",
+      "src": null,
+      "dst": null,
+      "collector": null,
+      "version": "0.1.0"
+    },
+    "details": {}
+  }
+]

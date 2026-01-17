@@ -138,13 +138,28 @@ class FlowRule(BaseModel):
 
 
 MetricLayer = Literal[
-    "physical",
-    "link",
-    "network",
-    "transport",
-    "application",
+    # OSI / service layers
+    "service",  # layer 0 (E2E experience)
+    "physical",  # L1
+    "link",  # L2
+    "network",  # L3
+    "transport",  # L4
+    "session",  # L5
+    "presentation",  # L6
+    "application",  # L7
+    # Platform-specific planes
     "control",
     "dataplane",
+]
+
+
+MetricKind = Literal[
+    "gauge",
+    "counter",
+    "ratio",
+    "histogram",
+    "summary",
+    "derived",
 ]
 
 
@@ -153,6 +168,11 @@ class MetricDefinition(BaseModel):
     description: str
     unit: Optional[str] = None
     layer: Optional[MetricLayer] = None
+    kind: Optional[MetricKind] = None
+    osi_layer: Optional[int] = Field(default=None, ge=0, le=7)
+    category: Optional[str] = None
+    tags: List[str] = Field(default_factory=list)
+    dimensions: List[str] = Field(default_factory=list)
 
 
 class MetricRecord(BaseModel):

@@ -1,0 +1,14 @@
+% Auto-gerado (presentation) a partir de temp/metric_catalog_rows_clean.tex (count=13)
+\texttt{tls\_handshake\_latency\_ms\_p95} & presentation & ms & summary & tls & sni, service & TLS handshake latency p95 \\
+\texttt{tls\_handshake\_latency\_ms\_p99} & presentation & ms & summary & tls & sni, service & TLS handshake latency p99 \\
+\texttt{tls\_version\_connections\_total} & presentation & count & counter & tls & version, sni & Distribuição de versões TLS \\
+\texttt{tls\_cipher\_connections\_total} & presentation & count & counter & tls & cipher, sni & Distribuição de ciphers \\
+\texttt{cert\_expiry\_days} & presentation & days & gauge & tls & cert, sni & Certificados: dias até expiração \\
+\texttt{cert\_validation\_errors\_total} & presentation & count & counter & tls & cert, sni & Certificados: validation errors \\
+\texttt{cert\_chain\_errors\_total} & presentation & count & counter & tls & cert, sni & Certificados: chain errors \\
+\texttt{sni\_mismatch\_total} & presentation & count & counter & tls & sni, cert & SNI mismatch \\
+\texttt{compression\_errors\_total} & presentation & count & counter & encoding & algo & Erro de compressão (gzip/br) \\
+\texttt{encoding\_errors\_total} & presentation & count & counter & encoding & codec & Erro de encoding/codec \\
+\texttt{http2\_negotiation\_success\_pct} & presentation & \% & ratio & http & service & HTTP/2 negotiation success \\
+\texttt{http3\_quic\_negotiation\_success\_pct} & presentation & \% & ratio & http & service & HTTP/3 (QUIC) negotiation success \\
+\texttt{quic\_fallback\_rate\_pct} & presentation & \% & ratio & http & service & HTTP/3 fallback rate \\

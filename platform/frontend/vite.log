@@ -1,0 +1,281 @@
+
+> profissa-sdn-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5173
+
+
+  VITE v5.4.21  ready in 990 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+7:05:49 PM [vite] hmr update /src/components/PageHeader.tsx
+7:05:53 PM [vite] hmr update /src/components/PageHeader.tsx
+7:06:25 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:06:59 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:07:12 PM [vite] hmr update /src/pages/Monitor.tsx
+7:07:37 PM [vite] hmr update /src/styles/theme.css
+7:08:02 PM [vite] hmr update /src/pages/Monitor.tsx
+7:08:02 PM [vite] hmr update /src/styles/theme.css
+7:22:53 PM [vite] hmr update /src/pages/Experiments.tsx
+7:23:09 PM [vite] hmr update /src/styles/theme.css
+7:23:32 PM [vite] hmr update /src/styles/theme.css
+7:23:32 PM [vite] hmr update /src/pages/Experiments.tsx
+7:32:41 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:32:54 PM [vite] hmr update /src/styles/theme.css
+7:33:00 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:33:00 PM [vite] hmr update /src/styles/theme.css
+7:38:35 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:39:04 PM [vite] hmr update /src/styles/theme.css
+7:39:18 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:39:18 PM [vite] hmr update /src/styles/theme.css
+7:42:50 PM [vite] hmr update /src/components/AppShell.tsx
+7:42:52 PM [vite] hmr update /src/components/AppShell.tsx
+7:42:58 PM [vite] hmr update /src/styles/theme.css
+7:44:08 PM [vite] hmr update /src/styles/theme.css
+7:44:36 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:44:54 PM [vite] hmr update /src/styles/theme.css
+7:45:02 PM [vite] hmr update /src/pages/Dashboard.tsx
+7:45:02 PM [vite] hmr update /src/styles/theme.css
+7:52:53 PM [vite] hmr update /src/pages/Monitor.tsx, /src/pages/Topology.tsx, /src/pages/Lab.tsx, /src/pages/Dashboard.tsx
+7:53:23 PM [vite] hmr update /src/pages/Monitor.tsx, /src/pages/Topology.tsx, /src/pages/Lab.tsx, /src/pages/Dashboard.tsx
+8:21:22 PM [vite] page reload src/main.tsx
+8:21:24 PM [vite] hmr update /src/components/AppShell.tsx
+8:21:32 PM [vite] hmr update /src/components/AppShell.tsx
+8:21:32 PM [vite] page reload src/main.tsx
+8:46:08 PM [vite] hmr update /src/pages/Settings.tsx
+8:46:29 PM [vite] hmr update /src/pages/Settings.tsx
+8:46:31 PM [vite] hmr update /src/pages/Settings.tsx
+8:49:09 PM [vite] hmr update /src/pages/Settings.tsx
+8:51:50 PM [vite] hmr update /src/pages/Settings.tsx
+8:53:10 PM [vite] hmr update /src/pages/Settings.tsx
+8:53:16 PM [vite] hmr update /src/pages/Settings.tsx
+8:53:18 PM [vite] hmr update /src/pages/Settings.tsx
+8:53:20 PM [vite] hmr update /src/pages/Settings.tsx
+8:59:47 PM [vite] hmr update /src/pages/Experiments.tsx
+9:01:52 PM [vite] hmr update /src/pages/Experiments.tsx
+9:05:06 PM [vite] hmr update /src/pages/Experiments.tsx
+9:05:37 PM [vite] hmr update /src/pages/Experiments.tsx
+9:18:31 PM [vite] hmr update /src/pages/Experiments.tsx
+9:19:34 PM [vite] hmr update /src/pages/Experiments.tsx
+9:22:08 PM [vite] hmr update /src/pages/Experiments.tsx
+9:22:12 PM [vite] hmr update /src/pages/Experiments.tsx
+9:29:44 PM [vite] hmr update /src/pages/Experiments.tsx
+9:29:46 PM [vite] hmr update /src/pages/Experiments.tsx
+9:29:54 PM [vite] hmr update /src/pages/Experiments.tsx
+9:29:55 PM [vite] hmr update /src/pages/Experiments.tsx
+9:30:34 PM [vite] hmr update /src/pages/Experiments.tsx
+9:30:34 PM [vite] Internal server error: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (1417:6)
+
+  1415 |       </Section>
+  1416 |
+> 1417 |       <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+       |       ^
+  1418 |         <div className="card table-card">
+  1419 |           <table>
+  1420 |             <thead>
+  Plugin: vite:react-babel
+  File: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx:1417:6
+  1415|        </Section>
+  1416|  
+  1417|        <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+     |        ^
+  1418|          <div className="card table-card">
+  1419|            <table>
+      at constructor (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4771:18)
+      at TypeScriptParserMixin.jsxParseElement (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9828:39
+      at TypeScriptParserMixin.tryParse (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:6932:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9828:18)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12567:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11747:28)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11395:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4793:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9839:20)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10955:30)
+      at TypeScriptParserMixin.parseConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9664:18)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10949:17)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseExpression (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4661:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4740:36)
+      at TypeScriptParserMixin.jsxParseElement (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+9:30:37 PM [vite] hmr update /src/pages/Experiments.tsx
+9:30:37 PM [vite] Internal server error: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (1417:6)
+
+  1415 |       </Section>
+  1416 |
+> 1417 |       <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+       |       ^
+  1418 |         <div className="card table-card">
+  1419 |           <table>
+  1420 |             <thead>
+  Plugin: vite:react-babel
+  File: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx:1417:6
+  1415|        </Section>
+  1416|  
+  1417|        <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+     |        ^
+  1418|          <div className="card table-card">
+  1419|            <table>
+      at constructor (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4771:18)
+      at TypeScriptParserMixin.jsxParseElement (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9828:39
+      at TypeScriptParserMixin.tryParse (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:6932:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9828:18)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12567:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11747:28)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11395:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4793:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9839:20)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10955:30)
+      at TypeScriptParserMixin.parseConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9664:18)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10949:17)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseExpression (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4661:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4740:36)
+      at TypeScriptParserMixin.jsxParseElement (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+9:30:40 PM [vite] Pre-transform error: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (1417:6)
+
+  1415 |       </Section>
+  1416 |
+> 1417 |       <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+       |       ^
+  1418 |         <div className="card table-card">
+  1419 |           <table>
+  1420 |             <thead>
+9:30:40 PM [vite] Internal server error: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (1417:6)
+
+  1415 |       </Section>
+  1416 |
+> 1417 |       <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+       |       ^
+  1418 |         <div className="card table-card">
+  1419 |           <table>
+  1420 |             <thead>
+  Plugin: vite:react-babel
+  File: /home/jon/profissa-sdn-framework/platform/frontend/src/pages/Experiments.tsx:1417:6
+  1415|        </Section>
+  1416|  
+  1417|        <Section title="Registro de experimentos" description="Selecione um experimento para ver execuções e exportar artefatos.">
+     |        ^
+  1418|          <div className="card table-card">
+  1419|            <table>
+      at constructor (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:6624:19)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4771:18)
+      at TypeScriptParserMixin.jsxParseElement (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9828:39
+      at TypeScriptParserMixin.tryParse (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:6932:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9828:18)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12567:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11747:28)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11395:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4793:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9839:20)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10864:17)
+      at TypeScriptParserMixin.parseConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10955:30)
+      at TypeScriptParserMixin.parseConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9664:18)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10949:17)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10848:23)
+      at /home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:12500:12)
+      at TypeScriptParserMixin.parseExpression (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:10844:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4661:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4740:36)
+      at TypeScriptParserMixin.jsxParseElement (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (/home/jon/profissa-sdn-framework/platform/frontend/node_modules/@babel/parser/lib/index.js:11130:21)
+9:30:54 PM [vite] hmr update /src/pages/Experiments.tsx
+9:30:56 PM [vite] hmr update /src/pages/Experiments.tsx
+9:31:55 PM [vite] hmr update /src/pages/Experiments.tsx
+9:32:15 PM [vite] hmr update /src/pages/Experiments.tsx
+9:33:09 PM [vite] hmr update /src/pages/Experiments.tsx
+9:33:42 PM [vite] hmr update /src/pages/Experiments.tsx

@@ -1,14 +1,17 @@
 import React from "react";
 
-const Section: React.FC<{ title: string; description?: string; children: React.ReactNode }> = ({
-  title,
-  description,
-  children,
-}) => (
+type SectionProps = {
+  title: string;
+  description?: string;
+  subtitle?: string;
+  children: React.ReactNode;
+};
+
+const Section: React.FC<SectionProps> = ({ title, description, subtitle, children }) => (
   <div className="section">
     <div>
       <h2 style={{ margin: "0 0 6px", fontSize: 20 }}>{title}</h2>
-      {description ? <div className="muted">{description}</div> : null}
+      {description || subtitle ? <div className="muted">{description ?? subtitle}</div> : null}
     </div>
     {children}
   </div>

@@ -1,8 +1,17 @@
 # Interfaces internas e DTOs
 
+> Nota: a referência completa e atualizada está no OpenAPI do backend (FastAPI): `GET /openapi.json` e UI em `/docs`.
+
 ## Contratos entre módulos
 - **Topologias (REST/JSON)**
   - `POST /topologies` cria; `GET /topologies/{id}` detalha; `GET /topologies` lista.
+- **Configurações (multi-ambiente) (REST/JSON)**
+  - `GET /configs` lista configs salvas.
+  - `GET /configs/active` mostra a config ativa.
+  - `GET /configs/{id}` recupera uma config.
+  - `POST /configs` cria uma config (suporta `set_active=true`).
+  - `POST /configs/{id}/activate` ativa uma config.
+  - `DELETE /configs/{id}` remove uma config.
 - **Experimentos (REST/JSON)**
   - `POST /experiments` cria; `GET /experiments/{id}` detalha; `POST /experiments/{id}/run` agenda/aciona execução; `GET /experiments/{id}/runs` lista execuções.
 - **Orquestrador**
@@ -13,9 +22,14 @@
   - Consulta: `POST /metrics/query` (filtros por nomes, nós, camadas, janela temporal, limite).
   - Últimos valores: `GET /metrics/latest?metric=&node=&layer=`.
   - Exportação: `GET /metrics/export?layer=network` (retorna JSONL da camada).
-  - Coletor mínimo: `POST /metrics/collect` (gera amostras sintéticas por camada).
-  - Camadas suportadas: `physical`, `link`, `network`, `transport`, `application`, `control`, `dataplane`.
+  - Coleta sob demanda: `POST /metrics/collect?mode=synthetic|real`.
+  - Camadas suportadas (OSI L0–L7 + SDN):
+    - `service`, `physical`, `link`, `network`, `transport`, `session`, `presentation`, `application`, `control`, `dataplane`.
   - Stream SSE: `GET /stream/events` (snapshot com topologia, runs e ~200 métricas recentes).
+
+## Autenticação (API Key)
+- Se `API_KEY` estiver configurado no backend, endpoints de escrita exigem header `X-API-Key: <chave>`.
+- O frontend usa `VITE_API_KEY` para enviar esse header.
 
 ## DTOs básicos (JSON)
 
@@ -89,6 +103,11 @@
 - `metric_layers` (raiz) habilita/desabilita coleta por camada (ex.: `"link": false` para ignorar L2).
 - O bootstrap da API lê esse arquivo na inicialização e pré-carrega topologia, fluxos e métricas disponíveis.
 
+### Persistência (arquivos)
+- Métricas brutas (por camada): `raw/metrics_{layer}.jsonl`
+- Configurações (multi-ambiente): `temp/configs/` (com ponteiro para ativa)
+- Experimentos/runs/artefatos: `temp/experiments/`
+
 ## Stream SSE (/stream/events)
 - Tipo de evento: `snapshot`.
 - Payload:
@@ -98,12 +117,16 @@
   "generated_at": "2024-01-01T12:00:00Z",
   "topology": {"id": "topo-1", "nodes": [], "links": []},
   "metrics": [
-    {"timestamp": "...", "node": "h1", "layer": "network", "metric": "latency_ms", "value": 1.2, "details": {}, "labels": {}}
+    {"timestamp": "...", "node": "h1", "layer": "network", "metric_name": "latency_ms", "value": 1.2, "details": {}, "labels": {}}
   ],
   "runs": []
 }
 ```
 - Inclui ~200 métricas recentes; topologia e runs ativos; usado pela UI em Monitor e Lab.
+
+## Esquemas de métricas (importante)
+- `MetricSample` (ingestão via `POST /metrics/samples`) usa o campo `metric`.
+- `MetricRecord` (armazenamento/consulta/UI) usa o campo `metric_name`.
 
 ## Templates de experimento (JSON/YAML)
 - Contêm: versão do template, topologia completa, lista de experimentos que referenciam a topologia, tráfego e métricas.
