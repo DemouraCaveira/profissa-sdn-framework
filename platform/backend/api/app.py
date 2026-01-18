@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Sequence
 from uuid import uuid4
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Response, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -959,7 +960,7 @@ async def _event_stream():
             "metrics": [_sample_to_dict(s) for s in latest_for_defs],
             "runs": [run.model_dump() for run in runs.values()],
         }
-        yield f"data: {json.dumps(payload)}\n\n"
+        yield f"data: {json.dumps(jsonable_encoder(payload))}\n\n"
         await asyncio.sleep(2)
 
 
