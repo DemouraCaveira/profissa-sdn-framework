@@ -38,6 +38,30 @@ source .venv/bin/activate
 pip install -r requirements-dev.txt
 ```
 
+## Subir backend + frontend (1 comando)
+Para o pesquisador/usuário final, use os scripts em `scripts/`.
+
+```bash
+./scripts/dev.sh
+```
+
+Parar tudo:
+```bash
+./scripts/stop.sh
+```
+
+Variáveis úteis (opcionais):
+- `BACKEND_PORT` (default `8000`)
+- `FRONTEND_PORT` (default `5173`)
+- `PLATFORM_CONFIG_PATH` (default `platform/experiments/platform_config.json`)
+- `REAL_COLLECTION` (default `1`)
+- `AUTO_COLLECT_INTERVAL` (default `5`)
+- `VITE_API_BASE` (default `http://localhost:8000`)
+
+Logs/PIDs:
+- `temp/backend.log`, `temp/backend.pid`
+- `temp/frontend.log`, `temp/frontend.pid`
+
 ## Como rodar testes
 ```bash
 pytest

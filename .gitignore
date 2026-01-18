@@ -25,3 +25,12 @@ dist/
 
 # local large raw metrics (do not commit)
 /raw/metrics_transport.jsonl
+
+# Runtime artifacts (dev)
+/temp/backend.log
+/temp/backend.pid
+/temp/frontend.log
+/temp/frontend.pid
+
+# Generated raw metrics during dev runs (do not commit)
+/raw/metrics_*.jsonl
