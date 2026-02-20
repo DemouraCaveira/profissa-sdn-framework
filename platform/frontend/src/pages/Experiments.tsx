@@ -113,7 +113,7 @@ const parseTags = (tags: string) =>
 
 const Experiments: React.FC = () => {
   const apiBase = useMemo(() => {
-    const base = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+    const base = import.meta.env.VITE_API_BASE || "/api";
     return String(base).replace(/\/$/, "");
   }, []);
 

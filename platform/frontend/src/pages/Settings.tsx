@@ -94,7 +94,7 @@ const defaultLink = (): LinkForm => ({
 });
 
 const Settings: React.FC = () => {
-  const apiBase = useMemo(() => import.meta.env.VITE_API_BASE || "http://localhost:8000", []);
+  const apiBase = useMemo(() => import.meta.env.VITE_API_BASE || "/api", []);
   const apiKey = useMemo(() => import.meta.env.VITE_API_KEY || "", []);
 
   const [items, setItems] = useState<ConfigListItem[]>([]);

@@ -1,0 +1,46 @@
+{
+  "id": "exp_78023123",
+  "topology_id": "platform-topology",
+  "name": "exp-l3-path-mtu-observation",
+  "description": "Observa comportamento de PMTU/fragmentação (quando aplicável) e impacto em latência/perda.",
+  "hypotheses": "H0: PMTU estável; H1: variação de PMTU aumenta perda/latência.",
+  "traffic": [
+    {
+      "generator": "ping",
+      "src": "h1",
+      "dst": "h2",
+      "protocol": "icmp",
+      "rate": null,
+      "duration_sec": 10,
+      "params": {}
+    }
+  ],
+  "metrics": {
+    "metrics": [
+      "latency_ms",
+      "jitter_ms",
+      "packet_loss_pct",
+      "mac_table_size",
+      "mac_churn_rate",
+      "mac_moves_total",
+      "stp_root_changes_total",
+      "stp_topology_changes_total",
+      "stp_blocked_ports",
+      "lacp_members_up"
+    ],
+    "interval_sec": 5.0,
+    "labels": [
+      "experiment_id",
+      "run_id",
+      "topology_id"
+    ]
+  },
+  "duration_sec": 30,
+  "tags": [
+    "network",
+    "pmtu",
+    "fragmentation",
+    "L3"
+  ],
+  "template_version": null
+}

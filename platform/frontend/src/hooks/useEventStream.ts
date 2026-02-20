@@ -39,7 +39,7 @@ export function useEventStream(path = "/stream/events") {
   const [status, setStatus] = useState<"connecting" | "open" | "closed">("connecting");
 
   const url = useMemo(() => {
-    const base = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+    const base = import.meta.env.VITE_API_BASE || "/api";
     return `${base.replace(/\/$/, "")}${path}`;
   }, [path]);
 
