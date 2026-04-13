@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/Input";
 import { nodeTypes } from "@/features/topology/nodeTypes";
 import { edgeTypes, type LinkStatus } from "@/features/topology/edgeTypes";
 import { cn } from "@/lib/cn";
+import { topologyApi, metricsApi, type Topology as ApiTopology, type MetricSample } from "@/lib/api"
+import { useTopologies, useTopologyMutations } from "@/hooks/useTopology";
 
 type NodeKind = "switch" | "host" | "controller";
 type MapMode = "logical" | "physical";
@@ -459,12 +461,253 @@ function bfsPath(edges: Edge<LinkStatus>[], from: string, to: string) {
 
 function EditorInner() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [nodes, setNodes] = useState<Node<TopologyNodeData>[]>(initialNodes);
-  const [edgesPhysical, setEdgesPhysical] = useState<Edge<LinkStatus>[]>(initialEdgesPhysical);
-  const [edgesLogical, setEdgesLogical] = useState<Edge<LinkStatus>[]>(initialEdgesLogical);
+  const [nodes, setNodes] = useState<Node<TopologyNodeData>[]>([]);
+  const [edgesPhysical, setEdgesPhysical] = useState<Edge<LinkStatus>[]>([]);
+  const [edgesLogical, setEdgesLogical] = useState<Edge<LinkStatus>[]>([]);
   const [mode, setMode] = useState<MapMode>("physical");
+  const [topoLoading, setTopoLoading] = useState(true);
+  const [topoName, setTopoName] = useState<string | null>(null);
 
+  // ── Backend sync ────────────────────────────────────────────────────────
+  const [backendTopoId, setBackendTopoId] = useState<string | null>(null);
+  const [backendSyncStatus, setBackendSyncStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const { createTopology, updateTopology } = useTopologyMutations();
+
+  // ── Selection state (must be declared before the useEffect that depends on it) ────
   const [selected, setSelected] = useState<SelectedElement>(null);
+
+  // ── Per-node metrics when Deep-Dive is open ──────────────────────────────
+  // Map: node id → Map<metric, value>
+  const [nodeMetrics, setNodeMetrics] = useState<Map<string, Map<string, number>>>(new Map());
+  const nodeMetricsTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // When selected element changes, start polling its metrics
+  useEffect(() => {
+    if (nodeMetricsTimerRef.current) clearInterval(nodeMetricsTimerRef.current);
+    if (!selected) return;
+
+    let nodeId: string;
+    if (selected.kind === "node") {
+      nodeId = selected.nodeId;
+    } else {
+      // For edges, find the edge and fetch link metrics using "source->target" key
+      const edge = edgesPhysical.find((e) => e.id === selected.edgeId) ?? edgesLogical.find((e) => e.id === selected.edgeId);
+      if (!edge) return;
+      nodeId = `${edge.source}->${edge.target}`;
+    }
+
+    const fetchNodeMetrics = () => {
+      metricsApi.latest({ node: nodeId }).then((samples) => {
+        const m = new Map<string, number>();
+        for (const s of samples) m.set(s.metric, s.value);
+        setNodeMetrics((prev) => new Map(prev).set(nodeId, m));
+      }).catch(() => {});
+    };
+    fetchNodeMetrics();
+    nodeMetricsTimerRef.current = setInterval(fetchNodeMetrics, 5000);
+    return () => {
+      if (nodeMetricsTimerRef.current) clearInterval(nodeMetricsTimerRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
+
+  // ── Load topology from backend on mount ─────────────────────────────────
+  useEffect(() => {
+    topologyApi.list().then((topos) => {
+      if (!topos.length) {
+        // No topologies — fall back to static demo nodes
+        setNodes(initialNodes);
+        setEdgesPhysical(initialEdgesPhysical);
+        setEdgesLogical(initialEdgesLogical);
+        setTopoLoading(false);
+        return;
+      }
+      const topo = topos[0];
+      setBackendTopoId(topo.id);
+      setTopoName(topo.name ?? topo.id);
+      if (topo.nodes?.length) {
+        // Auto-layout: controller top-center, switches middle, hosts bottom
+        const controllers = topo.nodes.filter((n) => n.type === "controller");
+        const switches = topo.nodes.filter((n) => n.type === "switch");
+        const hosts = topo.nodes.filter((n) => n.type === "host");
+
+        const cx = 500;
+        const layoutPos = (arr: typeof topo.nodes, y: number) =>
+          arr.reduce<Record<string, { x: number; y: number }>>((acc, n, i) => {
+            acc[n.id] = { x: cx - ((arr.length - 1) * 200) / 2 + i * 200, y };
+            return acc;
+          }, {});
+
+        const positions = {
+          ...layoutPos(controllers, 60),
+          ...layoutPos(switches, 240),
+          ...layoutPos(hosts, 420),
+        };
+
+        const rfNodes: Node<TopologyNodeData>[] = topo.nodes.map((n) => ({
+          id: n.id,
+          type: (n.type as NodeKind) || "host",
+          position: positions[n.id] ?? { x: 200, y: 200 },
+          data: {
+            id: n.id,
+            mgmtIp: n.mgmt_ip ?? undefined,
+          } as TopologyNodeData,
+        }));
+        setNodes(rfNodes);
+      }
+      if (topo.links?.length) {
+        const rfEdgesPhys: Edge<LinkStatus>[] = topo.links.map((l, i) => ({
+          id: `p-${l.source}-${l.target}-${i}`,
+          source: l.source,
+          target: l.target,
+          type: "util",
+          animated: false,
+          data: {
+            mode: "physical",
+            utilPct: 0,
+            capacityMbps: l.bandwidth_mbps ?? 1000,
+            lossPct: l.loss_pct ?? 0,
+            up: true,
+          } satisfies LinkStatus,
+        }));
+        const rfEdgesLog: Edge<LinkStatus>[] = topo.links.map((l, i) => ({
+          id: `l-${l.source}-${l.target}-${i}`,
+          source: l.source,
+          target: l.target,
+          type: "util",
+          animated: false,
+          data: { mode: "logical", up: true, lossPct: 0 } satisfies LinkStatus,
+        }));
+        setEdgesPhysical(rfEdgesPhys);
+        setEdgesLogical(rfEdgesLog);
+      }
+      setTopoLoading(false);
+    }).catch(() => {
+      // Backend offline — use static demo
+      setNodes(initialNodes);
+      setEdgesPhysical(initialEdgesPhysical);
+      setEdgesLogical(initialEdgesLogical);
+      setTopoLoading(false);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Poll real metrics and update nodes/edges ──────────────────────────
+  useEffect(() => {
+    const applyMetrics = (samples: MetricSample[]) => {
+      // Build lookup: node -> metric -> value
+      const byNode = new Map<string, Map<string, number>>();
+      for (const s of samples) {
+        if (!byNode.has(s.node)) byNode.set(s.node, new Map());
+        byNode.get(s.node)!.set(s.metric, s.value);
+      }
+
+      setNodes((prev) =>
+        prev.map((n) => {
+          const m = byNode.get(n.id);
+          if (!m) return n;
+          const patch: Partial<TopologyNodeData> = {};
+          if (n.type === "controller") {
+            const cpu = m.get("docker_cpu_util_pct") ?? m.get("cpu_util_pct");
+            const mem = m.get("docker_mem_util_pct") ?? m.get("mem_util_pct");
+            const lat = m.get("controller_latency_ms");
+            if (cpu !== undefined) patch.cpuPct = cpu;
+            if (mem !== undefined) patch.memPct = mem;
+            if (lat !== undefined) patch.responseLatencyMs = lat;
+            patch.status = (m.get("controller_conn_ok") ?? 1) > 0.5 ? "online" : "offline";
+          } else if (n.type === "host") {
+            const cpu = m.get("cpu_util_pct");
+            const mem = m.get("mem_util_pct");
+            const loss = m.get("packet_loss_pct");
+            if (cpu !== undefined) patch.cpuPct = cpu;
+            if (mem !== undefined) patch.memPct = mem;
+            if (loss !== undefined && n.data.ifaceStats) {
+              patch.ifaceStats = { ...n.data.ifaceStats };
+            }
+          } else if (n.type === "switch") {
+            const qOcc = m.get("queue_occupancy_pct");
+            const loss = m.get("packet_loss_pct");
+            if (qOcc !== undefined || loss !== undefined) {
+              const prev_pkt = n.data.pktStats ?? { rxPps: 0, txPps: 0, dropPps: 0 };
+              patch.pktStats = {
+                rxPps: prev_pkt.rxPps,
+                txPps: prev_pkt.txPps,
+                dropPps: loss !== undefined ? Math.round(loss * 10) : prev_pkt.dropPps,
+              };
+            }
+          }
+          if (Object.keys(patch).length === 0) return n;
+          return { ...n, data: { ...n.data, ...patch } };
+        }),
+      );
+
+      // Update physical edge metrics: links stored as "s1->h1" in backend
+      setEdgesPhysical((prev) =>
+        prev.map((e) => {
+          const linkKey = `${e.source}->${e.target}`;
+          const revKey = `${e.target}->${e.source}`;
+          const lm = byNode.get(linkKey) ?? byNode.get(revKey);
+          if (!lm) return e;
+          const util = lm.get("link_util_pct") ?? lm.get("if_in_util_pct") ?? lm.get("if_out_util_pct");
+          const loss = lm.get("link_loss_pct");
+          const up = lm.get("if_link_up");
+          const d = e.data ?? ({ mode: "physical" } as LinkStatus);
+          return {
+            ...e,
+            animated: ((loss ?? d.lossPct ?? 0) >= 2.5) || (up !== undefined ? up < 0.5 : !(d.up ?? true)),
+            data: {
+              ...d,
+              utilPct: util ?? d.utilPct ?? 0,
+              lossPct: loss ?? d.lossPct ?? 0,
+              up: up !== undefined ? up >= 0.5 : (d.up ?? true),
+            },
+          };
+        }),
+      );
+    };
+
+    // Fetch immediately then every 5 s
+    metricsApi.latest().then(applyMetrics).catch(() => {});
+    const metricsTimer = setInterval(() => {
+      metricsApi.latest().then(applyMetrics).catch(() => {});
+    }, 5000);
+    return () => clearInterval(metricsTimer);
+  }, []);
+
+  const publishToBackend = useCallback(async () => {
+    setBackendSyncStatus("saving");
+    const backendNodes = nodes.map((n) => ({
+      id: n.id,
+      type: (n.type ?? "host") as ApiTopology["nodes"][number]["type"],
+      mgmt_ip: n.data.mgmtIp ?? n.data.ip ?? null,
+      meta: {
+        ip: n.data.ip,
+        mac: n.data.mac,
+        dpid: n.data.dpid,
+        position: n.position,
+      },
+    }));
+    const backendLinks = edgesPhysical.map((e) => ({
+      source: e.source,
+      target: e.target,
+      bandwidth_mbps: e.data?.capacityMbps ?? null,
+      delay_ms: null,
+      loss_pct: e.data?.lossPct ?? null,
+    }));
+    try {
+      if (backendTopoId) {
+        await updateTopology(backendTopoId, { nodes: backendNodes, links: backendLinks });
+      } else {
+        const created = await createTopology({ name: "Topologia Frontend", nodes: backendNodes, links: backendLinks });
+        if (created) setBackendTopoId(created.id);
+      }
+      setBackendSyncStatus("saved");
+      setTimeout(() => setBackendSyncStatus("idle"), 2500);
+    } catch {
+      setBackendSyncStatus("error");
+      setTimeout(() => setBackendSyncStatus("idle"), 3000);
+    }
+  }, [backendTopoId, createTopology, edgesPhysical, nodes, updateTopology]);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [hostModalOpen, setHostModalOpen] = useState(false);
@@ -547,67 +790,9 @@ function EditorInner() {
     reloadSnapshots();
   }, [reloadSnapshots]);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      setNodes((prev) =>
-        prev.map((n) => {
-          if (n.type === "switch") {
-            const stats = n.data.pktStats ?? { rxPps: 0, txPps: 0, dropPps: 0 };
-            const rxPps = Math.max(0, stats.rxPps + Math.round((Math.random() * 2 - 1) * 60));
-            const txPps = Math.max(0, stats.txPps + Math.round((Math.random() * 2 - 1) * 60));
-            const dropPps = Math.max(0, stats.dropPps + Math.round((Math.random() * 2 - 1) * 2));
-            return { ...n, data: { ...n.data, pktStats: { rxPps, txPps, dropPps } } };
-          }
-          if (n.type === "host") {
-            const cpuPct = randomWalk(n.data.cpuPct ?? 18, 3.5, 0, 100);
-            const memPct = randomWalk(n.data.memPct ?? 42, 2.8, 0, 100);
-            const ifaceStats = n.data.ifaceStats ?? synthIfaceStats(n.id);
-            return {
-              ...n,
-              data: {
-                ...n.data,
-                cpuPct,
-                memPct,
-                ifaceStats: {
-                  ...ifaceStats,
-                  rxMbps: randomWalk(ifaceStats.rxMbps, 18, 0, 950),
-                  txMbps: randomWalk(ifaceStats.txMbps, 18, 0, 950),
-                },
-              },
-            };
-          }
-          if (n.type === "controller") {
-            const responseLatencyMs = randomWalk(n.data.responseLatencyMs ?? 8, 1.8, 0.2, 200);
-            return { ...n, data: { ...n.data, responseLatencyMs } };
-          }
-          return n;
-        }),
-      );
-    }, 900);
-    return () => clearInterval(id);
-  }, []);
 
-  useEffect(() => {
-    if (mode !== "physical") return;
-    const id = setInterval(() => {
-      setEdgesPhysical((prev) =>
-        prev.map((e) => {
-          const d = e.data ?? { mode: "physical" };
-          if (d.mode !== "physical") return e;
-          const util = randomWalk(d.utilPct ?? 20, 8, 0, 100);
-          const loss = Math.max(0, randomWalk(d.lossPct ?? 0.1, 0.2, 0, 8));
-          const up = d.up ?? true;
-          const flap = Math.random() < 0.008;
-          return {
-            ...e,
-            animated: (loss >= 2.5 || !up) && !(d.trace ?? false),
-            data: { ...d, utilPct: util, lossPct: loss, up: flap ? !up : up },
-          };
-        }),
-      );
-    }, 950);
-    return () => clearInterval(id);
-  }, [mode]);
+
+
 
   const onConnect: OnConnect = useCallback(
     (connection: Connection) => {
@@ -871,11 +1056,30 @@ function EditorInner() {
 
   const drawerOpen = selectedNode !== null || selectedEdge !== null;
 
+  if (topoLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center rounded-xl border border-border-0/60 bg-bg-1/40">
+        <div className="flex flex-col items-center gap-3 text-fg-1">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-fg-1/30 border-t-accent-ok" />
+          <div className="text-sm">Carregando topologia do backend…</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <div className="text-[14px] font-semibold tracking-tight">Topologia Interativa</div>
+          <div className="flex items-center gap-2">
+            <div className="text-[14px] font-semibold tracking-tight">Topologia Interativa</div>
+            {topoName && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-accent-ok/10 px-2 py-0.5 text-[11px] font-medium text-accent-ok">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-ok" />
+                {topoName}
+              </span>
+            )}
+          </div>
           <div className="text-[11px] text-fg-1">Editor completo (React Flow) · gestão de infraestrutura</div>
         </div>
 
@@ -945,6 +1149,24 @@ function EditorInner() {
           </div>
 
           <Button variant="ghost" className="h-8" onClick={captureSnapshot}>Capturar Snapshot</Button>
+
+          <Button
+            variant="primary"
+            className="h-8"
+            onClick={publishToBackend}
+            disabled={backendSyncStatus === "saving"}
+          >
+            {backendSyncStatus === "saving"
+              ? "Salvando…"
+              : backendSyncStatus === "saved"
+                ? "✓ Salvo"
+                : backendSyncStatus === "error"
+                  ? "Erro!"
+                  : "Publicar no Back-end"}
+          </Button>
+          {backendTopoId && (
+            <span className="text-[10px] text-fg-1 font-mono">{backendTopoId}</span>
+          )}
         </div>
       </div>
 
@@ -1062,6 +1284,7 @@ function EditorInner() {
         <div className="min-w-0">
           <div ref={wrapperRef} className="relative h-[74vh] w-full overflow-hidden rounded-xl border border-border-0/60">
             <ReactFlow
+              key={topoName ?? "topo"}
               nodes={nodes}
               edges={edges}
               onConnect={onConnect}
@@ -1071,6 +1294,7 @@ function EditorInner() {
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               fitView
+              fitViewOptions={{ padding: 0.3 }}
             >
               <Background gap={18} size={1} color="rgba(40,49,73,0.9)" />
               <Controls />
@@ -1116,241 +1340,220 @@ function EditorInner() {
 
               <div className="h-[calc(74vh-41px)] overflow-auto px-3 py-2">
                 {selectedEdge ? (
-            <div className="space-y-2">
-              <div className="text-[11px] text-fg-1">Link selecionado</div>
-              <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                <div className="text-[11px] text-fg-1">Endpoints</div>
-                <div className="mt-1 font-mono text-[11px] text-fg-0">{selectedEdge.source} ↔ {selectedEdge.target}</div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                  <div className="text-[10px] uppercase tracking-wide text-fg-1">utilização</div>
-                  <div className="mt-0.5 font-mono text-[12px] text-fg-0">{(selectedEdge.data?.utilPct ?? 0).toFixed(0)}%</div>
-                </div>
-                <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                  <div className="text-[10px] uppercase tracking-wide text-fg-1">perda</div>
-                  <div className={cn("mt-0.5 font-mono text-[12px]", (selectedEdge.data?.lossPct ?? 0) >= 2.5 ? "text-accent-danger" : "text-fg-0")}>
-                    {(selectedEdge.data?.lossPct ?? 0).toFixed(2)}%
-                  </div>
-                </div>
-                <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                  <div className="text-[10px] uppercase tracking-wide text-fg-1">status</div>
-                  <div className={cn("mt-0.5 font-mono text-[12px]", (selectedEdge.data?.up ?? true) ? "text-accent-ok" : "text-accent-danger")}>
-                    {(selectedEdge.data?.up ?? true) ? "UP" : "DOWN"}
-                  </div>
-                </div>
-                <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                  <div className="text-[10px] uppercase tracking-wide text-fg-1">modo</div>
-                  <div className="mt-0.5 font-mono text-[12px] text-fg-0">{selectedEdge.data?.mode ?? mode}</div>
-                </div>
-              </div>
-            </div>
+                  (() => {
+                    // Find real link metrics from backend (node key is "source->target")
+                    const lkA = `${selectedEdge.source}->${selectedEdge.target}`;
+                    const lkB = `${selectedEdge.target}->${selectedEdge.source}`;
+                    const lm = nodeMetrics.get(lkA) ?? nodeMetrics.get(lkB);
+                    return (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="text-[11px] font-semibold text-fg-0">Link</div>
+                          <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", (selectedEdge.data?.up ?? true) ? "bg-accent-ok/10 text-accent-ok" : "bg-accent-danger/10 text-accent-danger")}>
+                            {(selectedEdge.data?.up ?? true) ? "UP" : "DOWN"}
+                          </span>
+                        </div>
+                        <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                          <div className="font-mono text-[12px] text-fg-0">{selectedEdge.source} ↔ {selectedEdge.target}</div>
+                          <div className="mt-0.5 text-[10px] text-fg-1">Capacidade: {selectedEdge.data?.capacityMbps ? `${selectedEdge.data.capacityMbps >= 1000 ? `${(selectedEdge.data.capacityMbps/1000).toFixed(0)} Gbps` : `${selectedEdge.data.capacityMbps} Mbps`}` : "—"}</div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">Utilização</div>
+                            <div className="mt-0.5 font-mono text-[13px] text-fg-0">{(lm?.get("link_util_pct") ?? selectedEdge.data?.utilPct ?? 0).toFixed(1)}%</div>
+                          </div>
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">Perda pkts</div>
+                            <div className={cn("mt-0.5 font-mono text-[13px]", (lm?.get("link_loss_pct") ?? selectedEdge.data?.lossPct ?? 0) >= 2.5 ? "text-accent-danger" : "text-fg-0")}>
+                              {(lm?.get("link_loss_pct") ?? selectedEdge.data?.lossPct ?? 0).toFixed(2)}%
+                            </div>
+                          </div>
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">RX pkts</div>
+                            <div className="mt-0.5 font-mono text-[13px] text-fg-0">{lm?.get("port_rx_pkts") !== undefined ? lm.get("port_rx_pkts")!.toLocaleString() : "—"}</div>
+                          </div>
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">TX pkts</div>
+                            <div className="mt-0.5 font-mono text-[13px] text-fg-0">{lm?.get("port_tx_pkts") !== undefined ? lm.get("port_tx_pkts")!.toLocaleString() : "—"}</div>
+                          </div>
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">Jitter</div>
+                            <div className="mt-0.5 font-mono text-[13px] text-fg-0">{lm?.get("link_jitter_ms") !== undefined ? `${lm.get("link_jitter_ms")!.toFixed(2)} ms` : "—"}</div>
+                          </div>
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">Erros</div>
+                            <div className="mt-0.5 font-mono text-[13px] text-fg-0">{lm?.get("if_errors") !== undefined ? lm.get("if_errors")!.toFixed(0) : "—"}</div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()
                 ) : selectedNode ? (
-            <>
-              <div className="mb-2 text-[11px] text-fg-1">Elemento: <span className="font-mono text-fg-0">{selectedNode.id}</span></div>
+                  (() => {
+                    const nm = nodeMetrics.get(selectedNode.id) ?? new Map<string, number>();
+                    const fmt = (v: number | undefined, decimals = 1, suffix = "") =>
+                      v !== undefined ? `${v.toFixed(decimals)}${suffix}` : "—";
+                    const fmtInt = (v: number | undefined, suffix = "") =>
+                      v !== undefined ? `${v.toLocaleString()}${suffix}` : "—";
 
-              {selectedNode.type === "host" ? (
-                <div className="space-y-2">
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-1 text-[11px] font-medium text-fg-1">Host</div>
-                    <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">IP</div>
-                        <div className="font-mono text-fg-0">{selectedNode.data.ip ?? "—"}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">MAC</div>
-                        <div className="font-mono text-fg-0">{selectedNode.data.mac ?? "—"}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">IFACE</div>
-                        <div className="font-mono text-fg-0">{selectedNode.data.iface ?? "—"}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">GW</div>
-                        <div className="font-mono text-fg-0">{selectedNode.data.gateway ?? "—"}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                      <div className="text-[10px] uppercase tracking-wide text-fg-1">CPU</div>
-                      <div className="mt-0.5 font-mono text-[12px] text-fg-0">{(selectedNode.data.cpuPct ?? 0).toFixed(0)}%</div>
-                    </div>
-                    <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                      <div className="text-[10px] uppercase tracking-wide text-fg-1">Mem</div>
-                      <div className="mt-0.5 font-mono text-[12px] text-fg-0">{(selectedNode.data.memPct ?? 0).toFixed(0)}%</div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-2 text-[11px] font-medium text-fg-1">Tabela ARP</div>
-                    <div className="overflow-auto rounded-md border border-border-0/60">
-                      <table className="w-full min-w-[520px] border-collapse text-left text-xs">
-                        <thead className="bg-bg-1/60">
-                          <tr className="border-b border-border-0/60 text-[10px] uppercase tracking-wide text-fg-1">
-                            <th className="px-2 py-2 font-medium">IP</th>
-                            <th className="px-2 py-2 font-medium">MAC</th>
-                            <th className="px-2 py-2 font-medium">IF</th>
-                            <th className="px-2 py-2 font-medium">State</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(selectedNode.data.arpTable ?? synthArpTable(selectedNode.id)).map((r) => (
-                            <tr key={r.ip} className="border-b border-border-0/30 hover:bg-bg-2/20">
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{r.ip}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{r.mac}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{r.iface}</td>
-                              <td className={cn("px-2 py-2 font-mono text-[11px]", r.state === "FAILED" ? "text-accent-danger" : "text-fg-0")}>
-                                {r.state}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-2 text-[11px] font-medium text-fg-1">Sockets ativos (ss)</div>
-                    <div className="overflow-auto rounded-md border border-border-0/60">
-                      <table className="w-full min-w-[720px] border-collapse text-left text-xs">
-                        <thead className="bg-bg-1/60">
-                          <tr className="border-b border-border-0/60 text-[10px] uppercase tracking-wide text-fg-1">
-                            <th className="px-2 py-2 font-medium">Proto</th>
-                            <th className="px-2 py-2 font-medium">Local</th>
-                            <th className="px-2 py-2 font-medium">Remote</th>
-                            <th className="px-2 py-2 font-medium">State</th>
-                            <th className="px-2 py-2 font-medium">PID</th>
-                            <th className="px-2 py-2 font-medium">Proc</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(selectedNode.data.sockets ?? synthSockets()).map((s, idx) => (
-                            <tr key={`${s.local}-${idx}`} className="border-b border-border-0/30 hover:bg-bg-2/20">
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{s.proto}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{s.local}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{s.remote}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{s.state}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{s.pid}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{s.proc}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-2 text-[11px] font-medium text-fg-1">Estatísticas de Interface</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">RX</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{(selectedNode.data.ifaceStats?.rxMbps ?? 0).toFixed(1)} Mbps</div>
-                      </div>
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">TX</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{(selectedNode.data.ifaceStats?.txMbps ?? 0).toFixed(1)} Mbps</div>
-                      </div>
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">Drops</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{selectedNode.data.ifaceStats?.rxDrops ?? 0}/{selectedNode.data.ifaceStats?.txDrops ?? 0}</div>
-                      </div>
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">Errors</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{selectedNode.data.ifaceStats?.errors ?? 0}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : selectedNode.type === "switch" ? (
-                <div className="space-y-2">
-                  <div>
-                    <div className="mb-1 text-[11px] font-medium text-fg-1">ID do Switch</div>
-                    <Input value={selectedNode.data.id} onChange={(e) => updateSelectedNode({ id: e.target.value })} />
-                  </div>
-                  <div>
-                    <div className="mb-1 text-[11px] font-medium text-fg-1">Versão OpenFlow</div>
-                    <Input value={(selectedNode.data as any).ofVersion ?? "OpenFlow13"} onChange={(e) => updateSelectedNode({ ...(selectedNode.data as any), ofVersion: e.target.value } as any)} />
-                  </div>
-
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-2 text-[11px] font-medium text-fg-1">Estatísticas de pacotes</div>
-                    <div className="grid grid-cols-3 gap-2 text-xs">
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">rx pps</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{selectedNode.data.pktStats?.rxPps ?? 0}</div>
-                      </div>
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">tx pps</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{selectedNode.data.pktStats?.txPps ?? 0}</div>
-                      </div>
-                      <div className="rounded-md border border-border-0/60 bg-bg-2/20 p-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">drop pps</div>
-                        <div className="mt-0.5 font-mono text-[12px] text-fg-0">{selectedNode.data.pktStats?.dropPps ?? 0}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-2 text-[11px] font-medium text-fg-1">Flow Table (completa)</div>
-                    <div className="overflow-auto rounded-md border border-border-0/60">
-                      <table className="w-full min-w-[860px] border-collapse text-left text-xs">
-                        <thead className="bg-bg-1/60">
-                          <tr className="border-b border-border-0/60 text-[10px] uppercase tracking-wide text-fg-1">
-                            <th className="px-2 py-2 font-medium">Priority</th>
-                            <th className="px-2 py-2 font-medium">Match</th>
-                            <th className="px-2 py-2 font-medium">Actions</th>
-                            <th className="px-2 py-2 font-medium">Packets</th>
-                            <th className="px-2 py-2 font-medium">Bytes</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(selectedNode.data.flowTables ?? []).map((f, idx) => (
-                            <tr key={`${f.priority}-${idx}`} className="border-b border-border-0/30 hover:bg-bg-2/20">
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{f.priority}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{f.match}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{f.actions}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{f.packets}</td>
-                              <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{f.bytes}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
-                    <div className="mb-1 text-[11px] font-medium text-fg-1">Controlador</div>
-                    <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">Status</div>
-                        <div className={cn("font-mono", selectedNode.data.status === "online" ? "text-accent-ok" : "text-accent-danger")}>
-                          {selectedNode.data.status ?? "—"}
+                    return (
+                      <div className="space-y-3">
+                        {/* Header */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-mono text-[14px] font-bold text-fg-0">{selectedNode.id}</div>
+                            <div className="text-[10px] uppercase tracking-wide text-fg-1">{selectedNode.type}</div>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            {selectedNode.type === "controller" && (
+                              <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", selectedNode.data.status !== "offline" ? "bg-accent-ok/10 text-accent-ok" : "bg-accent-danger/10 text-accent-danger")}>
+                                {selectedNode.data.status !== "offline" ? "ONLINE" : "OFFLINE"}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">Latência</div>
-                        <div className="font-mono text-fg-0">{(selectedNode.data.responseLatencyMs ?? 0).toFixed(1)} ms</div>
-                      </div>
-                      <div className="col-span-2">
-                        <div className="text-[10px] uppercase tracking-wide text-fg-1">Switches sob gestão</div>
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {nodes.filter((n) => n.type === "switch").map((s) => (
-                            <span key={s.id} className="rounded-md border border-border-0/60 bg-bg-2/20 px-2 py-0.5 font-mono text-[10px] text-fg-0">
-                              {s.id}
-                            </span>
-                          ))}
+
+                        {/* Identity */}
+                        <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">Identidade</div>
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
+                            <div><span className="text-fg-1">Mgmt IP</span><div className="font-mono text-fg-0">{selectedNode.data.mgmtIp ?? "—"}</div></div>
+                            <div><span className="text-fg-1">Tipo</span><div className="font-mono text-fg-0">{selectedNode.type}</div></div>
+                            {selectedNode.type === "switch" && (
+                              <div className="col-span-2"><span className="text-fg-1">DPID</span><div className="font-mono text-fg-0">{selectedNode.data.dpid ?? "—"}</div></div>
+                            )}
+                            {selectedNode.type === "controller" && (
+                              <div><span className="text-fg-1">Latência OF</span><div className="font-mono text-fg-0">{fmt(nm.get("controller_latency_ms") ?? selectedNode.data.responseLatencyMs, 1, " ms")}</div></div>
+                            )}
+                          </div>
                         </div>
+
+                        {/* Resources */}
+                        {(nm.get("docker_cpu_util_pct") !== undefined || nm.get("cpu_util_pct") !== undefined || nm.get("docker_mem_util_pct") !== undefined) && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">Recursos (Docker)</div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <div className="flex justify-between text-[10px]"><span className="text-fg-1">CPU</span><span className="font-mono text-fg-0">{fmt(nm.get("docker_cpu_util_pct") ?? nm.get("cpu_util_pct"), 1, "%")}</span></div>
+                                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-border-0/40"><div className="h-full rounded-full bg-accent-ok" style={{ width: `${Math.min(100, nm.get("docker_cpu_util_pct") ?? nm.get("cpu_util_pct") ?? 0)}%` }} /></div>
+                              </div>
+                              <div>
+                                <div className="flex justify-between text-[10px]"><span className="text-fg-1">MEM</span><span className="font-mono text-fg-0">{fmt(nm.get("docker_mem_util_pct") ?? nm.get("mem_util_pct"), 1, "%")}</span></div>
+                                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-border-0/40"><div className="h-full rounded-full bg-accent-ok" style={{ width: `${Math.min(100, nm.get("docker_mem_util_pct") ?? nm.get("mem_util_pct") ?? 0)}%` }} /></div>
+                              </div>
+                              {nm.get("docker_net_rx_bytes") !== undefined && (
+                                <div><span className="text-[10px] text-fg-1">Net RX</span><div className="font-mono text-[11px] text-fg-0">{fmtInt(nm.get("docker_net_rx_bytes"), " B")}</div></div>
+                              )}
+                              {nm.get("docker_net_tx_bytes") !== undefined && (
+                                <div><span className="text-[10px] text-fg-1">Net TX</span><div className="font-mono text-[11px] text-fg-0">{fmtInt(nm.get("docker_net_tx_bytes"), " B")}</div></div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Network metrics */}
+                        {(nm.get("latency_ms") !== undefined || nm.get("packet_loss_pct") !== undefined || nm.get("jitter_ms") !== undefined) && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">Rede</div>
+                            <div className="grid grid-cols-2 gap-2 text-[11px]">
+                              {nm.get("latency_ms") !== undefined && <div><span className="text-fg-1">Latência</span><div className="font-mono text-fg-0">{fmt(nm.get("latency_ms"), 2, " ms")}</div></div>}
+                              {nm.get("packet_loss_pct") !== undefined && <div><span className="text-fg-1">Perda</span><div className={cn("font-mono", (nm.get("packet_loss_pct") ?? 0) > 1 ? "text-accent-danger" : "text-fg-0")}>{fmt(nm.get("packet_loss_pct"), 2, "%")}</div></div>}
+                              {nm.get("jitter_ms") !== undefined && <div><span className="text-fg-1">Jitter</span><div className="font-mono text-fg-0">{fmt(nm.get("jitter_ms"), 2, " ms")}</div></div>}
+                              {nm.get("throughput_mbps") !== undefined && <div><span className="text-fg-1">Throughput</span><div className="font-mono text-fg-0">{fmt(nm.get("throughput_mbps"), 1, " Mbps")}</div></div>}
+                              {nm.get("routes_count") !== undefined && <div><span className="text-fg-1">Rotas</span><div className="font-mono text-fg-0">{fmtInt(nm.get("routes_count"))}</div></div>}
+                              {nm.get("arp_entries") !== undefined && <div><span className="text-fg-1">Entradas ARP</span><div className="font-mono text-fg-0">{fmtInt(nm.get("arp_entries"))}</div></div>}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Controller-specific */}
+                        {selectedNode.type === "controller" && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">OpenFlow / Controle</div>
+                            <div className="grid grid-cols-2 gap-2 text-[11px]">
+                              <div><span className="text-fg-1">Flows instalados</span><div className="font-mono text-fg-0">{fmtInt(nm.get("flows_installed"))}</div></div>
+                              <div><span className="text-fg-1">Flows removidos</span><div className="font-mono text-fg-0">{fmtInt(nm.get("flows_removed"))}</div></div>
+                              <div><span className="text-fg-1">Reconexões OF</span><div className="font-mono text-fg-0">{fmtInt(nm.get("of_channel_reconnects"))}</div></div>
+                              <div><span className="text-fg-1">Conn OK</span><div className={cn("font-mono", (nm.get("controller_conn_ok") ?? 1) > 0.5 ? "text-accent-ok" : "text-accent-danger")}>{nm.get("controller_conn_ok") !== undefined ? ((nm.get("controller_conn_ok")! > 0.5) ? "Sim" : "Não") : "—"}</div></div>
+                              <div><span className="text-fg-1">Alertas</span><div className="font-mono text-fg-0">{fmtInt(nm.get("alerts_count"))}</div></div>
+                              <div><span className="text-fg-1">Fila</span><div className="font-mono text-fg-0">{fmtInt(nm.get("queue_depth"))}</div></div>
+                            </div>
+                            <div className="mt-2 text-[10px] text-fg-1">Switches sob gestão</div>
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {nodes.filter((n) => n.type === "switch").map((s) => (
+                                <span key={s.id} className="rounded-md border border-border-0/60 bg-bg-2/20 px-2 py-0.5 font-mono text-[10px] text-fg-0">{s.id}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Switch-specific */}
+                        {selectedNode.type === "switch" && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">Switch</div>
+                            <div className="grid grid-cols-3 gap-2 text-[11px]">
+                              <div><span className="text-fg-1">RX pps</span><div className="font-mono text-fg-0">{selectedNode.data.pktStats?.rxPps ?? 0}</div></div>
+                              <div><span className="text-fg-1">TX pps</span><div className="font-mono text-fg-0">{selectedNode.data.pktStats?.txPps ?? 0}</div></div>
+                              <div><span className="text-fg-1">DROP</span><div className={cn("font-mono", (selectedNode.data.pktStats?.dropPps ?? 0) > 0 ? "text-accent-warn" : "text-fg-0")}>{selectedNode.data.pktStats?.dropPps ?? 0}</div></div>
+                            </div>
+                            <div className="mt-2 grid grid-cols-2 gap-2 text-[11px]">
+                              {nm.get("queue_occupancy_pct") !== undefined && <div><span className="text-fg-1">Fila</span><div className="font-mono text-fg-0">{fmt(nm.get("queue_occupancy_pct"), 1, "%")}</div></div>}
+                              {nm.get("queue_drops") !== undefined && <div><span className="text-fg-1">Queue drops</span><div className="font-mono text-fg-0">{fmtInt(nm.get("queue_drops"))}</div></div>}
+                              {nm.get("snmp_tcp_currestab") !== undefined && <div><span className="text-fg-1">TCP Estab</span><div className="font-mono text-fg-0">{fmtInt(nm.get("snmp_tcp_currestab"))}</div></div>}
+                              {nm.get("snmp_ip_inreceives") !== undefined && <div><span className="text-fg-1">IP RX</span><div className="font-mono text-fg-0">{fmtInt(nm.get("snmp_ip_inreceives"))}</div></div>}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Host-specific */}
+                        {selectedNode.type === "host" && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">Host</div>
+                            <div className="grid grid-cols-2 gap-2 text-[11px]">
+                              {nm.get("dns_latency_ms") !== undefined && <div><span className="text-fg-1">DNS lat</span><div className="font-mono text-fg-0">{fmt(nm.get("dns_latency_ms"), 1, " ms")}</div></div>}
+                              {nm.get("dns_success_pct") !== undefined && <div><span className="text-fg-1">DNS ok</span><div className="font-mono text-fg-0">{fmt(nm.get("dns_success_pct"), 1, "%")}</div></div>}
+                              {nm.get("http_latency_ms") !== undefined && <div><span className="text-fg-1">HTTP lat</span><div className="font-mono text-fg-0">{fmt(nm.get("http_latency_ms"), 1, " ms")}</div></div>}
+                              {nm.get("http_success_pct") !== undefined && <div><span className="text-fg-1">HTTP ok</span><div className="font-mono text-fg-0">{fmt(nm.get("http_success_pct"), 1, "%")}</div></div>}
+                              {nm.get("tcp_rtt_ms") !== undefined && <div><span className="text-fg-1">TCP RTT</span><div className="font-mono text-fg-0">{fmt(nm.get("tcp_rtt_ms"), 2, " ms")}</div></div>}
+                              {nm.get("snmp_tcp_currestab") !== undefined && <div><span className="text-fg-1">TCP Estab</span><div className="font-mono text-fg-0">{fmtInt(nm.get("snmp_tcp_currestab"))}</div></div>}
+                              {nm.get("ss_tcp_sockets_total") !== undefined && <div><span className="text-fg-1">Sockets TCP</span><div className="font-mono text-fg-0">{fmtInt(nm.get("ss_tcp_sockets_total"))}</div></div>}
+                              {nm.get("app_rps") !== undefined && <div><span className="text-fg-1">App RPS</span><div className="font-mono text-fg-0">{fmt(nm.get("app_rps"), 1)}</div></div>}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Raw metrics table — all available */}
+                        {nm.size > 0 && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-2">
+                            <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-fg-1">Todas as métricas ({nm.size})</div>
+                            <div className="max-h-[300px] overflow-auto">
+                              <table className="w-full border-collapse text-left text-[10px]">
+                                <thead className="sticky top-0 bg-bg-1">
+                                  <tr className="border-b border-border-0/40 text-fg-1">
+                                    <th className="py-1 pr-2 font-medium">Métrica</th>
+                                    <th className="py-1 font-medium">Valor</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {Array.from(nm.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => (
+                                    <tr key={k} className="border-b border-border-0/20 hover:bg-bg-2/20">
+                                      <td className="py-0.5 pr-2 font-mono text-fg-1">{k}</td>
+                                      <td className="py-0.5 font-mono text-fg-0">{v.toFixed(3)}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+                        {nm.size === 0 && (
+                          <div className="rounded-lg border border-border-0/60 bg-bg-1/40 p-3 text-center text-[11px] text-fg-1">
+                            <div className="animate-pulse">Carregando métricas de <span className="font-mono text-fg-0">{selectedNode.id}</span>…</div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
+                    );
+                  })()
                 ) : null}
               </div>
             </div>

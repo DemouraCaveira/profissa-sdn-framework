@@ -51,7 +51,10 @@ app = FastAPI(title="Profissa SDN Platform API", version="0.1.0")
 api_key = os.getenv("API_KEY")
 allowed_origins = os.getenv(
     "CORS_ALLOW_ORIGINS",
-    "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://0.0.0.0:5173,http://0.0.0.0:5174",
+    "http://localhost:3000,http://127.0.0.1:3000,"
+    "http://localhost:5173,http://localhost:5174,"
+    "http://127.0.0.1:5173,http://127.0.0.1:5174,"
+    "http://0.0.0.0:5173,http://0.0.0.0:5174",
 ).split(",")
 config_path = os.getenv("PLATFORM_CONFIG_PATH", "platform/experiments/platform_config.json")
 raw_dir = Path("raw")
@@ -64,6 +67,17 @@ legacy_temp_experiments_dir = temp_store_dir / "experiments"
 temp_runs_dir = temp_store_dir / "runs"
 temp_run_metrics_dir = temp_store_dir / "run_metrics"
 for _d in [temp_experiments_dir, legacy_temp_experiments_dir, temp_runs_dir, temp_run_metrics_dir]:
+    _d.mkdir(parents=True, exist_ok=True)
+
+# ── Persistent experiments store ──────────────────────────────────────────────
+# Defaults to  <project_root>/experiments/  but can be overridden via env var.
+# This directory is meant to survive across restarts and is safe to back up or
+# share.  Sub-folders mirror the temp layout for easy migration.
+_experiments_root = Path(os.getenv("EXPERIMENTS_DIR", "experiments"))
+experiments_registry_dir = _experiments_root / "registry"
+experiments_runs_dir = _experiments_root / "runs"
+experiments_run_metrics_dir = _experiments_root / "run_metrics"
+for _d in [experiments_registry_dir, experiments_runs_dir, experiments_run_metrics_dir]:
     _d.mkdir(parents=True, exist_ok=True)
 
 temp_configs_dir = temp_root / "configs"
@@ -122,34 +136,41 @@ def _atomic_write_text(path: Path, content: str) -> None:
 
 
 def _persist_experiment(experiment: Experiment) -> None:
-    path = temp_experiments_dir / f"{experiment.id}.json"
-    _atomic_write_text(path, json.dumps(experiment.model_dump(mode="json"), indent=2, ensure_ascii=False))
+    data = json.dumps(experiment.model_dump(mode="json"), indent=2, ensure_ascii=False)
+    # Write to both temp (backward compat) and persistent store.
+    _atomic_write_text(temp_experiments_dir / f"{experiment.id}.json", data)
+    _atomic_write_text(experiments_registry_dir / f"{experiment.id}.json", data)
 
 
 def _persist_run(run: ExperimentRun) -> None:
-    path = temp_runs_dir / f"{run.id}.json"
-    _atomic_write_text(path, json.dumps(run.model_dump(mode="json"), indent=2, ensure_ascii=False))
+    data = json.dumps(run.model_dump(mode="json"), indent=2, ensure_ascii=False)
+    _atomic_write_text(temp_runs_dir / f"{run.id}.json", data)
+    _atomic_write_text(experiments_runs_dir / f"{run.id}.json", data)
 
 
 def _persist_run_metrics(run_id: str) -> None:
     metrics = run_metrics.get(run_id, [])
-    path = temp_run_metrics_dir / f"{run_id}.json"
-    _atomic_write_text(path, json.dumps([m.model_dump(mode="json") for m in metrics], indent=2, ensure_ascii=False))
+    data = json.dumps([m.model_dump(mode="json") for m in metrics], indent=2, ensure_ascii=False)
+    _atomic_write_text(temp_run_metrics_dir / f"{run_id}.json", data)
+    _atomic_write_text(experiments_run_metrics_dir / f"{run_id}.json", data)
 
 
 def _delete_persisted_experiment(experiment_id: str) -> None:
-    (temp_experiments_dir / f"{experiment_id}.json").unlink(missing_ok=True)
-    (legacy_temp_experiments_dir / f"{experiment_id}.json").unlink(missing_ok=True)
+    for d in [temp_experiments_dir, legacy_temp_experiments_dir, experiments_registry_dir]:
+        (d / f"{experiment_id}.json").unlink(missing_ok=True)
 
 
 def _delete_persisted_run(run_id: str) -> None:
-    (temp_runs_dir / f"{run_id}.json").unlink(missing_ok=True)
-    (temp_run_metrics_dir / f"{run_id}.json").unlink(missing_ok=True)
+    for d in [temp_runs_dir, experiments_runs_dir]:
+        (d / f"{run_id}.json").unlink(missing_ok=True)
+    for d in [temp_run_metrics_dir, experiments_run_metrics_dir]:
+        (d / f"{run_id}.json").unlink(missing_ok=True)
 
 
 def _load_experiments_and_runs_from_temp() -> None:
     # Best-effort restore for researcher workflow; ignore corrupt files.
-    for root in [legacy_temp_experiments_dir, temp_experiments_dir]:
+    # Persistent store (experiments/) takes priority over temp.
+    for root in [legacy_temp_experiments_dir, temp_experiments_dir, experiments_registry_dir]:
         for path in sorted(root.glob("*.json")):
             try:
                 obj = json.loads(path.read_text(encoding="utf-8"))
@@ -158,24 +179,26 @@ def _load_experiments_and_runs_from_temp() -> None:
             except Exception:
                 continue
 
-    for path in sorted(temp_runs_dir.glob("*.json")):
-        try:
-            obj = json.loads(path.read_text(encoding="utf-8"))
-            run = ExperimentRun(**obj)
-            runs[run.id] = run
-            run_metrics.setdefault(run.id, [])
-        except Exception:
-            continue
-
-    for path in sorted(temp_run_metrics_dir.glob("*.json")):
-        try:
-            run_id = path.stem
-            items = json.loads(path.read_text(encoding="utf-8"))
-            if not isinstance(items, list):
+    for root in [temp_runs_dir, experiments_runs_dir]:
+        for path in sorted(root.glob("*.json")):
+            try:
+                obj = json.loads(path.read_text(encoding="utf-8"))
+                run = ExperimentRun(**obj)
+                runs[run.id] = run
+                run_metrics.setdefault(run.id, [])
+            except Exception:
                 continue
-            run_metrics[run_id] = [MetricRecord(**item) for item in items if isinstance(item, dict)]
-        except Exception:
-            continue
+
+    for root in [temp_run_metrics_dir, experiments_run_metrics_dir]:
+        for path in sorted(root.glob("*.json")):
+            try:
+                run_id = path.stem
+                items = json.loads(path.read_text(encoding="utf-8"))
+                if not isinstance(items, list):
+                    continue
+                run_metrics[run_id] = [MetricRecord(**item) for item in items if isinstance(item, dict)]
+            except Exception:
+                continue
 
 
 def _load_active_config_id() -> str | None:
@@ -1208,6 +1231,122 @@ async def delete_experiment(experiment_id: str) -> Response:
         except Exception:
             pass
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.get("/experiments/{experiment_id}/export")
+async def export_experiment(experiment_id: str) -> Response:
+    """Return a self-contained JSON bundle (experiment + runs + metrics) for download."""
+    experiment = experiments.get(experiment_id)
+    if not experiment:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Experiment not found")
+
+    exp_runs = [r for r in runs.values() if r.experiment_id == experiment_id]
+    bundle = {
+        "version": 1,
+        "exported_at": datetime.utcnow().isoformat(),
+        "experiment": experiment.model_dump(mode="json"),
+        "runs": [r.model_dump(mode="json") for r in exp_runs],
+        "run_metrics": {
+            r.id: [m.model_dump(mode="json") for m in run_metrics.get(r.id, [])]
+            for r in exp_runs
+        },
+    }
+    filename = re.sub(r"[^a-zA-Z0-9_-]+", "_", experiment.name or experiment_id).strip("_") or experiment_id
+    return Response(
+        content=json.dumps(bundle, indent=2, ensure_ascii=False),
+        media_type="application/json",
+        headers={"Content-Disposition": f'attachment; filename="{filename}.json"'},
+    )
+
+
+@app.post(
+    "/experiments/import",
+    response_model=Dict[str, Any],
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_api_key)],
+)
+async def import_experiment(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Import a bundle produced by /experiments/{id}/export.
+
+    A new experiment ID is always generated to avoid collisions.
+    Existing topology IDs are reused when they already exist; otherwise a
+    placeholder topology is created automatically.
+    """
+    try:
+        exp_data: Dict[str, Any] = payload.get("experiment") or {}
+        runs_data: List[Dict[str, Any]] = payload.get("runs") or []
+        metrics_data: Dict[str, Any] = payload.get("run_metrics") or {}
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid bundle format")
+
+    # Resolve topology
+    orig_topo_id = exp_data.get("topology_id", "")
+    if orig_topo_id not in topologies:
+        placeholder = Topology(
+            id=orig_topo_id or _generate_id("topo"),
+            name=f"Imported ({orig_topo_id})",
+            nodes=[],
+            links=[],
+        )
+        topologies[placeholder.id] = placeholder
+        orig_topo_id = placeholder.id
+
+    # Create experiment with a fresh ID
+    new_exp_id = _generate_id("exp")
+    id_map: Dict[str, str] = {exp_data.get("id", ""): new_exp_id}
+    try:
+        exp = Experiment(
+            id=new_exp_id,
+            name=exp_data.get("name", "Imported"),
+            topology_id=orig_topo_id,
+            description=exp_data.get("description"),
+            parameters=exp_data.get("parameters"),
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid experiment data: {exc}")
+
+    experiments[new_exp_id] = exp
+    _persist_experiment(exp)
+
+    imported_runs: List[str] = []
+    for r_data in runs_data:
+        new_run_id = _generate_id("run")
+        id_map[r_data.get("id", "")] = new_run_id
+        try:
+            run = ExperimentRun(
+                id=new_run_id,
+                experiment_id=new_exp_id,
+                topology_id=orig_topo_id,
+                status=r_data.get("status", "COMPLETED"),
+                started_at=r_data.get("started_at"),
+                ended_at=r_data.get("ended_at"),
+                parameters=r_data.get("parameters"),
+                logs=r_data.get("logs") or [],
+            )
+        except Exception:
+            continue
+        runs[new_run_id] = run
+        _persist_run(run)
+
+        # Restore metrics
+        orig_run_id = r_data.get("id", "")
+        raw_metrics: List[Dict[str, Any]] = metrics_data.get(orig_run_id) or []
+        restored: List[MetricRecord] = []
+        for m in raw_metrics:
+            try:
+                restored.append(MetricRecord(**m))
+            except Exception:
+                continue
+        run_metrics[new_run_id] = restored
+        _persist_run_metrics(new_run_id)
+        imported_runs.append(new_run_id)
+
+    return {
+        "imported": True,
+        "experiment_id": new_exp_id,
+        "runs_imported": len(imported_runs),
+        "id_map": id_map,
+    }
 
 
 @app.post(

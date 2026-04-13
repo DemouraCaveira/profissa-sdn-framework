@@ -1,9 +1,32 @@
 #!/usr/bin/env bash
 # =============================================================================
 # Profissa SDN Platform — Installer
-# Run once:  bash desktop/install.sh
-# After that, click the "Profissa SDN Platform" icon in the application menu.
+# Clique duas vezes neste arquivo no gerenciador de arquivos, OU execute:
+#   bash desktop/install.sh
 # =============================================================================
+
+# ── Se não estiver rodando dentro de um terminal, re-executa dentro de um ────
+# Isso garante que o clique duplo pelo gerenciador de arquivos abra um terminal.
+if [[ ! -t 0 ]]; then
+    SELF="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+    # Tenta os emuladores de terminal mais comuns
+    for TERM_EMU in gnome-terminal x-terminal-emulator xterm konsole xfce4-terminal lxterminal mate-terminal; do
+        if command -v "$TERM_EMU" &>/dev/null; then
+            case "$TERM_EMU" in
+                gnome-terminal) exec gnome-terminal -- bash "$SELF" ;;
+                konsole)        exec konsole -e bash "$SELF" ;;
+                *)              exec "$TERM_EMU" -e bash "$SELF" ;;
+            esac
+        fi
+    done
+    # Fallback: abre via xdg-terminal (se disponível)
+    if command -v xdg-terminal &>/dev/null; then
+        exec xdg-terminal bash "$SELF"
+    fi
+    # Último recurso: executa sem terminal (erros vão para /tmp/profissa_install.log)
+    exec bash "$SELF" >> /tmp/profissa_install.log 2>&1
+fi
+
 set -euo pipefail
 
 ### ── Colours ────────────────────────────────────────────────────────────────
@@ -37,6 +60,33 @@ if [[ ${#MISSING_PKGS[@]} -gt 0 ]]; then
     fi
 else
     info "All system packages present ✔"
+fi
+
+### ── 1b. Node.js / npm prerequisite ─────────────────────────────────────────
+info "Checking Node.js / npm …"
+NODE_MIN=18
+NPM_OK=false
+if command -v node &>/dev/null; then
+    NODE_VER="$(node -e 'process.stdout.write(process.versions.node.split(".")[0])')"
+    if [[ "$NODE_VER" -ge "$NODE_MIN" ]]; then
+        info "Node.js $NODE_VER detected ✔"
+        NPM_OK=true
+    else
+        warn "Node.js $NODE_VER is too old (need ≥ $NODE_MIN). Trying to install a newer version …"
+    fi
+else
+    warn "Node.js not found. Installing via NodeSource …"
+fi
+
+if [[ "$NPM_OK" == false ]]; then
+    if command -v sudo &>/dev/null; then
+        curl -fsSL https://deb.nodesource.com/setup_${NODE_MIN}.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+    else
+        error "sudo not available. Please install Node.js ≥ $NODE_MIN manually: https://nodejs.org"
+        exit 1
+    fi
+    info "Node.js installed ✔"
 fi
 
 ### ── 2. Create / refresh Python venv ───────────────────────────────────────
@@ -80,7 +130,31 @@ fi
 
 info "Python dependencies installed ✔"
 
-### ── 4. Install SVG icon ────────────────────────────────────────────────────
+### ── 3b. Pre-create runtime directories ───────────────────────────────────
+info "Creating runtime directories …"
+# Persistent experiments folder (survives reinstalls, safe to keep)
+mkdir -p \
+    "$APP_DIR/experiments/registry" \
+    "$APP_DIR/experiments/runs" \
+    "$APP_DIR/experiments/run_metrics"
+# Temporary working directories for the backend
+mkdir -p \
+    "$APP_DIR/temp/experiments/registry" \
+    "$APP_DIR/temp/experiments/runs" \
+    "$APP_DIR/temp/experiments/run_metrics" \
+    "$APP_DIR/temp/configs"
+info "Runtime directories ready ✔"
+
+### ── 4. Build the Next.js frontend ─────────────────────────────────────────
+FRONTEND_DIR="$APP_DIR/platform/frontend-next"
+info "Installing Node.js dependencies …"
+(cd "$FRONTEND_DIR" && npm ci --silent)
+info "Building Next.js frontend …"
+# Bake the backend URL for production build — stays localhost:8000 for desktop use.
+(cd "$FRONTEND_DIR" && NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 npm run build)
+info "Frontend built ✔"
+
+### ── 5. Install SVG icon ────────────────────────────────────────────────────
 info "Installing icon …"
 ICON_DIR="$HOME/.local/share/icons/hicolor/scalable/apps"
 mkdir -p "$ICON_DIR"
@@ -92,7 +166,7 @@ cp "$SCRIPT_DIR/profissa.svg" "$ICON_DIR_256/profissa.svg"
 gtk-update-icon-cache -f -t "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
 info "Icon installed ✔"
 
-### ── 5. Write .desktop entry with ABSOLUTE paths ───────────────────────────
+### ── 6. Write .desktop entry with ABSOLUTE paths ───────────────────────────
 info "Registering application launcher …"
 APPS_DIR="$HOME/.local/share/applications"
 mkdir -p "$APPS_DIR"
@@ -103,7 +177,7 @@ cat > "$APPS_DIR/profissa.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=NetOps Studio
+Name=Profissa SDN Platform
 GenericName=Network Operations Studio
 Comment=Network Operations & Monitoring Platform for SDN Research
 Exec="$SCRIPT_DIR/run_profissa.sh"
@@ -126,14 +200,17 @@ update-desktop-database "$APPS_DIR" 2>/dev/null || true
 
 info "Launcher registered ✔"
 
-### ── 6. Summary ─────────────────────────────────────────────────────────────
+### ── 7. Summary ─────────────────────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║      NetOps Studio — installed successfully!         ║${NC}"
+echo -e "${GREEN}║   Profissa SDN Platform — instalado com sucesso!     ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo "  → Open your application menu and search for 'NetOps Studio'"
-echo "  → Or run from terminal:  $SCRIPT_DIR/run_profissa.sh"
+echo "  → Abra o menu de aplicativos e busque por 'Profissa SDN Platform'"
+echo "  → Ou execute direto:  $SCRIPT_DIR/run_profissa.sh"
+echo "  → Experimentos salvos em: $APP_DIR/experiments/"
 echo ""
-echo "  Log file: /tmp/profissa_app.log"
+echo "  Log de execução: /tmp/profissa_app.log"
 echo ""
+# Mantém o terminal aberto para o usuário ler o resultado
+read -rp "  Pressione ENTER para fechar esta janela…"

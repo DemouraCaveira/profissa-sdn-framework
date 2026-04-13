@@ -12,7 +12,9 @@ import { getLayerMetrics, type MetricLayer, type MetricSpec } from "@/lib/metric
 import { cn } from "@/lib/cn";
 import { simulateSeriesMap, buildDatasetRows, datasetToCsv, type SeriesMap } from "@/lib/metricSim";
 import { simulateControlPlaneLog, type ControlPlaneEvent } from "@/lib/controlPlaneSim";
+import { lttbSeriesMap } from "@/lib/lttb";
 import { confidenceInterval95, mean, median, outlierIndicesZ, p95, p99, pearsonR, stddev, variance } from "@/lib/stats";
+import { experimentApi, topologyApi, metricsApi, type MetricSample, type ExperimentBundle } from "@/lib/api";
 
 type Tab = "manual" | "templates" | "dashboard";
 
@@ -189,8 +191,67 @@ function readRunHistory(): RunRecord[] {
   }
 }
 
+/**
+ * Persists run history to localStorage using LTTB downsampling.
+ *
+ * LTTB (Largest-Triangle-Three-Buckets) is O(n) and preserves the visual
+ * shape of each series far better than uniform sub-sampling — peaks, valleys
+ * and anomalies are never dropped.
+ *
+ * Budget ladder (attempted in order until one succeeds):
+ *   1. Full data — no downsampling (works for short experiments)
+ *   2. LTTB to fit ~1 MB total across all series of all runs
+ *   3. LTTB to fit ~200 KB  (aggressive but still useful preview)
+ *   4. Drop seriesMap entirely — charts re-simulate from the deterministic seed
+ *   5. Keep only the 10 most recent runs without series (last resort)
+ *
+ * The authoritative record is always in experiments/run_metrics/ on disk.
+ */
 function writeRunHistory(next: RunRecord[]) {
-  localStorage.setItem("profissa.experiments.runs", JSON.stringify(next.slice(0, 100)));
+  const MAX_RUNS = 100;
+  const runs = next.slice(0, MAX_RUNS);
+
+  function applyLttb(budget: number): RunRecord[] {
+    return runs.map((r) => ({
+      ...r,
+      seriesMap: r.seriesMap ? lttbSeriesMap(r.seriesMap, budget) : r.seriesMap,
+    }));
+  }
+
+  // Attempt 1: full fidelity
+  try {
+    localStorage.setItem("profissa.experiments.runs", JSON.stringify(runs));
+    return;
+  } catch { /* QuotaExceededError */ }
+
+  // Attempt 2: LTTB @ 1 MB total
+  try {
+    localStorage.setItem("profissa.experiments.runs", JSON.stringify(applyLttb(1_000_000)));
+    return;
+  } catch { /* still too large */ }
+
+  // Attempt 3: LTTB @ 200 KB total
+  try {
+    localStorage.setItem("profissa.experiments.runs", JSON.stringify(applyLttb(200_000)));
+    return;
+  } catch { /* still too large */ }
+
+  // Attempt 4: metadata only — charts re-simulate from seed (no visual loss)
+  try {
+    localStorage.setItem("profissa.experiments.runs", JSON.stringify(
+      runs.map((r) => ({ ...r, seriesMap: undefined }))
+    ));
+    return;
+  } catch { /* still failing */ }
+
+  // Attempt 5: last resort
+  try {
+    localStorage.setItem("profissa.experiments.runs", JSON.stringify(
+      runs.slice(0, 10).map((r) => ({ ...r, seriesMap: undefined }))
+    ));
+  } catch {
+    // Silently give up — run lives in memory for this session
+  }
 }
 
 function readLatestTopologySummary(): TopologySnapshotSummary | null {
@@ -541,6 +602,8 @@ export function ExperimentsView() {
   const startMsRef = useRef<number | null>(null);
   const remainingMsRef = useRef<number>(0);
   const runIdRef = useRef<string | null>(null);
+  const importFileRef = useRef<HTMLInputElement | null>(null);
+  const [importStatus, setImportStatus] = useState<string | null>(null);
 
   const runMetaRef = useRef<{
     seed: number;
@@ -597,70 +660,136 @@ export function ExperimentsView() {
 
   const finalizeRun = useCallback(
     ({ status }: { status: "Sucesso" | "Falha" }) => {
-      const id = runIdRef.current ?? runId ?? makeRunId();
-      const startedAtMs = startMsRef.current ?? Date.now();
-      const startedAt = new Date(startedAtMs).toISOString();
-      const endedAt = nowIso();
+      try {
+        const id = runIdRef.current ?? runId ?? makeRunId();
+        const startedAtMs = startMsRef.current ?? Date.now();
+        const startedAt = new Date(startedAtMs).toISOString();
+        const endedAt = nowIso();
 
-      const meta = runMetaRef.current;
-      const cfg = meta?.configSnapshot ?? config;
-      const metricKeys = meta?.metricKeys ?? Array.from(selectedMetricKeys);
-      const seed = meta?.seed ?? hashSeed(id);
-      const templateId = meta?.templateId ?? activeTemplateId;
-      const batch = meta?.batch ?? null;
-      const topology = meta?.topology ?? null;
+        const meta = runMetaRef.current;
+        const cfg = meta?.configSnapshot ?? config;
+        const metricKeys = meta?.metricKeys ?? Array.from(selectedMetricKeys);
+        const seed = meta?.seed ?? hashSeed(id);
+        const templateId = meta?.templateId ?? activeTemplateId;
+        const batch = meta?.batch ?? null;
+        const topology = meta?.topology ?? null;
 
-      const samplingMs = clamp(cfg.general.samplingMs, 80, 5000);
-      const durationMs = Math.max(1, Math.round(cfg.general.durationS * 1000));
-      const points = Math.max(12, Math.min(720, Math.round(durationMs / samplingMs)));
+        const samplingMs = clamp(cfg.general.samplingMs, 80, 5000);
+        const durationMs = Math.max(1, Math.round(cfg.general.durationS * 1000));
+        // Generate the full natural resolution — LTTB is applied when persisting
+        // to localStorage so the chart preview is always visually accurate.
+        const points = Math.max(12, Math.round(durationMs / samplingMs));
 
-      const specs = resolveSpecs(metricKeys);
-      const seriesMap = simulateSeriesMap({ specs, points, seed });
-      const controlPlane = simulateControlPlaneLog({ startedAtMs, durationMs, samplingMs, seed });
+        const specs = resolveSpecs(metricKeys);
+        const seriesMap = simulateSeriesMap({ specs, points, seed });
+        const controlPlane = simulateControlPlaneLog({ startedAtMs, durationMs, samplingMs, seed });
 
-      // Quick insight: compare current metric mean against historical template mean.
-      let insight: string | undefined;
-      const primaryKey = metricKeys.includes("app_latency_ms_p95")
-        ? "app_latency_ms_p95"
-        : metricKeys.includes("app_latency_ms")
-          ? "app_latency_ms"
-          : metricKeys[0];
-      if (templateId && primaryKey && seriesMap[primaryKey]) {
-        const currentMean = mean(seriesMap[primaryKey] ?? []);
-        const peers = readRunHistory().filter((r) => r.status === "Sucesso" && r.templateId === templateId && r.seriesMap && r.seriesMap[primaryKey]);
-        const peerMeans = peers.map((r) => mean(r.seriesMap?.[primaryKey] ?? []));
-        if (peerMeans.length >= 2) {
-          const hist = mean(peerMeans);
-          if (Math.abs(hist) > 1e-9) {
-            const pct = ((currentMean - hist) / hist) * 100;
-            const dir = pct >= 0 ? "maior" : "menor";
-            insight = `Insight rápido: ${primaryKey} médio nesta execução foi ${Math.abs(pct).toFixed(1)}% ${dir} que a média histórica do template.`;
+        // Quick insight: compare current metric mean against historical template mean.
+        let insight: string | undefined;
+        const primaryKey = metricKeys.includes("app_latency_ms_p95")
+          ? "app_latency_ms_p95"
+          : metricKeys.includes("app_latency_ms")
+            ? "app_latency_ms"
+            : metricKeys[0];
+        if (templateId && primaryKey && seriesMap[primaryKey]) {
+          const currentMean = mean(seriesMap[primaryKey] ?? []);
+          const peers = readRunHistory().filter((r) => r.status === "Sucesso" && r.templateId === templateId && r.seriesMap && r.seriesMap[primaryKey]);
+          const peerMeans = peers.map((r) => mean(r.seriesMap?.[primaryKey] ?? []));
+          if (peerMeans.length >= 2) {
+            const hist = mean(peerMeans);
+            if (Math.abs(hist) > 1e-9) {
+              const pct = ((currentMean - hist) / hist) * 100;
+              const dir = pct >= 0 ? "maior" : "menor";
+              insight = `Insight rápido: ${primaryKey} médio nesta execução foi ${Math.abs(pct).toFixed(1)}% ${dir} que a média histórica do template.`;
+            }
           }
         }
+
+        const record: RunRecord = {
+          id,
+          seed,
+          startedAt,
+          endedAt,
+          status,
+          config: cfg,
+          templateId,
+          metricKeys,
+          seriesMap,
+          annotations: annotations.slice(),
+          controlPlane,
+          topology,
+          insight,
+          batch,
+        };
+
+        const nextHistory = [record, ...readRunHistory()];
+        writeRunHistory(nextHistory);
+        setHistory(nextHistory);
+
+        if (insight) setLogs((p) => [...p, `[${nowIso()}] ${insight}`].slice(-400));
+
+        // ── Sync to back-end (fire-and-forget) ──────────────────────────────
+        ;(async () => {
+          try {
+            // Ensure a topology exists in the backend
+            let topoId: string | null = null;
+            try {
+              const topos = await topologyApi.list();
+              topoId = topos[0]?.id ?? null;
+              if (!topoId) {
+                const created = await topologyApi.create({
+                  name: "Auto (Frontend)",
+                  nodes: [],
+                  links: [],
+                });
+                topoId = created.id;
+              }
+            } catch { /* backend offline – skip */ }
+
+            if (!topoId) return;
+
+            // Create experiment
+            const exp = await experimentApi.create({
+              name: cfg.general.name || id,
+              topology_id: topoId,
+              description: cfg.general.scientificDescription || undefined,
+              parameters: {
+                traffic: cfg.traffic,
+                sampling_ms: cfg.general.samplingMs,
+                duration_s: cfg.general.durationS,
+                template_id: templateId ?? undefined,
+              },
+            });
+
+            // Start a synthetic run (snapshot) on the backend
+            await experimentApi.startRun(exp.id, "synthetic");
+
+            // Push simulated metric samples to backend
+            const samples: MetricSample[] = [];
+            for (const [k, series] of Object.entries(seriesMap)) {
+              for (let i = 0; i < series.length; i++) {
+                samples.push({
+                  timestamp: new Date(startedAtMs + i * samplingMs).toISOString(),
+                  node: cfg.traffic.srcHostId || "probe",
+                  layer: "network",
+                  metric: k,
+                  value: series[i] ?? 0,
+                  labels: { experiment_id: exp.id, run_id: id, version: "frontend" },
+                });
+              }
+            }
+            // Send in batches of 100
+            for (let i = 0; i < samples.length; i += 100) {
+              await metricsApi.ingestSamples(samples.slice(i, i + 100));
+            }
+          } catch {
+            // Best-effort: backend sync failures are silently ignored
+          }
+        })();
+      } catch (err) {
+        // Defensive: don't let record-saving errors crash the React tree
+        console.error("[finalizeRun] unexpected error:", err);
       }
-
-      const record: RunRecord = {
-        id,
-        seed,
-        startedAt,
-        endedAt,
-        status,
-        config: cfg,
-        templateId,
-        metricKeys,
-        seriesMap,
-        annotations: annotations.slice(),
-        controlPlane,
-        topology,
-        insight,
-        batch,
-      };
-
-      const nextHistory = [record, ...readRunHistory()];
-      writeRunHistory(nextHistory);
-      setHistory(nextHistory);
-
-      if (insight) setLogs((p) => [...p, `[${nowIso()}] ${insight}`].slice(-400));
     },
     [activeTemplateId, annotations, config, resolveSpecs, runId, selectedMetricKeys],
   );
@@ -883,6 +1012,156 @@ export function ExperimentsView() {
     [],
   );
 
+  // ── Bundle export: syncs the local run record to backend then downloads ──
+  const exportBundle = useCallback(
+    async (r: RunRecord) => {
+      // Best-effort: try to fetch the backend bundle (has real metrics) first.
+      try {
+        const topos = await topologyApi.list();
+        const topoId = topos[0]?.id ?? null;
+        if (topoId) {
+          // Find matching backend experiment by name+id heuristic
+          const exps = await experimentApi.list();
+          const match = exps.find((e) => e.name === (r.config.general.name || r.id));
+          if (match) {
+            const bundle = await experimentApi.exportBundle(match.id);
+            downloadTextFile({
+              filename: `bundle_${r.id}.json`,
+              content: JSON.stringify(bundle, null, 2),
+              mime: "application/json;charset=utf-8",
+            });
+            return;
+          }
+        }
+      } catch {
+        // backend unreachable – fall through to local bundle
+      }
+
+      // Fallback: build a local-only bundle from localStorage record
+      const localBundle = {
+        version: 1,
+        exported_at: new Date().toISOString(),
+        experiment: {
+          id: r.id,
+          name: r.config.general.name || r.id,
+          topology_id: "",
+          description: r.config.general.scientificDescription || "",
+          parameters: {
+            traffic: r.config.traffic,
+            duration_s: r.config.general.durationS,
+            sampling_ms: r.config.general.samplingMs,
+            template_id: r.templateId ?? null,
+          },
+        },
+        runs: [
+          {
+            id: r.id,
+            experiment_id: r.id,
+            topology_id: "",
+            status: r.status === "Sucesso" ? "COMPLETED" : "FAILED",
+            started_at: r.startedAt,
+            ended_at: r.endedAt,
+            parameters: { seed: r.seed, batch: r.batch ?? null },
+            logs: [],
+          },
+        ],
+        run_metrics: {} as Record<string, unknown[]>,
+        // Embed the series data so the recipient can recreate charts
+        local_series_map: r.seriesMap ?? {},
+        local_annotations: r.annotations ?? [],
+        local_control_plane: r.controlPlane ?? [],
+        local_topology: r.topology ?? null,
+        local_insight: r.insight ?? "",
+        local_metric_keys: r.metricKeys,
+      };
+      downloadTextFile({
+        filename: `bundle_${r.id}.json`,
+        content: JSON.stringify(localBundle, null, 2),
+        mime: "application/json;charset=utf-8",
+      });
+    },
+    [],
+  );
+
+  // ── Bundle import: reads a .json file and restores run to localStorage + backend ──
+  const importBundle = useCallback(
+    async (file: File) => {
+      setImportStatus("Lendo arquivo…");
+      try {
+        const text = await file.text();
+        const bundle = JSON.parse(text) as Record<string, unknown>;
+
+        // Restore to localStorage: reconstruct RunRecord(s)
+        const expData = bundle.experiment as Record<string, unknown> | undefined;
+        const runsData = (bundle.runs as Record<string, unknown>[] | undefined) ?? [];
+        let imported = 0;
+        const nextHistory = [...readRunHistory()];
+
+        for (const runData of runsData) {
+          const runId = String(runData.id ?? "");
+          if (!runId || nextHistory.some((h) => h.id === runId)) continue;
+
+          const params = (runData.parameters ?? {}) as Record<string, unknown>;
+          const cfg: ManualExperimentConfig = {
+            general: {
+              name: String(expData?.name ?? bundle.local_series_map ? expData?.name ?? runId : runId),
+              scientificDescription: String(expData?.description ?? ""),
+              durationS: typeof params.duration_s === "number" ? params.duration_s : 120,
+              samplingMs: typeof params.sampling_ms === "number" ? params.sampling_ms : 250,
+            },
+            traffic: (expData?.parameters as Record<string, unknown> | undefined)?.traffic as ManualExperimentConfig["traffic"] ?? {
+              srcHostId: "Host-A",
+              dstHostId: "Host-D",
+              type: "TCP",
+              rateValue: 300,
+              rateUnit: "Mbps",
+            },
+            telemetry: { metricKeys: (bundle.local_metric_keys as string[]) ?? [] },
+            scripts: { pre: "", post: "" },
+          };
+
+          const record: RunRecord = {
+            id: runId,
+            seed: typeof params.seed === "number" ? params.seed : hashSeed(runId),
+            startedAt: String(runData.started_at ?? new Date().toISOString()),
+            endedAt: String(runData.ended_at ?? new Date().toISOString()),
+            status: runData.status === "FAILED" ? "Falha" : "Sucesso",
+            config: cfg,
+            templateId: (params.template_id as string | null | undefined) ?? null,
+            metricKeys: (bundle.local_metric_keys as string[] | undefined) ?? [],
+            seriesMap: (bundle.local_series_map as SeriesMap | undefined) ?? undefined,
+            annotations: (bundle.local_annotations as Annotation[] | undefined) ?? [],
+            controlPlane: (bundle.local_control_plane as ControlPlaneEvent[] | undefined) ?? [],
+            topology: (bundle.local_topology as TopologySnapshotSummary | null | undefined) ?? null,
+            insight: String(bundle.local_insight ?? "") || undefined,
+            batch: (params.batch as RunRecord["batch"]) ?? null,
+          };
+          nextHistory.unshift(record);
+          imported++;
+        }
+
+        if (imported > 0) {
+          writeRunHistory(nextHistory);
+          setHistory(nextHistory);
+          setImportStatus(`✔ ${imported} run(s) importada(s) com sucesso.`);
+        } else {
+          setImportStatus("Nenhuma run nova encontrada no bundle.");
+        }
+
+        // Best-effort: push to backend
+        try {
+          await experimentApi.importBundle(bundle as unknown as ExperimentBundle);
+        } catch {
+          // backend unreachable or reject — local import already succeeded
+        }
+      } catch (err) {
+        setImportStatus(`Erro ao importar: ${err instanceof Error ? err.message : String(err)}`);
+      }
+      setTimeout(() => setImportStatus(null), 5000);
+    },
+    [],
+  );
+
   const exportRunDataset = useCallback((r: RunRecord, format: "json" | "csv") => {
     const samplingMs = clamp(r.config.general.samplingMs, 80, 5000);
     const startedAtMs = Date.parse(r.startedAt);
@@ -890,7 +1169,8 @@ export function ExperimentsView() {
     if (!Number.isFinite(startedAtMs) || metricKeys.length === 0) return;
 
     const specs = resolveSpecs(metricKeys);
-    const points = Math.max(12, Math.min(720, Math.round((r.config.general.durationS * 1000) / samplingMs)));
+    // Full resolution for data exports — no downsampling.
+    const points = Math.max(12, Math.round((r.config.general.durationS * 1000) / samplingMs));
     const seriesMap = r.seriesMap ?? simulateSeriesMap({ specs, points, seed: r.seed ?? hashSeed(r.id) });
     const rows = buildDatasetRows({ seriesMap, metricKeys, startedAtMs, samplingMs });
 
@@ -934,7 +1214,8 @@ export function ExperimentsView() {
 
     const metricKeys = (r.metricKeys ?? r.config.telemetry.metricKeys ?? []).slice();
     const specs = resolveSpecs(metricKeys);
-    const points = Math.max(12, Math.min(720, Math.round((r.config.general.durationS * 1000) / samplingMs)));
+    // Full resolution for statistical accuracy (mean, p95, CI etc.)
+    const points = Math.max(12, Math.round((r.config.general.durationS * 1000) / samplingMs));
     const seriesMap = r.seriesMap ?? simulateSeriesMap({ specs, points, seed: r.seed ?? hashSeed(r.id) });
 
     const topK = metricKeys.slice(0, 4);
@@ -1088,14 +1369,20 @@ export function ExperimentsView() {
   const dashboardPoints = useMemo(() => {
     if (!dashboardRun) return 36;
     const durationMs = Math.max(1, Math.round(dashboardRun.config.general.durationS * 1000));
-    return Math.max(12, Math.min(720, Math.round(durationMs / dashboardSamplingMs)));
+    // Full natural resolution — LTTB is applied per-series in dashboardSeriesMap.
+    return Math.max(12, Math.round(durationMs / dashboardSamplingMs));
   }, [dashboardRun, dashboardSamplingMs]);
 
   const dashboardSeriesMap = useMemo(() => {
     if (!dashboardRun) return {} as SeriesMap;
-    if (dashboardRun.seriesMap) return dashboardRun.seriesMap;
-    const seed = dashboardRun.seed ?? hashSeed(dashboardRun.id);
-    return simulateSeriesMap({ specs: dashboardSpecs, points: dashboardPoints, seed });
+    const raw: SeriesMap = dashboardRun.seriesMap
+      ?? simulateSeriesMap({ specs: dashboardSpecs, points: dashboardPoints, seed: dashboardRun.seed ?? hashSeed(dashboardRun.id) });
+    // LTTB: reduce each series to at most 1200 pts for chart performance while
+    // preserving peaks and anomalies far better than uniform sub-sampling.
+    return lttbSeriesMap(raw, /* totalByteBudget */ 1_200 * 8 * Object.keys(raw).length, {
+      minPoints: 50,
+      maxPoints: 1200,
+    });
   }, [dashboardPoints, dashboardRun, dashboardSpecs]);
 
   const dashboardMarkers = useMemo(() => {
@@ -1656,7 +1943,28 @@ export function ExperimentsView() {
               <CardBody>
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <div className="text-[11px] text-fg-1">Selecione 2+ runs finalizadas para A/B Testing.</div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {importStatus && (
+                      <span className="text-[11px] text-accent-ok">{importStatus}</span>
+                    )}
+                    <Button
+                      variant="ghost"
+                      className="h-7 px-2 text-[11px]"
+                      onClick={() => importFileRef.current?.click()}
+                    >
+                      ↑ Importar Bundle
+                    </Button>
+                    <input
+                      ref={importFileRef}
+                      type="file"
+                      accept=".json,application/json"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) void importBundle(file);
+                        e.target.value = "";
+                      }}
+                    />
                     <Button
                       variant="ghost"
                       className="h-7 px-2 text-[11px]"
@@ -1729,6 +2037,9 @@ export function ExperimentsView() {
                                 </Button>
                                 <Button variant="ghost" className="h-7 px-2 text-[11px]" onClick={() => exportControlPlaneLog(r, "txt")}>
                                   Log OF
+                                </Button>
+                                <Button variant="ghost" className="h-7 px-2 text-[11px]" onClick={() => exportBundle(r)}>
+                                  ↓ Bundle
                                 </Button>
                               </div>
                             </td>

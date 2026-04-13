@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-NetOps Studio — Desktop launcher.
+Profissa SDN Platform — Desktop launcher.
 
-Starts the FastAPI backend and (optionally) the SPA frontend, then opens
-a pywebview window.  Works when invoked from a terminal or a desktop icon.
+Starts the FastAPI backend and Next.js frontend, then opens a pywebview
+window.  Works when invoked from a terminal or a desktop icon.
 
 Log file: /tmp/profissa_app.log
 """
@@ -74,13 +74,39 @@ def _port_open(host: str, port: int) -> bool:
         return False
 
 
+def _kill_port(port: int) -> None:
+    """Kill any process listening on *port* (best-effort, cross-platform)."""
+    import signal as _signal
+    try:
+        import subprocess as _sp
+        # lsof works on Linux and macOS
+        result = _sp.run(
+            ["lsof", "-t", "-i", f"TCP:{port}", "-sTCP:LISTEN"],
+            capture_output=True, text=True,
+        )
+        for pid_str in result.stdout.split():
+            try:
+                os.kill(int(pid_str), _signal.SIGTERM)
+            except Exception:
+                pass
+        if result.stdout.strip():
+            time.sleep(0.8)  # give processes a moment to exit
+    except Exception:
+        pass  # lsof not available — best-effort only
+
+
 def _start_backend(port: int) -> subprocess.Popen:
     env = os.environ.copy()
     env.setdefault(
         "PLATFORM_CONFIG_PATH",
         str(ROOT / "platform" / "experiments" / "platform_config.json"),
     )
-    env.setdefault("REAL_COLLECTION", "1")
+    # EXPERIMENTS_DIR set explicitly so it always resolves to ROOT/experiments
+    # regardless of the working directory the launcher was called from.
+    env.setdefault("EXPERIMENTS_DIR", str(ROOT / "experiments"))
+    # Default to synthetic/demo mode for desktop; override via environment if
+    # real Docker collection is available.
+    env.setdefault("REAL_COLLECTION", "0")
     env.setdefault("AUTO_COLLECT_INTERVAL", "5")
     env["PYTHONPATH"] = str(ROOT)
     cmd = [
@@ -94,24 +120,25 @@ def _start_backend(port: int) -> subprocess.Popen:
 
 
 def _start_frontend(port: int) -> subprocess.Popen:
-    frontend_dist = ROOT / "platform" / "frontend" / "dist"
+    frontend_dir = ROOT / "platform" / "frontend-next"
+    # next start defaults to port 3000; honour whatever port is requested.
     cmd = [
-        sys.executable,
-        str(ROOT / "scripts" / "serve_spa.py"),
-        "--dir", str(frontend_dist),
-        "--host", "127.0.0.1",
+        "npm", "run", "start", "--",
         "--port", str(port),
+        "--hostname", "127.0.0.1",
     ]
-    log.info("Starting frontend: %s", " ".join(cmd))
-    return subprocess.Popen(cmd, cwd=str(ROOT))
+    env = os.environ.copy()
+    env["BACKEND_URL"] = "http://127.0.0.1:8000"
+    log.info("Starting Next.js frontend: %s (cwd=%s)", " ".join(cmd), frontend_dir)
+    return subprocess.Popen(cmd, cwd=str(frontend_dir), env=env)
 
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="NetOps Studio Desktop App")
+    parser = argparse.ArgumentParser(description="Profissa SDN Platform Desktop App")
     parser.add_argument("--backend-port", type=int, default=8000)
-    parser.add_argument("--frontend-port", type=int, default=5173)
+    parser.add_argument("--frontend-port", type=int, default=3000)
     parser.add_argument(
         "--headless",
         action="store_true",
@@ -128,19 +155,21 @@ def main() -> None:
         try:
             backend = _start_backend(args.backend_port)
         except Exception as exc:
-            _show_error("Profissa — Backend Error", f"Could not start backend:\n{exc}")
+            _show_error("Profissa \u2014 Backend Error", f"Could not start backend:\n{exc}")
             sys.exit(1)
     else:
         log.info("Backend already running on port %d", args.backend_port)
 
-    if not _port_open("127.0.0.1", args.frontend_port):
-        try:
-            frontend = _start_frontend(args.frontend_port)
-        except Exception as exc:
-            _show_error("Profissa — Frontend Error", f"Could not start frontend:\n{exc}")
-            sys.exit(1)
-    else:
-        log.info("Frontend already running on port %d", args.frontend_port)
+    # Always kill any stale frontend process and start fresh so the latest
+    # build is guaranteed to be served (avoids serving an outdated build).
+    if _port_open("127.0.0.1", args.frontend_port):
+        log.info("Killing stale frontend on port %d \u2026", args.frontend_port)
+        _kill_port(args.frontend_port)
+    try:
+        frontend = _start_frontend(args.frontend_port)
+    except Exception as exc:
+        _show_error("Profissa \u2014 Frontend Error", f"Could not start frontend:\n{exc}")
+        sys.exit(1)
 
     def _shutdown() -> None:
         log.info("Shutting down services …")
@@ -197,7 +226,7 @@ def main() -> None:
     log.info("Opening webview window …")
     try:
         webview.create_window(
-            "NetOps Studio",
+            "Profissa SDN Platform",
             f"http://127.0.0.1:{args.frontend_port}",
             width=1280,
             height=800,

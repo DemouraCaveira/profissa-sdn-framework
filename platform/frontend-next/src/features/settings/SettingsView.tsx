@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { Input, Select } from "@/components/ui/Input";
 import { cn } from "@/lib/cn";
+import { configApi, API_BASE, type SavedConfig } from "@/lib/api";
 
 type Tab = "general" | "topology" | "resources" | "telemetry";
 
@@ -355,8 +356,8 @@ export function SettingsView() {
       version: "1.0.0",
       environment: "docker",
       orchestration: { log_level: "info", execution_timeout_sec: 600, cleanup_strategy: "keep_assets" },
-      telemetry: { endpoint_url: "http://127.0.0.1:8000", database_name: "profissa", sampling_rate_ms: 250, batch_size: 200 },
-      backend: { api_base_url: "http://127.0.0.1:8000", api_key: "", set_active: true },
+      telemetry: { endpoint_url: API_BASE, database_name: "profissa", sampling_rate_ms: 250, batch_size: 200 },
+      backend: { api_base_url: API_BASE, api_key: "", set_active: true },
       config: cfg,
     };
   });
@@ -455,6 +456,53 @@ export function SettingsView() {
   }, [isValid, payload.backend.api_base_url, payload.backend.api_key, preview]);
 
   const [applyState, setApplyState] = useState<{ status: "idle" | "sending" | "ok" | "error"; msg?: string }>({ status: "idle" });
+
+  // ── Saved configs from backend ────────────────────────────────────────────
+  const [savedConfigs, setSavedConfigs] = useState<SavedConfig[]>([]);
+  const [savedConfigsLoading, setSavedConfigsLoading] = useState(false);
+
+  const reloadSavedConfigs = useCallback(async () => {
+    setSavedConfigsLoading(true);
+    try {
+      const list = await configApi.list();
+      setSavedConfigs(list);
+    } catch {
+      // backend offline – ignore
+    } finally {
+      setSavedConfigsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { reloadSavedConfigs(); }, [reloadSavedConfigs]);
+
+  const loadConfigFromBackend = useCallback(async (id: string) => {
+    try {
+      const obj = await configApi.get(id);
+      await importJson(new File([JSON.stringify(obj)], `${id}.json`, { type: "application/json" }));
+    } catch (e: any) {
+      setApplyState({ status: "error", msg: `Erro ao carregar config ${id}: ${e?.message ?? e}` });
+    }
+  }, [importJson]);
+
+  const activateConfigOnBackend = useCallback(async (id: string) => {
+    try {
+      await configApi.activate(id, payload.backend.api_key || undefined);
+      await reloadSavedConfigs();
+      setApplyState({ status: "ok", msg: `Config "${id}" ativada.` });
+    } catch (e: any) {
+      setApplyState({ status: "error", msg: `Erro ao ativar config ${id}: ${e?.message ?? e}` });
+    }
+  }, [payload.backend.api_key, reloadSavedConfigs]);
+
+  const deleteConfigOnBackend = useCallback(async (id: string) => {
+    try {
+      await configApi.delete(id, payload.backend.api_key || undefined);
+      await reloadSavedConfigs();
+      setApplyState({ status: "ok", msg: `Config "${id}" removida.` });
+    } catch (e: any) {
+      setApplyState({ status: "error", msg: `Erro ao remover config ${id}: ${e?.message ?? e}` });
+    }
+  }, [payload.backend.api_key, reloadSavedConfigs]);
 
   const selectedNodeId = payload.config.nodes[0]?.id ?? "";
   const [nodeForResources, setNodeForResources] = useState<string>(selectedNodeId);
@@ -1210,6 +1258,52 @@ export function SettingsView() {
           right={<span className={cn("font-mono text-[11px]", isValid ? "text-accent-ok" : "text-accent-danger")}>{isValid ? "válido" : "inválido"}</span>}
         />
         <CardBody className="space-y-2">
+          {/* ── Configs salvas no back-end ─────────────────────────── */}
+          <div className="rounded-xl border border-border-0/60 bg-bg-2/10 p-2">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div className="text-[11px] font-semibold text-fg-0">Configs salvas no back-end</div>
+              <Button
+                variant="ghost"
+                className="h-7 px-2 text-[10px]"
+                disabled={savedConfigsLoading}
+                onClick={reloadSavedConfigs}
+              >
+                {savedConfigsLoading ? "…" : "↺ Atualizar"}
+              </Button>
+            </div>
+            {savedConfigs.length === 0 ? (
+              <div className="text-[11px] text-fg-1">Nenhuma config encontrada (ou back-end offline).</div>
+            ) : (
+              <div className="space-y-1">
+                {savedConfigs.map((c) => (
+                  <div key={c.id} className="flex items-center justify-between gap-2 rounded-md border border-border-0/50 bg-bg-1/30 px-2 py-1.5">
+                    <div className="min-w-0">
+                      <span className="font-mono text-[11px] text-fg-0">{c.name}</span>
+                      {c.active && (
+                        <span className="ml-2 rounded-md bg-accent-ok/20 px-1.5 py-0.5 text-[10px] font-medium text-accent-ok">
+                          ativo
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button variant="ghost" className="h-6 px-2 text-[10px]" onClick={() => loadConfigFromBackend(c.id)}>
+                        Carregar
+                      </Button>
+                      {!c.active && (
+                        <Button variant="ghost" className="h-6 px-2 text-[10px]" onClick={() => activateConfigOnBackend(c.id)}>
+                          Ativar
+                        </Button>
+                      )}
+                      <Button variant="ghost" className="h-6 px-2 text-[10px] text-accent-danger/80 hover:text-accent-danger" onClick={() => deleteConfigOnBackend(c.id)}>
+                        ×
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="rounded-xl border border-border-0/60 bg-bg-2/10 p-2">
             <pre
               className={cn(

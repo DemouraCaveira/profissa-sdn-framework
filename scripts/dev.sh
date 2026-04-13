@@ -7,12 +7,11 @@ cd "$ROOT_DIR"
 BACKEND_HOST="${BACKEND_HOST:-0.0.0.0}"
 BACKEND_PORT="${BACKEND_PORT:-8000}"
 FRONTEND_HOST="${FRONTEND_HOST:-0.0.0.0}"
-FRONTEND_PORT="${FRONTEND_PORT:-5173}"
+FRONTEND_PORT="${FRONTEND_PORT:-3000}"
 
 PLATFORM_CONFIG_PATH="${PLATFORM_CONFIG_PATH:-platform/experiments/platform_config.json}"
 REAL_COLLECTION="${REAL_COLLECTION:-1}"
 AUTO_COLLECT_INTERVAL="${AUTO_COLLECT_INTERVAL:-5}"
-VITE_API_BASE="${VITE_API_BASE:-http://localhost:${BACKEND_PORT}}"
 
 mkdir -p temp
 
@@ -21,7 +20,7 @@ if [[ ! -d .venv ]]; then
 fi
 
 source .venv/bin/activate
-pip -q install -r requirements-dev.txt
+pip -q install -r requirements.txt
 
 (
   pkill -f "uvicorn platform.backend.api.app:app" 2>/dev/null || true
@@ -38,12 +37,14 @@ pip -q install -r requirements-dev.txt
 )
 
 (
-  cd platform/frontend
+  cd platform/frontend-next
   npm install --silent
-  pkill -f "vite --host" 2>/dev/null || true
+  pkill -f "next start" 2>/dev/null || true
+  pkill -f "next dev" 2>/dev/null || true
   nohup env \
-    VITE_API_BASE="$VITE_API_BASE" \
-    npm run dev -- --host "$FRONTEND_HOST" --port "$FRONTEND_PORT" \
+    NEXT_PUBLIC_API_URL="http://localhost:${BACKEND_PORT}" \
+    BACKEND_URL="http://127.0.0.1:${BACKEND_PORT}" \
+    npm run dev -- --port "$FRONTEND_PORT" \
       > ../../temp/frontend.log 2>&1 &
   echo $! > ../../temp/frontend.pid
 )

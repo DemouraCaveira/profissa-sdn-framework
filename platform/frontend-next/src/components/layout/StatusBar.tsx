@@ -2,34 +2,99 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
-import { randomWalk } from "@/lib/sim";
-
-type ControllerStatus = "ONLINE" | "OFFLINE";
+import { metricsApi, type MetricSample } from "@/lib/api";
 
 function formatGiB(bytes: number) {
-  const gib = bytes / 1024 / 1024 / 1024;
-  return `${gib.toFixed(1)} GiB`;
+  return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GiB`;
+}
+
+function formatPct(v: number) {
+  return `${v.toFixed(1)}%`;
+}
+
+type ResourceData = {
+  cpuPct: number | null;
+  memPct: number | null;
+  memUsedBytes: number | null;
+  source: "real" | "unavailable";
+  node: string;
+  updatedAt: string | null;
+};
+
+const FALLBACK: ResourceData = {
+  cpuPct: null,
+  memPct: null,
+  memUsedBytes: null,
+  source: "unavailable",
+  node: "—",
+  updatedAt: null,
+};
+
+function extractResources(samples: MetricSample[]): ResourceData {
+  // Prioridade: docker_cpu_util_pct > cpu_util_pct
+  const cpuSample =
+    samples.find((s) => s.metric === "docker_cpu_util_pct") ??
+    samples.find((s) => s.metric === "cpu_util_pct");
+  const memPctSample =
+    samples.find((s) => s.metric === "docker_mem_util_pct") ??
+    samples.find((s) => s.metric === "mem_util_pct");
+  const memBytesSample = samples.find((s) => s.metric === "docker_mem_used_bytes");
+
+  if (!cpuSample && !memPctSample) return FALLBACK;
+
+  return {
+    cpuPct: cpuSample?.value ?? null,
+    memPct: memPctSample?.value ?? null,
+    memUsedBytes: memBytesSample?.value ?? null,
+    source: "real",
+    node: cpuSample?.node ?? memPctSample?.node ?? "—",
+    updatedAt: cpuSample?.timestamp ?? memPctSample?.timestamp ?? null,
+  };
 }
 
 export function StatusBar() {
-  const [controller, setController] = useState<ControllerStatus>("ONLINE");
-  const [cpu, setCpu] = useState(22);
-  const [ramUsed, setRamUsed] = useState(5.4);
-  const [ramTotal] = useState(16);
+  const [resources, setResources] = useState<ResourceData>(FALLBACK);
+  const [controllerOnline, setControllerOnline] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setCpu((p) => randomWalk(p, 4, 0, 100));
-      setRamUsed((p) => randomWalk(p, 0.25, 0.5, ramTotal));
+    async function poll() {
+      try {
+        const [cpuSamples, connSamples] = await Promise.all([
+          metricsApi.latest({ layer: "control" }),
+          metricsApi.latest({ metric: "controller_conn_ok" }),
+        ]);
 
-      // Rare fault injection for UX: OFFLINE is an emergency signal.
-      if (Math.random() < 0.01) setController("OFFLINE");
-      if (Math.random() < 0.06) setController("ONLINE");
-    }, 900);
+        setResources(extractResources(cpuSamples));
+
+        const connSample = connSamples.find((s) => s.metric === "controller_conn_ok");
+        if (connSample !== undefined) {
+          setControllerOnline(connSample.value > 0.5);
+        } else {
+          // Se não há sample de conn, assume online se há qualquer dado
+          setControllerOnline(cpuSamples.length > 0);
+        }
+      } catch {
+        setResources(FALLBACK);
+        setControllerOnline(false);
+      }
+    }
+
+    poll();
+    const id = setInterval(poll, 5000);
     return () => clearInterval(id);
-  }, [ramTotal]);
+  }, []);
 
-  const ramPct = useMemo(() => (ramUsed / ramTotal) * 100, [ramUsed, ramTotal]);
+  const cpuTone = resources.cpuPct === null ? "neutral" : resources.cpuPct > 85 ? "danger" : resources.cpuPct > 60 ? "neutral" : "ok";
+  const memTone = resources.memPct === null ? "neutral" : resources.memPct > 90 ? "danger" : resources.memPct > 70 ? "neutral" : "ok";
+
+  const updatedLabel = useMemo(() => {
+    if (!resources.updatedAt) return null;
+    try {
+      return new Date(resources.updatedAt).toLocaleTimeString("pt-BR");
+    } catch {
+      return null;
+    }
+  }, [resources.updatedAt]);
 
   return (
     <div className="sticky top-0 z-20 flex h-12 items-center justify-between gap-4 border-b border-border-0/60 bg-bg-0/80 px-4 backdrop-blur">
@@ -39,21 +104,53 @@ export function StatusBar() {
         </div>
         <div className="h-4 w-px bg-border-0/70" />
         <div className="flex items-center gap-2 text-[12px] text-fg-1">
-          <span>Status do Controlador SDN</span>
-          <Badge tone={controller === "ONLINE" ? "ok" : "danger"}>{controller}</Badge>
+          <span>Controlador SDN</span>
+          <Badge tone={controllerOnline === null ? "neutral" : controllerOnline ? "ok" : "danger"}>
+            {controllerOnline === null ? "…" : controllerOnline ? "ONLINE" : "OFFLINE"}
+          </Badge>
         </div>
       </div>
 
       <div className="flex items-center gap-4 text-[12px] text-fg-1">
-        <div className="flex items-center gap-2">
-          <span>CPU Host</span>
-          <Badge tone={cpu < 85 ? "ok" : "danger"}>{cpu.toFixed(0)}%</Badge>
+        {/* CPU */}
+        <div className="flex items-center gap-1.5">
+          <span>CPU</span>
+          <span className="font-mono text-[10px] text-fg-1">({resources.node})</span>
+          {resources.cpuPct !== null ? (
+            <Badge tone={cpuTone}>{formatPct(resources.cpuPct)}</Badge>
+          ) : (
+            <Badge tone="neutral">—</Badge>
+          )}
         </div>
-        <div className="flex items-center gap-2">
-          <span>RAM Host</span>
-          <Badge tone={ramPct < 90 ? "ok" : "danger"}>
-            {formatGiB(ramUsed * 1024 * 1024 * 1024)} / {formatGiB(ramTotal * 1024 * 1024 * 1024)}
-          </Badge>
+
+        {/* Memória */}
+        <div className="flex items-center gap-1.5">
+          <span>MEM</span>
+          {resources.memPct !== null ? (
+            <Badge tone={memTone}>
+              {resources.memUsedBytes !== null
+                ? formatGiB(resources.memUsedBytes)
+                : formatPct(resources.memPct)}
+            </Badge>
+          ) : (
+            <Badge tone="neutral">—</Badge>
+          )}
+        </div>
+
+        {/* Fonte e timestamp */}
+        <div className="flex items-center gap-1 text-[10px] text-fg-1">
+          {resources.source === "real" ? (
+            <>
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              <span className="font-mono">docker stats</span>
+              {updatedLabel && <span className="font-mono opacity-60">{updatedLabel}</span>}
+            </>
+          ) : (
+            <>
+              <span className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
+              <span className="font-mono text-yellow-400">sem dados</span>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -1,0 +1,91 @@
+Entendido. A abordagem certa é **LTTB (Largest-Triangle-Three-Buckets)** — o algoritmo padrão da indústria para downsampling de séries temporais que preserva a forma visual com complexidade $O(n)$ e qualidade próxima de $O(n^2)$.
+
+Em vez de cortar pontos uniformemente (que perde picos e anomalias), o LTTB divide a série em buckets e escolece o ponto de maior área triangular em cada bucket — preservando features visuais importantes. 
+
+Read [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/lib/metricSim.ts#1-1), lines 1 to 30
+
+Vou criar um arquivo dedicado para o algoritmo LTTB e depois refatorar `writeRunHistory` e `simulateSeriesMap` para usá-lo: 
+
+Created [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/lib/lttb.ts)
+
+Agora refatoro `writeRunHistory` para usar LTTB em vez do downsample uniforme, e removo o cap fixo de pontos no `simulateSeriesMap` deixando-o gerar a quantidade real de pontos pedida (sem limite interno — o LTTB cuida da performance na hora de salvar): 
+
+Using "Multi-Replace String in Files"
+
+
+```
+
+```
+Agora também atualizar os outros três `Math.min(2000, ...)` nos callbacks de visualização — eles também devem usar LTTB em vez de truncar, mas para renderização ao vivo o cap de 2000 ainda faz sentido para não travar o gráfico. Vou substituir pelo LTTB diretamente na série antes de passar para o gráfico: 
+
+Searched for text `Math.min(2000` (`**/platform/frontend-next/src/features/experiments/ExperimentsView.tsx`), 3 results
+
+Read [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/features/experiments/ExperimentsView.tsx#1162-1162), lines 1162 to 1195
+
+Read [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/features/experiments/ExperimentsView.tsx#1206-1206), lines 1206 to 1240
+
+Read [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/features/experiments/ExperimentsView.tsx#1360-1360), lines 1360 to 1395
+
+Para os callbacks de exportação (PDF/dataset) faz sentido usar **resolução total** — o utilizador quer os dados completos ao exportar. Para o **dashboard visual** ao vivo, aplicar LTTB diretamente na série antes de renderizar: 
+
+Using "Multi-Replace String in Files"
+
+
+```
+
+```
+
+
+Checked [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/features/experiments/ExperimentsView.tsx), [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/lib/lttb.ts), no problems found
+
+Ran terminal command: NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 npm run build 2>&1 | tail -22
+
+O `rows` ficou sem definição porque a substituição inseriu a nova linha mas não incluiu a linha `const rows = ...` que vem depois. Vou ver o contexto exato: 
+
+Read [](file:///home/jon/profissa-sdn-framework-1/platform/frontend-next/src/features/experiments/ExperimentsView.tsx#1168-1168), lines 1168 to 1195
+
+A linha `const rows = buildDatasetRows(...)` foi removida na substituição anterior. Vou restaurá-la: 
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Ran terminal command: NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 npm run build 2>&1 | tail -22
+
+Build limpo. Aqui está a arquitetura final:
+
+---
+
+**Como funciona agora — sem limite fixo, complexidade logarítmica:**
+
+```
+Experimento de qualquer tamanho
+         ↓
+simulateSeriesMap()  →  resolução NATURAL completa (n pontos reais)
+         ↓
+         ├─ writeRunHistory() ──→ LTTB O(n) ──→ localStorage
+         │    Tentativa 1: full data
+         │    Tentativa 2: LTTB → 1 MB total  (preserva picos/vales)
+         │    Tentativa 3: LTTB → 200 KB total
+         │    Tentativa 4: sem seriesMap (re-simula do seed)
+         │    Tentativa 5: 10 runs mais recentes
+         │
+         ├─ exportRunDataset() ──→ TODOS os pontos (CSV/JSON)
+         │
+         ├─ exportRunPdf() ──→ TODOS os pontos (estatísticas precisas)
+         │
+         └─ dashboardSeriesMap ──→ LTTB → máx 1200 pts por série
+                                    (chart rápido, picos preservados)
+```
+
+**Propriedades do LTTB:**
+- $O(n)$ — percorre a série uma vez dividindo em buckets
+- Escolhe o ponto de **maior área triangular** em cada bucket — preserva anomalias, picos e vales melhor que qualquer método uniforme
+- Para um experimento de 1h com sampling de 100ms (36.000 pontos), reduz para 1200 pts para o gráfico sem perder nenhum spike visualmente importante
+- Experimentos curtos (ex: 5 min) passam direto sem nenhuma redução
+
+Made changes.

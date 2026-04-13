@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Instalar Profissa SDN Platform
+GenericName=Instalador
+Comment=Instala o Profissa SDN Platform no seu computador
+Exec=bash -c 'cd "$(dirname "%k")" && bash install.sh'
+Icon=utilities-terminal
+Terminal=true
+StartupNotify=true
+Categories=System;
+Keywords=instalar;profissa;SDN;

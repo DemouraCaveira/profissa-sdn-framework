@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AreaMini } from "@/components/viz/AreaMini";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -22,12 +22,19 @@ import {
   type MetricType,
 } from "@/lib/metricsCatalog";
 import { cn } from "@/lib/cn";
+import { metricsApi, topologyApi, type MetricSample, type Topology } from "@/lib/api";
 
-const ENTITY_INSTANCES: Record<EntityKind, string[]> = {
-  switch: Array.from({ length: 12 }).map((_, i) => `Switch-${String(i + 1).padStart(2, "0")}`),
-  host: Array.from({ length: 24 }).map((_, i) => `Host-${String.fromCharCode("A".charCodeAt(0) + i)}`),
-  controller: ["Controller-01", "Controller-02"],
-};
+// Classifica um node real do backend no EntityKind correspondente
+function classifyNode(node: string): EntityKind | null {
+  const n = node.toLowerCase();
+  // Ignorar interfaces/sub-nodes (contêm ":" ou "->") e nodes genéricos
+  if (n.includes(":") || n.includes("->")) return null;
+  if (["probe", "edge", "gw", "aaa", "platform-topology"].includes(n)) return null;
+  if (n.startsWith("h") && /^h\d+$/.test(n)) return "host";
+  if (n.startsWith("s") && /^s\d+$/.test(n)) return "switch";
+  if (n.startsWith("c") && /^c\d+$/.test(n)) return "controller";
+  return null;
+}
 
 function defaultLayerForEntity(kind: EntityKind): MetricLayer {
   if (kind === "host") return "L3";
@@ -39,7 +46,8 @@ function isAll<T extends string>(v: string): v is "all" {
   return v === "all";
 }
 
-function layerLabel(layer: MetricLayer) {
+function layerLabel(layer: MetricLayer | "all") {
+  if (layer === "all") return "Todas";
   if (layer === "Control Plane") return "Control";
   if (layer === "Dataplane") return "Data";
   return layer;
@@ -82,7 +90,7 @@ function toLayerCsv({
 }: {
   entityKind: EntityKind;
   entityId: string;
-  layer: MetricLayer;
+  layer: MetricLayer | "all";
   specs: MetricSpec[];
   currentValues: Record<string, string>;
 }) {
@@ -252,12 +260,15 @@ function DeepDiveMetricCard({
 
 export default function DashboardPage() {
   const [entityKind, setEntityKind] = useState<EntityKind>("switch");
-  const [entityId, setEntityId] = useState<string>(() => ENTITY_INSTANCES.switch[0] ?? "s1");
-  const [layer, setLayer] = useState<MetricLayer>(() => defaultLayerForEntity("switch"));
+  const [entityId, setEntityId] = useState<string>("s1");
+  const [layer, setLayer] = useState<MetricLayer | "all">(() => defaultLayerForEntity("switch"));
 
   const [category, setCategory] = useState<"all" | MetricCategory>("all");
   const [type, setType] = useState<"all" | MetricType>("all");
   const [q, setQ] = useState<string>("");
+
+  const [topologies, setTopologies] = useState<Topology[]>([]);
+  const [topologyId, setTopologyId] = useState<string>("all");
 
   const [timeFilter, setTimeFilter] = useState<null | { runId: string; from: string; to: string; samplingMs?: number }>(null);
 
@@ -272,6 +283,10 @@ export default function DashboardPage() {
     } catch {
       // ignore
     }
+  }, []);
+
+  useEffect(() => {
+    topologyApi.list().then(setTopologies).catch(() => {});
   }, []);
 
   const seriesParams = useMemo(() => {
@@ -289,17 +304,74 @@ export default function DashboardPage() {
     return { points, intervalMs };
   }, [timeFilter]);
 
-  useEffect(() => {
-    setEntityId(ENTITY_INSTANCES[entityKind][0] ?? "—");
-    setLayer(defaultLayerForEntity(entityKind));
-  }, [entityKind]);
+  // ── Live backend metrics ──────────────────────────────────────────────────
+  const [liveMetrics, setLiveMetrics] = useState<MetricSample[]>([]);
+  const [backendOnline, setBackendOnline] = useState<boolean | null>(null); // null = unknown
+  const liveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const entityOptions = ENTITY_INSTANCES[entityKind];
+  const fetchLiveMetrics = useCallback(() => {
+    metricsApi
+      .latest()
+      .then((samples) => {
+        setLiveMetrics(samples);
+        setBackendOnline(true);
+      })
+      .catch(() => {
+        setBackendOnline(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchLiveMetrics();
+    liveTimerRef.current = setInterval(fetchLiveMetrics, 5000);
+    return () => {
+      if (liveTimerRef.current) clearInterval(liveTimerRef.current);
+    };
+  }, [fetchLiveMetrics]);
+
+  // Derivar instâncias reais dos metrics do backend
+  const entityInstances = useMemo<Record<EntityKind, string[]>>(() => {
+    const map: Record<EntityKind, Set<string>> = { switch: new Set(), host: new Set(), controller: new Set() };
+    for (const s of liveMetrics) {
+      const kind = classifyNode(s.node);
+      if (kind) map[kind].add(s.node);
+    }
+    return {
+      switch: Array.from(map.switch).sort(),
+      host: Array.from(map.host).sort(),
+      controller: Array.from(map.controller).sort(),
+    };
+  }, [liveMetrics]);
+
+  useEffect(() => {
+    const instances = entityInstances[entityKind];
+    if (instances.length > 0 && !instances.includes(entityId)) {
+      setEntityId(instances[0]);
+    }
+    setLayer(defaultLayerForEntity(entityKind));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entityKind, entityInstances]);
+
+  // Build a lookup: metric name → latest value (most recent sample wins)
+  const liveValueMap = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const s of liveMetrics) {
+      // Accept both exact key match and case-insensitive metric name match
+      map.set(s.metric.toLowerCase(), s.value);
+    }
+    return map;
+  }, [liveMetrics]);
+
+  const entityOptions = entityInstances[entityKind].length > 0
+    ? entityInstances[entityKind]
+    : [entityId];
 
   const visibleSpecs = useMemo(() => {
     const query = q.trim().toLowerCase();
 
-    const base = getLayerMetrics(layer);
+    const base = layer === "all"
+      ? LAYERS.flatMap((l) => getLayerMetrics(l))
+      : getLayerMetrics(layer);
     return base
       .filter((m) => {
         if (!m.entityKinds.includes(entityKind)) return false;
@@ -321,12 +393,17 @@ export default function DashboardPage() {
   const currentValues = useMemo(() => {
     const out: Record<string, string> = {};
     for (const spec of visibleSpecs) {
+      // Prefer live backend value; fall back to last simulated value
+      const liveRaw =
+        liveValueMap.get(spec.key.toLowerCase()) ??
+        liveValueMap.get(spec.name.toLowerCase());
       const series = seriesMap[spec.key] ?? [];
-      const last = series[series.length - 1] ?? spec.sim.initial;
-      out[spec.key] = formatMetricValue(spec, last);
+      const simLast = series[series.length - 1] ?? spec.sim.initial;
+      const raw = liveRaw !== undefined ? liveRaw : simLast;
+      out[spec.key] = formatMetricValue(spec, raw);
     }
     return out;
-  }, [seriesMap, visibleSpecs]);
+  }, [seriesMap, visibleSpecs, liveValueMap]);
 
 
   return (
@@ -355,7 +432,7 @@ export default function DashboardPage() {
           </div>
         ) : null}
 
-        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[1.1fr_1.1fr_1fr_1fr_1.5fr]">
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-[1.1fr_1.1fr_1fr_1fr_1.5fr_1fr]">
           <div>
             <div className="mb-1 text-xs font-medium text-fg-1">Entidade</div>
             <Select value={entityKind} onChange={(e) => setEntityKind(e.target.value as EntityKind)}>
@@ -404,6 +481,18 @@ export default function DashboardPage() {
             <div className="mb-1 text-xs font-medium text-fg-1">Buscar métrica</div>
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="ex: tcp_rtt, link_util, flows" />
           </div>
+
+          <div>
+            <div className="mb-1 text-xs font-medium text-fg-1">Topologia</div>
+            <Select value={topologyId} onChange={(e) => setTopologyId(e.target.value)}>
+              <option value="all">Todas</option>
+              {topologies.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name ?? t.id}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
 
         <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
@@ -411,6 +500,14 @@ export default function DashboardPage() {
             <div className="text-xs font-medium text-fg-1">Camadas</div>
             <div className="max-w-full overflow-x-auto">
               <div className="flex items-center gap-1">
+                <Button
+                  key="all"
+                  variant={layer === "all" ? "primary" : "ghost"}
+                  className={cn("h-7 px-2 text-[11px]", layer === "all" && "bg-bg-2")}
+                  onClick={() => setLayer("all")}
+                >
+                  Todas
+                </Button>
                 {LAYERS.map((l) => {
                   const active = l === layer;
                   return (
@@ -430,7 +527,23 @@ export default function DashboardPage() {
 
           <div className="text-[11px] text-fg-1">
             contexto: <span className="font-mono">{prettyEntityKind(entityKind)}</span> · <span className="font-mono">{entityId}</span> ·{" "}
-            <span className="font-mono">{layerLabel(layer)}</span> · <span className="font-mono">{visibleSpecs.length}</span> métricas
+            <span className="font-mono">{layerLabel(layer)}</span> ·{" "}
+            {topologyId !== "all" && (
+              <span className="font-mono text-accent-ok">{topologies.find((t) => t.id === topologyId)?.name ?? topologyId} · </span>
+            )}
+            <span className="font-mono">{visibleSpecs.length}</span> métricas
+            {backendOnline === true && (
+              <span className="ml-2 inline-flex items-center gap-1 font-mono text-accent-ok">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-ok" />
+                live ({liveMetrics.length})
+              </span>
+            )}
+            {backendOnline === false && (
+              <span className="ml-2 inline-flex items-center gap-1 font-mono text-fg-1 opacity-60">
+                <span className="h-1.5 w-1.5 rounded-full bg-fg-1" />
+                simulado
+              </span>
+            )}
           </div>
         </div>
       </div>
