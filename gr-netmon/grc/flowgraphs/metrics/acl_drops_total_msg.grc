@@ -33,55 +33,60 @@ options:
     state: enabled
 
 blocks:
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 136.0]
+    rotation: 0
+    state: true
 - name: blocks_message_strobe_0
   id: blocks_message_strobe
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
     msg: pmt.PMT_NIL
     period: '1000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 120.0]
+    coordinate: [72, 124.0]
     rotation: 0
     state: true
 - name: netmon_metric_acl_drops_total_msg_0
   id: netmon_metric_acl_drops_total_msg
   parameters:
-    node: h1
-    value: 0.0
-    labels_json: '{}'
-    details_json: '{}'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [176, 208.0]
-    rotation: 0
-    state: true
-- name: blocks_message_debug_0
-  id: blocks_message_debug
-  parameters:
     affinity: ''
     alias: ''
-    color: '""'
-    debug: 'True'
-    label: ''
+    comment: ''
+    details_json: '{}'
+    labels_json: '{}'
     maxoutbuf: '0'
     minoutbuf: '0'
-    show: 'True'
-    stream: 'False'
+    node: h1
+    value: '0.0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 120.0]
+    coordinate: [240, 220.0]
     rotation: 0
     state: true
 
 connections:
-- [blocks_message_strobe_0, 'strobe', netmon_metric_acl_drops_total_msg_0, 'tick']
-- [netmon_metric_acl_drops_total_msg_0, 'metrics', blocks_message_debug_0, 'print']
+- [blocks_message_strobe_0, strobe, netmon_metric_acl_drops_total_msg_0, tick]
+- [netmon_metric_acl_drops_total_msg_0, metrics, blocks_message_debug_0, print]
 
 metadata:
   file_format: 1
