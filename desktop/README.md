@@ -1,11 +1,11 @@
-# Profissa SDN Platform — Aplicação Desktop
+# NetOps Studio — Aplicação Desktop
 
 ## Instalação (uma vez só)
 
 ### Opção 1 — com o mouse (recomendado)
 
 1. Abra a pasta **`desktop/`** no gerenciador de arquivos
-2. Dê um **duplo clique** em **`Instalar Profissa.desktop`**
+2. Dê um **duplo clique** em **`Instalar NetOps Studio.desktop`**
 3. Se o sistema perguntar, escolha **"Executar"** ou **"Confiar e executar"**
 4. Um terminal abre e a instalação roda automaticamente
 5. Ao final, pressione **ENTER** para fechar
@@ -27,15 +27,15 @@ O instalador faz **tudo automaticamente**:
 - Instala todas as dependências Python
 - Instala as dependências Node.js e compila o frontend Next.js (`npm ci && npm run build`)
 - Registra o ícone no sistema
-- Cria o atalho **"Profissa SDN Platform"** no menu de aplicativos
+- Cria o atalho **"NetOps Studio"** no menu de aplicativos
 
 ## Usar
 
-Após instalar, procure por **"Profissa SDN Platform"** no menu de aplicativos.
+Após instalar, procure por **"NetOps Studio"** no menu de aplicativos.
 
 Ou execute direto pelo terminal:
 ```bash
-./desktop/run_profissa.sh
+./desktop/run_netops.sh
 ```
 
 ## O que acontece ao abrir
@@ -47,7 +47,7 @@ Ou execute direto pelo terminal:
 ## Diagnóstico (se algo der errado)
 
 ```bash
-tail -50 /tmp/profissa_app.log
+tail -50 /tmp/netops_app.log
 ```
 
 ## Reinstalar / Atualizar

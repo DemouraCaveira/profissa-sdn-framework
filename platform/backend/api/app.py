@@ -46,7 +46,7 @@ from platform.backend.core.metric_catalog import metric_definitions as catalog_m
 from platform.backend.core.netmon_blocks import list_grc_blocks
 from platform.backend.core.netmon_bridge import netmon_metric_definitions, run_host_ping, samples_from_netmon
 
-app = FastAPI(title="Profissa SDN Platform API", version="0.1.0")
+app = FastAPI(title="NetOps Studio API", version="0.1.0")
 
 api_key = os.getenv("API_KEY")
 allowed_origins = os.getenv(
@@ -269,19 +269,19 @@ def _write_config_payload(config_id: str, payload: Dict[str, Any]) -> None:
 
 
 def _seed_default_config_if_missing() -> None:
-    # Ensure at least one saved config exists: keep current repo default as lft-profissa.
+    # Ensure at least one saved config exists: keep current repo default as lft-netops.
     if any(p for p in temp_configs_dir.glob("*.json") if p.name != "active.json"):
         return
     try:
         default_cfg = load_platform_config(config_path)
         payload = {
-            "name": "lft-profissa",
-            "description": "Configuração padrão (docker) do Profissa SDN Framework",
+            "name": "lft-netops",
+            "description": "Configuração padrão (docker) do NetOps Studio (Network Operations)",
             "environment": "docker",
             "config": default_cfg,
         }
-        _write_config_payload("lft-profissa", payload)
-        _set_active_config_id("lft-profissa")
+        _write_config_payload("lft-netops", payload)
+        _set_active_config_id("lft-netops")
     except Exception:
         # Best-effort only.
         pass

@@ -350,13 +350,13 @@ export function SettingsView() {
     };
 
     return {
-      name: "lft-profissa",
+      name: "lft-netops",
       description: "Configuração de orquestração do experimento",
       author: "",
       version: "1.0.0",
       environment: "docker",
       orchestration: { log_level: "info", execution_timeout_sec: 600, cleanup_strategy: "keep_assets" },
-      telemetry: { endpoint_url: API_BASE, database_name: "profissa", sampling_rate_ms: 250, batch_size: 200 },
+      telemetry: { endpoint_url: API_BASE, database_name: "netops", sampling_rate_ms: 250, batch_size: 200 },
       backend: { api_base_url: API_BASE, api_key: "", set_active: true },
       config: cfg,
     };

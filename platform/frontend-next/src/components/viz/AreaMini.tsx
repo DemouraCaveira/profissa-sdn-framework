@@ -19,7 +19,7 @@ function linePath(pts: Array<{ x: number; y: number }>) {
   return [`M ${f.x} ${f.y}`, ...rest.map((p) => `L ${p.x} ${p.y}`)].join(" ");
 }
 
-function areaPath(pts: Array<{ x: number; y: number }>, w: number, h: number, pad: number) {
+function areaPath(pts: Array<{ x: number; y: number }>, _w: number, h: number, pad: number) {
   if (pts.length === 0) return "";
   const d = linePath(pts);
   const last = pts[pts.length - 1];

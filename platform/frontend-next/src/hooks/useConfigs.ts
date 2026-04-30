@@ -3,7 +3,6 @@
 import { useCallback, useState } from "react";
 import {
   configApi,
-  type SavedConfig,
   type ConfigPayload,
 } from "@/lib/api";
 import { useAsync } from "@/hooks/useAsync";

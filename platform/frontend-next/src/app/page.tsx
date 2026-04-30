@@ -42,7 +42,7 @@ function defaultLayerForEntity(kind: EntityKind): MetricLayer {
   return "Dataplane";
 }
 
-function isAll<T extends string>(v: string): v is "all" {
+function isAll(v: string): v is "all" {
   return v === "all";
 }
 
@@ -274,7 +274,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("profissa.dashboard.timeFilter");
+      const raw = localStorage.getItem("netops.dashboard.timeFilter");
       if (!raw) return;
       const parsed = JSON.parse(raw) as any;
       if (!parsed || typeof parsed !== "object") return;
@@ -423,7 +423,7 @@ export default function DashboardPage() {
               variant="ghost"
               className="h-7 px-2 text-[11px]"
               onClick={() => {
-                localStorage.removeItem("profissa.dashboard.timeFilter");
+                localStorage.removeItem("netops.dashboard.timeFilter");
                 setTimeFilter(null);
               }}
             >

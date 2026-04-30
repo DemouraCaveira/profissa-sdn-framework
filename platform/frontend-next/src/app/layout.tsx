@@ -18,8 +18,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Profissa SDN | Observabilidade",
-  description: "Scientific UX for SDN research workflows",
+  title: "NetOps | Network Operations",
+  description: "Scientific UX for Network Operations research workflows",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -131,10 +131,6 @@ function TopologyViewInner() {
   const nodeMetricsTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const rfRef = useRef<ReactFlowInstance | null>(null);
 
-  const centerAll = useCallback(() => {
-    setTimeout(() => rfRef.current?.fitView({ padding: 0.25, duration: 600 }), 50);
-  }, []);
-
   // ── Center view whenever nodes are first loaded ────────────────────────
   const didFitRef = useRef(false);
   useEffect(() => {

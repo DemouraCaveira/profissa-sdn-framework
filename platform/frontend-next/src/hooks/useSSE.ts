@@ -23,7 +23,7 @@ export function useSSE() {
         setConnected(true);
         setError(null);
       },
-      (err) => {
+      (_err) => {
         setConnected(false);
         setError("SSE connection lost – retrying…");
         cleanup();

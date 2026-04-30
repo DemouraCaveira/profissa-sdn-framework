@@ -15,6 +15,15 @@ import { simulateControlPlaneLog, type ControlPlaneEvent } from "@/lib/controlPl
 import { lttbSeriesMap } from "@/lib/lttb";
 import { confidenceInterval95, mean, median, outlierIndicesZ, p95, p99, pearsonR, stddev, variance } from "@/lib/stats";
 import { experimentApi, topologyApi, metricsApi, type MetricSample, type ExperimentBundle } from "@/lib/api";
+import {
+  fsSupportedInBrowser,
+  saveDirHandle as persistDirHandle,
+  loadDirHandle,
+  clearDirHandle,
+  requestPermission,
+  writeJsonToDir,
+  readJsonFilesFromDir,
+} from "@/lib/fsStorage";
 
 type Tab = "manual" | "templates" | "dashboard";
 
@@ -95,8 +104,17 @@ function downloadTextFile({ filename, content, mime }: { filename: string; conte
   URL.revokeObjectURL(url);
 }
 
+function escapeHtml(s: string) {
+  return (s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function escapeLatex(input: string) {
-  const placeholder = "__PROFISSA_BSLASH__";
+  const placeholder = "__NETOPS_BSLASH__";
   return (input ?? "")
     .replaceAll("\\", placeholder)
     .replaceAll("{", "\\{")
@@ -159,7 +177,7 @@ function formatMetricValue(spec: MetricSpec, raw: number) {
 
 function readRunHistory(): RunRecord[] {
   try {
-    const raw = localStorage.getItem("profissa.experiments.runs");
+    const raw = localStorage.getItem("netops.experiments.runs");
     if (!raw) return [];
     const parsed = JSON.parse(raw) as RunRecord[];
     if (!Array.isArray(parsed)) return [];
@@ -220,25 +238,25 @@ function writeRunHistory(next: RunRecord[]) {
 
   // Attempt 1: full fidelity
   try {
-    localStorage.setItem("profissa.experiments.runs", JSON.stringify(runs));
+    localStorage.setItem("netops.experiments.runs", JSON.stringify(runs));
     return;
   } catch { /* QuotaExceededError */ }
 
   // Attempt 2: LTTB @ 1 MB total
   try {
-    localStorage.setItem("profissa.experiments.runs", JSON.stringify(applyLttb(1_000_000)));
+    localStorage.setItem("netops.experiments.runs", JSON.stringify(applyLttb(1_000_000)));
     return;
   } catch { /* still too large */ }
 
   // Attempt 3: LTTB @ 200 KB total
   try {
-    localStorage.setItem("profissa.experiments.runs", JSON.stringify(applyLttb(200_000)));
+    localStorage.setItem("netops.experiments.runs", JSON.stringify(applyLttb(200_000)));
     return;
   } catch { /* still too large */ }
 
   // Attempt 4: metadata only — charts re-simulate from seed (no visual loss)
   try {
-    localStorage.setItem("profissa.experiments.runs", JSON.stringify(
+    localStorage.setItem("netops.experiments.runs", JSON.stringify(
       runs.map((r) => ({ ...r, seriesMap: undefined }))
     ));
     return;
@@ -246,7 +264,7 @@ function writeRunHistory(next: RunRecord[]) {
 
   // Attempt 5: last resort
   try {
-    localStorage.setItem("profissa.experiments.runs", JSON.stringify(
+    localStorage.setItem("netops.experiments.runs", JSON.stringify(
       runs.slice(0, 10).map((r) => ({ ...r, seriesMap: undefined }))
     ));
   } catch {
@@ -256,7 +274,7 @@ function writeRunHistory(next: RunRecord[]) {
 
 function readLatestTopologySummary(): TopologySnapshotSummary | null {
   try {
-    const raw = localStorage.getItem("profissa.topology.snapshots");
+    const raw = localStorage.getItem("netops.topology.snapshots");
     if (!raw) return null;
     const parsed = JSON.parse(raw) as any[];
     if (!Array.isArray(parsed) || parsed.length === 0) return null;
@@ -598,6 +616,12 @@ export function ExperimentsView() {
   const [dashCorY, setDashCorY] = useState<string>("");
   const [dashQuery, setDashQuery] = useState<string>("");
 
+  // ── Pasta de saída (File System Access API) ──────────────────────────────
+  const [saveDir, setSaveDir] = useState<FileSystemDirectoryHandle | null>(null);
+  const [saveDirName, setSaveDirName] = useState<string>("");
+  const [saveDirStatus, setSaveDirStatus] = useState<string | null>(null);
+  const fsSupported = typeof window !== "undefined" && fsSupportedInBrowser();
+
   const timersRef = useRef<{ tick?: number; log?: number }>({});
   const startMsRef = useRef<number | null>(null);
   const remainingMsRef = useRef<number>(0);
@@ -626,7 +650,7 @@ export function ExperimentsView() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("profissa.experiments.dashboard.runId");
+      const raw = localStorage.getItem("netops.experiments.dashboard.runId");
       if (typeof raw === "string" && raw.trim()) setDashboardRunId(raw.trim());
     } catch {
       // ignore
@@ -636,6 +660,50 @@ export function ExperimentsView() {
   useEffect(() => {
     if (!dashboardRunId && history.length > 0) setDashboardRunId(history[0]!.id);
   }, [dashboardRunId, history]);
+
+  // ── Restaurar pasta de saída salva no IndexedDB ──────────────────────────
+  useEffect(() => {
+    if (!fsSupported) return;
+    void (async () => {
+      try {
+        const handle = await loadDirHandle();
+        if (!handle) return;
+        // Solicitar permissão silenciosamente; se o user precisar interagir
+        // ele verá o prompt do browser automaticamente.
+        const granted = await requestPermission(handle);
+        if (granted) {
+          setSaveDir(handle);
+          setSaveDirName(handle.name);
+          // Ler experimentos já salvos na pasta e mesclar ao histórico
+          type SavedRecord = RunRecord & { __netopsRun?: boolean };
+          const isRunRecord = (v: unknown): v is SavedRecord => {
+            return (
+              typeof v === "object" &&
+              v !== null &&
+              typeof (v as Record<string, unknown>).id === "string" &&
+              typeof (v as Record<string, unknown>).startedAt === "string"
+            );
+          };
+          const saved = await readJsonFilesFromDir<SavedRecord>(handle, isRunRecord);
+          if (saved.length > 0) {
+            setHistory((prev) => {
+              const ids = new Set(prev.map((r) => r.id));
+              const novelRuns = saved.filter((r) => !ids.has(r.id));
+              if (novelRuns.length === 0) return prev;
+              const next = [...novelRuns, ...prev].sort(
+                (a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt),
+              );
+              writeRunHistory(next);
+              return next;
+            });
+          }
+        }
+      } catch {
+        // pasta não mais acessível — ignorar silenciosamente
+      }
+    })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fsSupported]);
 
   const allSpecsByKey = useMemo(() => {
     const m = new Map<string, MetricSpec>();
@@ -647,6 +715,53 @@ export function ExperimentsView() {
     (keys: string[]) => keys.map((k) => allSpecsByKey.get(k)).filter(Boolean) as MetricSpec[],
     [allSpecsByKey],
   );
+
+  // ── Escolher / revogar pasta de saída ────────────────────────────────────
+  const chooseSaveDir = useCallback(async () => {
+    if (!fsSupported) return;
+    try {
+      const handle: FileSystemDirectoryHandle = await (window as unknown as { showDirectoryPicker: (o: unknown) => Promise<FileSystemDirectoryHandle> }).showDirectoryPicker({ mode: "readwrite" });
+      await persistDirHandle(handle);
+      setSaveDir(handle);
+      setSaveDirName(handle.name);
+      setSaveDirStatus(`✔ Pasta definida: ${handle.name}`);
+      setTimeout(() => setSaveDirStatus(null), 4000);
+
+      // Carregar experimentos já existentes na pasta escolhida
+      type SavedRecord = RunRecord & { __netopsRun?: boolean };
+      const isRunRecord = (v: unknown): v is SavedRecord =>
+        typeof v === "object" &&
+        v !== null &&
+        typeof (v as Record<string, unknown>).id === "string" &&
+        typeof (v as Record<string, unknown>).startedAt === "string";
+      const saved = await readJsonFilesFromDir<SavedRecord>(handle, isRunRecord);
+      if (saved.length > 0) {
+        setHistory((prev) => {
+          const ids = new Set(prev.map((r) => r.id));
+          const novel = saved.filter((r) => !ids.has(r.id));
+          if (novel.length === 0) return prev;
+          const next = [...novel, ...prev].sort(
+            (a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt),
+          );
+          writeRunHistory(next);
+          return next;
+        });
+      }
+    } catch (err) {
+      if ((err as DOMException)?.name !== "AbortError") {
+        setSaveDirStatus("Erro ao escolher pasta.");
+        setTimeout(() => setSaveDirStatus(null), 4000);
+      }
+    }
+  }, [fsSupported]);
+
+  const removeSaveDir = useCallback(async () => {
+    await clearDirHandle();
+    setSaveDir(null);
+    setSaveDirName("");
+    setSaveDirStatus("Pasta removida.");
+    setTimeout(() => setSaveDirStatus(null), 3000);
+  }, []);
 
   const stopTimers = useCallback(() => {
     if (timersRef.current.tick) window.clearInterval(timersRef.current.tick);
@@ -726,6 +841,19 @@ export function ExperimentsView() {
         writeRunHistory(nextHistory);
         setHistory(nextHistory);
 
+        // ── Auto-save para pasta de saída escolhida pelo usuário ─────────
+        ;(async () => {
+          try {
+            const dir = saveDir;
+            if (!dir) return;
+            const granted = await requestPermission(dir);
+            if (!granted) return;
+            await writeJsonToDir(dir, `experimento_${record.id}.json`, record);
+          } catch {
+            // Falha silenciosa — o registro já está no localStorage
+          }
+        })();
+
         if (insight) setLogs((p) => [...p, `[${nowIso()}] ${insight}`].slice(-400));
 
         // ── Sync to back-end (fire-and-forget) ──────────────────────────────
@@ -791,7 +919,7 @@ export function ExperimentsView() {
         console.error("[finalizeRun] unexpected error:", err);
       }
     },
-    [activeTemplateId, annotations, config, resolveSpecs, runId, selectedMetricKeys],
+    [activeTemplateId, annotations, config, resolveSpecs, runId, saveDir, selectedMetricKeys],
   );
 
   const installTimers = useCallback(
@@ -1002,7 +1130,7 @@ export function ExperimentsView() {
   const inspectRun = useCallback(
     (r: RunRecord) => {
       try {
-        localStorage.setItem("profissa.experiments.dashboard.runId", r.id);
+        localStorage.setItem("netops.experiments.dashboard.runId", r.id);
       } catch {
         // ignore
       }
@@ -1247,7 +1375,7 @@ export function ExperimentsView() {
 
     const html = `<!doctype html>
 <html><head><meta charset="utf-8" />
-<title>Relatório ${r.id}</title>
+<title>Relatório ${escapeHtml(r.id)}</title>
 <style>
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:24px; color:#111;}
   h1{font-size:18px; margin:0 0 8px 0;}
@@ -1260,22 +1388,22 @@ export function ExperimentsView() {
 </style>
 </head>
 <body>
-  <h1>Relatório de Execução (Run <code>${r.id}</code>)</h1>
-  <div class="muted">${new Date(r.startedAt).toLocaleString()} → ${new Date(r.endedAt).toLocaleString()} · sampling=${samplingMs}ms · duration=${r.config.general.durationS}s · status=${r.status}</div>
+  <h1>Relatório de Execução (Run <code>${escapeHtml(r.id)}</code>)</h1>
+  <div class="muted">${escapeHtml(new Date(r.startedAt).toLocaleString())} → ${escapeHtml(new Date(r.endedAt).toLocaleString())} · sampling=${samplingMs}ms · duration=${r.config.general.durationS}s · status=${escapeHtml(r.status)}</div>
   <div class="grid">
     <div>
       <div class="muted"><b>Experimento</b></div>
-      <div><b>${r.config.general.name}</b></div>
-      <div class="muted">${r.config.general.scientificDescription || "—"}</div>
+      <div><b>${escapeHtml(r.config.general.name)}</b></div>
+      <div class="muted">${escapeHtml(r.config.general.scientificDescription || "—")}</div>
       <div style="margin-top:8px" class="muted"><b>Tráfego</b></div>
-      <div><code>${r.config.traffic.srcHostId}</code> → <code>${r.config.traffic.dstHostId}</code> · <code>${r.config.traffic.type}</code> · <code>${r.config.traffic.rateValue}${r.config.traffic.rateUnit}</code></div>
+      <div><code>${escapeHtml(r.config.traffic.srcHostId)}</code> → <code>${escapeHtml(r.config.traffic.dstHostId)}</code> · <code>${escapeHtml(r.config.traffic.type)}</code> · <code>${escapeHtml(String(r.config.traffic.rateValue))}${escapeHtml(r.config.traffic.rateUnit)}</code></div>
       <div style="margin-top:8px" class="muted"><b>Topologia (snapshot)</b></div>
-      <div><code>${topoLine}</code></div>
+      <div><code>${escapeHtml(topoLine)}</code></div>
     </div>
     <div>
       <div class="muted"><b>Métricas selecionadas</b></div>
-      <div><code>${metricKeys.join(", ") || "—"}</code></div>
-      ${r.insight ? `<div style="margin-top:8px" class="muted"><b>Insight rápido</b></div><div>${r.insight}</div>` : ""}
+      <div><code>${escapeHtml(metricKeys.join(", ") || "—")}</code></div>
+      ${r.insight ? `<div style="margin-top:8px" class="muted"><b>Insight rápido</b></div><div>${escapeHtml(r.insight)}</div>` : ""}
     </div>
   </div>
 
@@ -1291,11 +1419,10 @@ export function ExperimentsView() {
   </script>
 </body></html>`;
 
-    const w = window.open("", "_blank");
-    if (!w) return;
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, "_blank");
+    if (w) setTimeout(() => URL.revokeObjectURL(url), 10_000);
   }, [resolveSpecs]);
 
   const selectedRunsForCompare = useMemo(() => {
@@ -1543,7 +1670,7 @@ export function ExperimentsView() {
 
     const html = `<!doctype html>
 <html><head><meta charset="utf-8" />
-<title>Dashboard do Experimento ${dashboardRun.id}</title>
+<title>Dashboard do Experimento ${escapeHtml(dashboardRun.id)}</title>
 <style>
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:24px; color:#111;}
   h1{font-size:18px; margin:0 0 8px 0;}
@@ -1557,19 +1684,19 @@ export function ExperimentsView() {
 </style>
 </head>
 <body>
-  <h1>Dashboard do Experimento (Run <code>${dashboardRun.id}</code>)</h1>
-  <div class="muted">${new Date(dashboardRun.startedAt).toLocaleString()} → ${new Date(dashboardRun.endedAt).toLocaleString()} · sampling=${dashboardSamplingMs}ms · duration=${dashboardRun.config.general.durationS}s · status=${dashboardRun.status}</div>
+  <h1>Dashboard do Experimento (Run <code>${escapeHtml(dashboardRun.id)}</code>)</h1>
+  <div class="muted">${escapeHtml(new Date(dashboardRun.startedAt).toLocaleString())} → ${escapeHtml(new Date(dashboardRun.endedAt).toLocaleString())} · sampling=${dashboardSamplingMs}ms · duration=${dashboardRun.config.general.durationS}s · status=${escapeHtml(dashboardRun.status)}</div>
   <div class="meta">
     <div class="box">
       <div class="muted"><b>Experimento</b></div>
-      <div><b>${dashboardRun.config.general.name}</b></div>
-      <div class="muted">${dashboardRun.config.general.scientificDescription || "—"}</div>
-      <div style="margin-top:8px" class="muted"><b>Query</b>: <code>${dashQuery || "(vazio)"}</code></div>
-      ${dashboardRun.insight ? `<div style="margin-top:8px" class="muted"><b>Insight</b>: ${dashboardRun.insight}</div>` : ""}
+      <div><b>${escapeHtml(dashboardRun.config.general.name)}</b></div>
+      <div class="muted">${escapeHtml(dashboardRun.config.general.scientificDescription || "—")}</div>
+      <div style="margin-top:8px" class="muted"><b>Query</b>: <code>${escapeHtml(dashQuery || "(vazio)")}</code></div>
+      ${dashboardRun.insight ? `<div style="margin-top:8px" class="muted"><b>Insight</b>: ${escapeHtml(dashboardRun.insight)}</div>` : ""}
     </div>
     <div class="box">
       ${corr}
-      <div style="margin-top:8px" class="muted"><b>Métricas (filtradas)</b>: <code>${filteredDashboardSpecs.map((s) => s.key).join(", ") || "—"}</code></div>
+      <div style="margin-top:8px" class="muted"><b>Métricas (filtradas)</b>: <code>${escapeHtml(filteredDashboardSpecs.map((s) => s.key).join(", ") || "—")}</code></div>
     </div>
   </div>
 
@@ -1585,11 +1712,10 @@ export function ExperimentsView() {
   </script>
 </body></html>`;
 
-    const w = window.open("", "_blank");
-    if (!w) return;
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, "_blank");
+    if (w) setTimeout(() => URL.revokeObjectURL(url), 10_000);
   }, [dashCorX, dashCorY, dashCorrelation, dashQuery, dashboardRun, dashboardSamplingMs, dashboardStatRows, filteredDashboardSpecs]);
 
   const runDurationMs = Math.max(1, Math.round((runMetaRef.current?.configSnapshot?.general?.durationS ?? config.general.durationS) * 1000));
@@ -1669,7 +1795,7 @@ export function ExperimentsView() {
                         const id = e.target.value;
                         setDashboardRunId(id);
                         try {
-                          localStorage.setItem("profissa.experiments.dashboard.runId", id);
+                          localStorage.setItem("netops.experiments.dashboard.runId", id);
                         } catch {
                           // ignore
                         }
@@ -1939,7 +2065,16 @@ export function ExperimentsView() {
             </Card>
 
             <Card>
-              <CardHeader title="Histórico de Execuções (Runs)" right={<span className="font-mono">history</span>} />
+              <CardHeader title="Histórico de Execuções (Runs)" right={
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[11px] text-fg-1">{history.length} run{history.length !== 1 ? "s" : ""}</span>
+                  {saveDir && (
+                    <span className="rounded-md bg-accent-ok/15 px-2 py-0.5 font-mono text-[10px] text-accent-ok">
+                      💾 {saveDirName}
+                    </span>
+                  )}
+                </div>
+              } />
               <CardBody>
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <div className="text-[11px] text-fg-1">Selecione 2+ runs finalizadas para A/B Testing.</div>
@@ -1990,6 +2125,7 @@ export function ExperimentsView() {
                     <thead className="bg-bg-1/60">
                       <tr className="border-b border-border-0/60 text-[10px] uppercase tracking-wide text-fg-1">
                         <th className="px-2 py-2 font-medium">Sel</th>
+                        <th className="px-2 py-2 font-medium">Nome</th>
                         <th className="px-2 py-2 font-medium">ID</th>
                         <th className="px-2 py-2 font-medium">Data</th>
                         <th className="px-2 py-2 font-medium">Status</th>
@@ -1999,7 +2135,7 @@ export function ExperimentsView() {
                     <tbody>
                       {history.length === 0 ? (
                         <tr>
-                          <td className="px-2 py-3 text-[11px] text-fg-1" colSpan={5}>—</td>
+                          <td className="px-2 py-3 text-[11px] text-fg-1" colSpan={6}>—</td>
                         </tr>
                       ) : (
                         history.map((r) => (
@@ -2016,7 +2152,10 @@ export function ExperimentsView() {
                                 }}
                               />
                             </td>
-                            <td className="px-2 py-2 font-mono text-[11px] text-fg-0">{r.id}</td>
+                            <td className="max-w-[160px] truncate px-2 py-2 text-[11px] text-fg-0" title={r.config.general.name}>
+                              {r.config.general.name || "—"}
+                            </td>
+                            <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{r.id}</td>
                             <td className="px-2 py-2 font-mono text-[11px] text-fg-1">{new Date(r.startedAt).toLocaleString()}</td>
                             <td className={cn("px-2 py-2 font-mono text-[11px]", r.status === "Sucesso" ? "text-accent-ok" : "text-accent-danger")}>
                               {r.status}
@@ -2170,6 +2309,60 @@ export function ExperimentsView() {
             <Card>
               <CardHeader title="Gestão de Runs" right={<span className="font-mono">control</span>} />
               <CardBody className="space-y-3">
+
+                {/* ── Pasta de Saída ─────────────────────────────────────── */}
+                <div className="rounded-xl border border-border-0/60 bg-bg-2/10 p-3">
+                  <div className="mb-2 flex items-start justify-between gap-2">
+                    <div>
+                      <div className="text-[11px] font-semibold text-fg-0">Pasta de Saída</div>
+                      <div className="mt-0.5 text-[10px] text-fg-1">
+                        Os experimentos serão salvos automaticamente nessa pasta e recarregados ao abrir a plataforma.
+                      </div>
+                    </div>
+                  </div>
+
+                  {!fsSupported ? (
+                    <div className="rounded-lg border border-border-0/40 bg-bg-2/10 px-2 py-1.5 text-[10px] text-fg-1">
+                      Seu browser não suporta a File System Access API. Use Chrome/Edge para habilitar esta funcionalidade.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          variant={saveDir ? "ghost" : "primary"}
+                          className="h-7 px-3 text-[11px]"
+                          onClick={chooseSaveDir}
+                        >
+                          {saveDir ? "Alterar Pasta" : "Escolher Pasta…"}
+                        </Button>
+                        {saveDir && (
+                          <Button
+                            variant="ghost"
+                            className="h-7 px-2 text-[11px] text-accent-danger"
+                            onClick={removeSaveDir}
+                          >
+                            Remover
+                          </Button>
+                        )}
+                      </div>
+
+                      {saveDirName ? (
+                        <div className="flex items-center gap-1.5 rounded-lg border border-accent-ok/30 bg-accent-ok/10 px-2 py-1.5">
+                          <span className="text-accent-ok">📁</span>
+                          <span className="truncate font-mono text-[11px] text-fg-0">{saveDirName}</span>
+                        </div>
+                      ) : (
+                        <div className="rounded-lg border border-border-0/40 bg-bg-2/10 px-2 py-1.5 text-[10px] text-fg-1">
+                          Nenhuma pasta selecionada — resultados ficam apenas no cache do browser.
+                        </div>
+                      )}
+
+                      {saveDirStatus && (
+                        <div className="text-[11px] text-accent-ok">{saveDirStatus}</div>
+                      )}
+                    </div>
+                  )}
+                </div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <div className="text-[11px] text-fg-1">Status</div>

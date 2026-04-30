@@ -1,4 +1,4 @@
-# Profissa SDN UI (Next.js + Tailwind)
+# NetOps UI (Next.js + Tailwind)
 
 Interface científica em Dark Mode, densa em informações, com módulos:
 - Dashboard (Observabilidade)

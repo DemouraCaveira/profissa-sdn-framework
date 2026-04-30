@@ -33,7 +33,7 @@ function PaletteItem({ kind, label }: { kind: BlockKind; label: string }) {
     <div
       draggable
       onDragStart={(ev) => {
-        ev.dataTransfer.setData("application/profissa-labblock", kind);
+        ev.dataTransfer.setData("application/netops-labblock", kind);
         ev.dataTransfer.effectAllowed = "move";
       }}
       className={cn(
@@ -82,7 +82,7 @@ function EditorInner() {
   const onDrop = useCallback(
     (ev: React.DragEvent) => {
       ev.preventDefault();
-      const kind = ev.dataTransfer.getData("application/profissa-labblock") as BlockKind;
+      const kind = ev.dataTransfer.getData("application/netops-labblock") as BlockKind;
       if (!kind) return;
 
       const bounds = wrapperRef.current?.getBoundingClientRect();

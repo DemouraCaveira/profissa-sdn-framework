@@ -1,14 +1,20 @@
 /**
- * Profissa SDN Platform – typed API client
+ * NetOps Platform – typed API client
  *
- * All requests go to NEXT_PUBLIC_API_URL (default http://localhost:8000).
- * The Next.js config rewrites /api/* → backend, so you can also use
- * relative paths in SSR/ISR contexts when the rewrite is active.
+ * In the browser all requests go through the Next.js /api/* rewrite proxy
+ * (defined in next.config.mjs) so the real backend host is never exposed
+ * in the client bundle.
+ *
+ * In server/build contexts (e.g. ISR, route handlers) the value of
+ * NEXT_PUBLIC_API_URL is used when explicitly set; otherwise falls back
+ * to the /api relative prefix which works for local dev too.
  */
 
-export const API_BASE =
-  (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) ||
-  "http://localhost:8000";
+export const API_BASE: string =
+  typeof window !== "undefined"
+    ? "/api"
+    : (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) ||
+      "/api";
 
 // ─── Shared types (mirrors backend schemas) ────────────────────────────────
 

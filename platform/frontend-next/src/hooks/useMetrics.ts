@@ -1,6 +1,6 @@
 "use client";
 
-import { metricsApi, type MetricDefinition, type MetricLayer, type MetricSample } from "@/lib/api";
+import { metricsApi, type MetricLayer } from "@/lib/api";
 import { useAsync } from "@/hooks/useAsync";
 
 export function useMetricDefinitions() {

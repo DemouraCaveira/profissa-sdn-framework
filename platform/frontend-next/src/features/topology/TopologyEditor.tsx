@@ -19,7 +19,7 @@ import { nodeTypes } from "@/features/topology/nodeTypes";
 import { edgeTypes, type LinkStatus } from "@/features/topology/edgeTypes";
 import { cn } from "@/lib/cn";
 import { topologyApi, metricsApi, type Topology as ApiTopology, type MetricSample } from "@/lib/api"
-import { useTopologies, useTopologyMutations } from "@/hooks/useTopology";
+import { useTopologyMutations } from "@/hooks/useTopology";
 
 type NodeKind = "switch" | "host" | "controller";
 type MapMode = "logical" | "physical";
@@ -279,11 +279,6 @@ const initialEdgesLogical: Edge<LinkStatus>[] = [
   },
 ];
 
-function randomWalk(prev: number, step: number, min: number, max: number) {
-  const delta = (Math.random() * 2 - 1) * step;
-  return Math.max(min, Math.min(max, prev + delta));
-}
-
 function synthArpTable(hostId: string): HostArpRow[] {
   const rows: HostArpRow[] = [
     { ip: "10.0.0.1", mac: "00:00:00:00:00:01", iface: "eth0", state: "REACHABLE" },
@@ -329,7 +324,7 @@ type TopologySnapshot = {
 
 function readSnapshotsFromStorage(): TopologySnapshot[] {
   try {
-    const raw = localStorage.getItem("profissa.topology.snapshots");
+    const raw = localStorage.getItem("netops.topology.snapshots");
     if (!raw) return [];
     const parsed = JSON.parse(raw) as TopologySnapshot[];
     if (!Array.isArray(parsed)) return [];
@@ -831,18 +826,6 @@ function EditorInner() {
     setMenuOpen(false);
   }, []);
 
-  const updateSelectedNode = useCallback(
-    (patch: Partial<TopologyNodeData>) => {
-      if (!selectedNode) return;
-      const nodeId = selectedNode.id;
-      setNodes((prev) => prev.map((n) => (n.id === nodeId ? { ...n, data: { ...n.data, ...patch } } : n)));
-      setSelected((prevSel) =>
-        prevSel && prevSel.kind === "node" && prevSel.nodeId === nodeId ? prevSel : prevSel,
-      );
-    },
-    [selectedNode],
-  );
-
   const clearTrace = useCallback(() => {
     setEdgesPhysical((prev) => prev.map((e) => ({ ...e, data: { ...(e.data ?? { mode: "physical" }), trace: false } })));
     setEdgesLogical((prev) => prev.map((e) => ({ ...e, data: { ...(e.data ?? { mode: "logical" }), trace: false } })));
@@ -866,7 +849,7 @@ function EditorInner() {
   }, [clearTrace, edges, mode, setEdges, traceFrom, traceTo]);
 
   const captureSnapshot = useCallback(() => {
-    const key = "profissa.topology.snapshots";
+    const key = "netops.topology.snapshots";
     const prev = readSnapshotsFromStorage();
     const payload = {
       capturedAt: new Date().toISOString(),
@@ -878,7 +861,7 @@ function EditorInner() {
     const next = [payload, ...prev].slice(0, 50);
     localStorage.setItem(key, JSON.stringify(next));
     reloadSnapshots();
-  }, [edgesLogical, edgesPhysical, mode, nodes]);
+  }, [edgesLogical, edgesPhysical, mode, nodes, reloadSnapshots]);
 
   const applySnapshot = useCallback((snap: TopologySnapshot) => {
     setMode(snap.mode);
@@ -946,7 +929,7 @@ function EditorInner() {
     // Avoid stale selection when changing map mode.
     if (selected && selected.kind === "edge") setSelected(null);
     setMenuOpen(false);
-  }, [mode]);
+  }, [mode, selected]);
 
   const submitHost = useCallback(() => {
     const id = hostDraft.name.trim() || nextId("Host-", usedIds);

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Profissa SDN Platform — Desktop launcher.
+NetOps Studio — Desktop launcher.
 
 Starts the FastAPI backend and Next.js frontend, then opens a pywebview
 window.  Works when invoked from a terminal or a desktop icon.
 
-Log file: /tmp/profissa_app.log
+Log file: /tmp/netops_app.log
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from urllib.request import urlopen
 import socket
 
 # ── logging setup ─────────────────────────────────────────────────────────────
-LOG_FILE = "/tmp/profissa_app.log"
+LOG_FILE = "/tmp/netops_app.log"
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)s %(message)s",
@@ -31,7 +31,7 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout),
     ],
 )
-log = logging.getLogger("profissa")
+log = logging.getLogger("netops")
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -136,7 +136,7 @@ def _start_frontend(port: int) -> subprocess.Popen:
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Profissa SDN Platform Desktop App")
+    parser = argparse.ArgumentParser(description="NetOps Studio Desktop App")
     parser.add_argument("--backend-port", type=int, default=8000)
     parser.add_argument("--frontend-port", type=int, default=3000)
     parser.add_argument(
@@ -146,7 +146,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    log.info("Profissa desktop app starting. ROOT=%s", ROOT)
+    log.info("NetOps Studio desktop app starting. ROOT=%s", ROOT)
 
     backend: subprocess.Popen | None = None
     frontend: subprocess.Popen | None = None
@@ -155,7 +155,7 @@ def main() -> None:
         try:
             backend = _start_backend(args.backend_port)
         except Exception as exc:
-            _show_error("Profissa \u2014 Backend Error", f"Could not start backend:\n{exc}")
+            _show_error("NetOps Studio \u2014 Backend Error", f"Could not start backend:\n{exc}")
             sys.exit(1)
     else:
         log.info("Backend already running on port %d", args.backend_port)
@@ -168,7 +168,7 @@ def main() -> None:
     try:
         frontend = _start_frontend(args.frontend_port)
     except Exception as exc:
-        _show_error("Profissa \u2014 Frontend Error", f"Could not start frontend:\n{exc}")
+        _show_error("NetOps Studio \u2014 Frontend Error", f"Could not start frontend:\n{exc}")
         sys.exit(1)
 
     def _shutdown() -> None:
@@ -198,7 +198,7 @@ def main() -> None:
         _wait_http(f"http://127.0.0.1:{args.backend_port}/health", timeout_sec=20)
         log.info("Backend ready ✔")
     except RuntimeError as exc:
-        _show_error("Profissa — Startup Error", f"Backend did not start in time:\n{exc}\n\nCheck log: {LOG_FILE}")
+        _show_error("NetOps Studio — Startup Error", f"Backend did not start in time:\n{exc}\n\nCheck log: {LOG_FILE}")
         sys.exit(1)
 
     try:
@@ -206,7 +206,7 @@ def main() -> None:
         _wait_http(f"http://127.0.0.1:{args.frontend_port}/", timeout_sec=15)
         log.info("Frontend ready ✔")
     except RuntimeError as exc:
-        _show_error("Profissa — Startup Error", f"Frontend did not start in time:\n{exc}\n\nCheck log: {LOG_FILE}")
+        _show_error("NetOps Studio — Startup Error", f"Frontend did not start in time:\n{exc}\n\nCheck log: {LOG_FILE}")
         sys.exit(1)
 
     if args.headless:
@@ -218,7 +218,7 @@ def main() -> None:
         import webview  # type: ignore[import]
     except Exception as exc:
         _show_error(
-            "Profissa — Missing Dependency",
+            "NetOps Studio — Missing Dependency",
             f"pywebview is not installed.\n\nRun the installer:\n  bash {ROOT}/desktop/install.sh\n\nError: {exc}",
         )
         sys.exit(1)
@@ -226,7 +226,7 @@ def main() -> None:
     log.info("Opening webview window …")
     try:
         webview.create_window(
-            "Profissa SDN Platform",
+            "NetOps Studio",
             f"http://127.0.0.1:{args.frontend_port}",
             width=1280,
             height=800,
@@ -235,7 +235,7 @@ def main() -> None:
         webview.start(debug=False)
     except Exception as exc:
         _show_error(
-            "Profissa — Window Error",
+            "NetOps Studio — Window Error",
             f"Could not open application window:\n{exc}\n\n"
             f"The platform is still running at:\n"
             f"  http://127.0.0.1:{args.frontend_port}\n\n"
