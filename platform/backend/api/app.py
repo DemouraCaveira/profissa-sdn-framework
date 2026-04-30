@@ -1056,6 +1056,13 @@ real_collection_default = os.getenv("REAL_COLLECTION", "0") == "1"
 collection_interval_seconds = float(os.getenv("AUTO_COLLECT_INTERVAL", "5"))
 _auto_collect_task: asyncio.Task | None = None
 
+# System settings (in-memory, pode migrar para banco posteriormente)
+system_settings: Dict[str, Any] = {
+    "use_real_data": real_collection_default,
+    "auto_collect_enabled": False,
+    "collect_interval_sec": collection_interval_seconds,
+}
+
 
 def _extended_metric_definitions() -> List[MetricDefinition]:
     return catalog_metric_definitions() + netmon_metric_definitions()
@@ -1143,7 +1150,8 @@ async def _auto_collect_loop() -> None:
             topology = next(iter(topologies.values()), None)
             if topology:
                 labels = {"version": software_version}
-                samples = _collect_real(topology, labels) if real_collection_default else _collect_synthetic_full(topology, labels)
+                use_real_setting = system_settings.get("use_real_data", real_collection_default)
+                samples = _collect_real(topology, labels) if use_real_setting else _collect_synthetic_full(topology, labels)
                 if samples:
                     _store_samples(samples)
         except Exception:
@@ -1432,7 +1440,9 @@ async def start_run(experiment_id: str, mode: str = "synthetic") -> ExperimentRu
             "version": software_version,
         }
         topology = topologies.get(experiment.topology_id)
-        use_real = mode == "real" or (real_collection_default and mode != "synthetic")
+        # Usar system_settings para determinar modo de coleta
+        use_real_setting = system_settings.get("use_real_data", real_collection_default)
+        use_real = mode == "real" or (use_real_setting and mode != "synthetic")
         samples = _collect_real(topology, labels) if use_real else _collect_synthetic_full(topology, labels)
         _store_samples(samples)
         _append_run_log(run_id, f"metrics_collected:{len(samples)}")
@@ -1474,6 +1484,36 @@ async def get_run_metrics(run_id: str) -> List[MetricRecord]:
     if run_id not in runs:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Run not found")
     return run_metrics.get(run_id, [])
+
+
+@app.get("/system/settings")
+async def get_system_settings() -> Dict[str, Any]:
+    """Get current system settings (data mode, auto-collect, etc)."""
+    return {
+        "use_real_data": system_settings["use_real_data"],
+        "auto_collect_enabled": system_settings["auto_collect_enabled"],
+        "collect_interval_sec": system_settings["collect_interval_sec"],
+        "real_collection_available": True,  # Indica se coleta real está disponível
+    }
+
+
+@app.patch("/system/settings")
+async def update_system_settings(settings: Dict[str, Any]) -> Dict[str, Any]:
+    """Update system settings. Accepts: use_real_data, auto_collect_enabled, collect_interval_sec."""
+    if "use_real_data" in settings and isinstance(settings["use_real_data"], bool):
+        system_settings["use_real_data"] = settings["use_real_data"]
+        logger.info(f"Modo de coleta alterado: {'REAL' if settings['use_real_data'] else 'SINTÉTICO'}")
+    
+    if "auto_collect_enabled" in settings and isinstance(settings["auto_collect_enabled"], bool):
+        system_settings["auto_collect_enabled"] = settings["auto_collect_enabled"]
+        logger.info(f"Auto-coleta: {'ATIVADA' if settings['auto_collect_enabled'] else 'DESATIVADA'}")
+    
+    if "collect_interval_sec" in settings and isinstance(settings["collect_interval_sec"], (int, float)):
+        if settings["collect_interval_sec"] > 0:
+            system_settings["collect_interval_sec"] = float(settings["collect_interval_sec"])
+            logger.info(f"Intervalo de coleta: {settings['collect_interval_sec']}s")
+    
+    return await get_system_settings()
 
 
 @app.get("/metrics/definitions", response_model=List[MetricDefinition])
@@ -1682,7 +1722,8 @@ async def collect_metrics(
 ) -> Dict[str, int]:
     labels = {k: v for k, v in {"run_id": run_id, "experiment_id": experiment_id, "topology_id": topology_id, "version": version}.items() if v is not None}
     topology = topologies.get(topology_id) if topology_id else next(iter(topologies.values()), None)
-    use_real = mode == "real" or (real_collection_default and mode != "synthetic")
+    use_real_setting = system_settings.get("use_real_data", real_collection_default)
+    use_real = mode == "real" or (use_real_setting and mode != "synthetic")
     samples = _collect_real(topology, labels) if use_real else _collect_synthetic_full(topology, labels)
     _store_samples(samples)
     if run_id:

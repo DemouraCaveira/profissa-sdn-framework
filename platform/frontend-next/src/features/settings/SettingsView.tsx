@@ -6,6 +6,7 @@ import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { Input, Select } from "@/components/ui/Input";
 import { cn } from "@/lib/cn";
 import { configApi, API_BASE, type SavedConfig } from "@/lib/api";
+import { DataModeToggle } from "./DataModeToggle";
 
 type Tab = "general" | "topology" | "resources" | "telemetry";
 
@@ -592,6 +593,9 @@ export function SettingsView() {
 
           {tab === "general" ? (
             <div className="space-y-4">
+              {/* Toggle de Modo de Coleta de Dados */}
+              <DataModeToggle />
+
               <div className="rounded-xl border border-border-0/60 bg-bg-2/10 p-3">
                 <div className="mb-2 text-[11px] font-semibold text-fg-0">Dados Globais</div>
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">

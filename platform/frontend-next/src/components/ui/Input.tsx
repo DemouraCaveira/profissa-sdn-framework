@@ -4,7 +4,7 @@ export function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInp
   return (
     <input
       className={cn(
-        "h-8 w-full rounded-lg border border-border-0/60 bg-bg-2/40 px-2 text-[12px] text-fg-0",
+        "h-8 w-full rounded-lg border border-border-0/60 bg-bg-2/90 px-2 text-[12px] text-white",
         "placeholder:text-fg-1/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-ok/40",
         className,
       )}
@@ -17,8 +17,9 @@ export function Select({ className, ...props }: React.SelectHTMLAttributes<HTMLS
   return (
     <select
       className={cn(
-        "h-8 w-full rounded-lg border border-border-0/60 bg-bg-2/40 px-2 text-[12px] text-fg-0",
+        "h-8 w-full rounded-lg border border-border-0/60 bg-bg-2/90 px-2 text-[12px] text-white font-medium",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-ok/40",
+        "cursor-pointer hover:bg-bg-2",
         className,
       )}
       {...props}
