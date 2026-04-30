@@ -301,7 +301,7 @@ chmod +x "$SCRIPT_DIR/netops.desktop"                 2>/dev/null || true
 
 # Bake the absolute path into the source installer .desktop so it works
 # from double-click regardless of working directory.
-sed -i "s|^Exec=.*|Exec=bash \"$SCRIPT_DIR/install.sh\"|" \
+sed -i "s|__INSTALL_DIR__|$SCRIPT_DIR|g" \
     "$SCRIPT_DIR/Instalar NetOps Studio.desktop" 2>/dev/null || true
 
 if command -v gio &>/dev/null; then
