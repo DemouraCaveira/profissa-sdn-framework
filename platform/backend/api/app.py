@@ -2,17 +2,19 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 import random
 import time
 import re
 import subprocess
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Sequence
 from uuid import uuid4
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -46,9 +48,25 @@ from platform.backend.core.metric_catalog import metric_definitions as catalog_m
 from platform.backend.core.netmon_blocks import list_grc_blocks
 from platform.backend.core.netmon_bridge import netmon_metric_definitions, run_host_ping, samples_from_netmon
 
-app = FastAPI(title="NetOps Studio API", version="0.1.0")
+# Configure structured logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+logger = logging.getLogger(__name__)
+
+app = FastAPI(
+    title="NetOps Studio API",
+    version="0.1.0",
+    docs_url="/docs" if os.getenv("ENV", "dev") == "dev" else None,
+    redoc_url="/redoc" if os.getenv("ENV", "dev") == "dev" else None,
+)
 
 api_key = os.getenv("API_KEY")
+if not api_key and os.getenv("ENV") == "production":
+    logger.warning("API_KEY não configurada em produção!")
+
 allowed_origins = os.getenv(
     "CORS_ALLOW_ORIGINS",
     "http://localhost:3000,http://127.0.0.1:3000,"
@@ -94,9 +112,37 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in allowed_origins if origin.strip()],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-API-Key"],
+    max_age=600,
 )
+
+# Rate limiting: simple in-memory tracker (use Redis em produção)
+_rate_limit_store: Dict[str, List[float]] = defaultdict(list)
+RATE_LIMIT_REQUESTS = int(os.getenv("RATE_LIMIT_REQUESTS", "100"))
+RATE_LIMIT_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "60"))
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    client_ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    
+    # Limpar timestamps antigos
+    _rate_limit_store[client_ip] = [
+        ts for ts in _rate_limit_store[client_ip]
+        if now - ts < RATE_LIMIT_WINDOW
+    ]
+    
+    if len(_rate_limit_store[client_ip]) >= RATE_LIMIT_REQUESTS:
+        logger.warning(f"Rate limit exceeded for {client_ip}")
+        return Response(
+            content=json.dumps({"detail": "Too many requests"}),
+            status_code=429,
+            media_type="application/json"
+        )
+    
+    _rate_limit_store[client_ip].append(now)
+    return await call_next(request)
 
 
 def _generate_id(prefix: str) -> str:
