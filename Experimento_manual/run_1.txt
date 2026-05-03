@@ -1,0 +1,602 @@
+ts "2026-05-03T19:13:18.731Z"
+cpu_pct	4,2
+dns_resolve_ms	129.853
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,18
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	276.530
+
+ts "2026-05-03T19:13:20.485Z"
+cpu_pct	2,2
+dns_resolve_ms	28.285
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,05
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	188.143
+
+ts "2026-05-03T19:13:21.985Z"
+cpu_pct	4,3
+dns_resolve_ms	26.104
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,16
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	180.500
+
+ts "2026-05-03T19:13:23.461Z"
+cpu_pct	56,4
+dns_resolve_ms	39.207
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,44
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	179.661
+
+ts "2026-05-03T19:13:25.012Z"
+cpu_pct	8,2
+dns_resolve_ms	25.963
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,55
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	218.317
+
+ts "2026-05-03T19:13:26.547Z"
+cpu_pct	4,3
+dns_resolve_ms	29.588
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,37
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	201.343
+
+ts "2026-05-03T19:13:28.047Z"
+cpu_pct	100
+dns_resolve_ms	26.070
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,39
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	194.909
+
+ts "2026-05-03T19:13:29.533Z"
+cpu_pct	2,2
+dns_resolve_ms	34.493
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,47
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	228.889
+
+ts "2026-05-03T19:13:31.059Z"
+cpu_pct	56,4
+dns_resolve_ms	34.382
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,62
+route_count	6
+sessions_established	10,
+tcp_retrans_pct	
+tls_handshake_latency	183.565
+
+ts "2026-05-03T19:13:32.604Z"
+cpu_pct	4,8
+dns_resolve_ms	27.184
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,52
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	194.924
+
+ts "2026-05-03T19:13:34.170Z"
+cpu_pct	100
+dns_resolve_ms	42.725
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,45
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	210.291
+
+ts "2026-05-03T19:13:35.752Z"
+cpu_pct	5,4
+dns_resolve_ms	30.467
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,36
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	186.145
+
+ts "2026-05-03T19:13:37.295Z"
+cpu_pct	3,4
+dns_resolve_ms	28.638
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,38
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	177.369
+
+ts "2026-05-03T19:13:38.836Z"
+cpu_pct	72,5
+dns_resolve_ms	39.224
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,83
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	156.355
+
+ts "2026-05-03T19:13:40.373Z"
+cpu_pct	6,4
+dns_resolve_ms	30.717
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,47
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	161.120
+
+ts "2026-05-03T19:13:41.821Z"
+cpu_pct	14
+dns_resolve_ms	22.006
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,25
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	177.078
+
+ts "2026-05-03T19:13:43.282Z"
+cpu_pct	2,3
+dns_resolve_ms	18.139
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,23
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	148.739
+
+ts "2026-05-03T19:13:44.709Z"
+cpu_pct	4
+dns_resolve_ms	28.400
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	59,91
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	186.004
+
+ts "2026-05-03T19:13:46.220Z"
+cpu_pct	53,8
+dns_resolve_ms	42.416
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,48
+route_count	6
+sessions_established	10,
+tcp_retrans_pct	
+tls_handshake_latency	177.234
+
+ts "2026-05-03T19:13:47.771Z"
+cpu_pct	11,6
+dns_resolve_ms	28.133
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+ram_used_pct	60,47
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	180.673
+
+ts "2026-05-03T19:18:28.019Z"
+cpu_pct	6.80
+ram_used_pct	0.17
+dns_resolve_ms	118.824
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	7,
+tcp_retrans_pct	
+tls_handshake_latency	170.303
+
+ts "2026-05-03T19:18:33.563Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	66.711
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	172.772
+
+ts "2026-05-03T19:18:38.611Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	41.333
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	153.106
+
+ts "2026-05-03T19:18:44.149Z"
+cpu_pct	6.72
+ram_used_pct	0.17
+dns_resolve_ms	31.448
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	175.354
+
+ts "2026-05-03T19:18:49.229Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	34.502
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	10,
+tcp_retrans_pct	
+tls_handshake_latency	184.462
+
+ts "2026-05-03T19:18:54.163Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	38.285
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	10,
+tcp_retrans_pct	
+tls_handshake_latency	195.542
+
+ts "2026-05-03T19:18:59.177Z"
+cpu_pct	8.62
+ram_used_pct	0.17
+dns_resolve_ms	37.074
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	169.555
+
+ts "2026-05-03T19:19:04.074Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	25.552
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	13,
+tcp_retrans_pct	
+tls_handshake_latency	255.278
+
+ts "2026-05-03T19:19:09.222Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	35.274
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	180.006
+
+ts "2026-05-03T19:19:14.279Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	32.654
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	13,
+tcp_retrans_pct	
+tls_handshake_latency	197.733
+
+ts "2026-05-03T19:19:19.173Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	42.157
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	157.374
+
+ts "2026-05-03T19:19:24.333Z"
+cpu_pct	10.90
+ram_used_pct	0.17
+dns_resolve_ms	62.688
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	200.039
+
+ts "2026-05-03T19:19:29.344Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	64.116
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	13,
+tcp_retrans_pct	
+tls_handshake_latency	146.029
+
+ts "2026-05-03T19:19:34.273Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	56.424
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	175.359
+
+ts "2026-05-03T19:19:39.301Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	83.416
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	13,
+tcp_retrans_pct	
+tls_handshake_latency	187.219
+
+ts "2026-05-03T19:19:44.814Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	28.377
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	154.935
+
+ts "2026-05-03T19:19:49.828Z"
+cpu_pct	6.78
+ram_used_pct	0.17
+dns_resolve_ms	74.329
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	13,
+tcp_retrans_pct	
+tls_handshake_latency	192.945
+
+ts "2026-05-03T19:19:54.934Z"
+cpu_pct	0.00
+ts "2026-05-03T19:21:24.534Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	30.284
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	140.214
+
+ts "2026-05-03T19:21:29.387Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	28.894
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	149.653
+
+ts "2026-05-03T19:21:34.216Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	26.187
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	159.557
+
+ts "2026-05-03T19:21:39.057Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	26.838
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	176.153
+
+ts "2026-05-03T19:21:44.008Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	29.463
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	150.601
+
+ts "2026-05-03T19:21:48.825Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	27.642
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	154.923
+
+ts "2026-05-03T19:21:53.739Z"
+cpu_pct	7.58
+ram_used_pct	0.17
+dns_resolve_ms	25.997
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	5,
+tcp_retrans_pct	
+tls_handshake_latency	133.155
+
+ts "2026-05-03T19:21:58.588Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	27.170
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	177.652
+
+ts "2026-05-03T19:22:03.854Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	28.376
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	177.556
+
+ts "2026-05-03T19:22:08.781Z"
+cpu_pct	1.88
+ram_used_pct	0.17
+dns_resolve_ms	27.403
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	155.497
+
+ts "2026-05-03T19:22:13.671Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	30.721
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	157.569
+
+ts "2026-05-03T19:22:18.686Z"
+cpu_pct	0.00
+ram_used_pct	0.17
+dns_resolve_ms	27.777
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	162.002
+
+ts "2026-05-03T19:22:23.560Z"
+cpu_pct	0.79
+ram_used_pct	0.17
+dns_resolve_ms	28.246
+e2e_path_availability	1
+if_link_up	7
+mac_table_size	7
+route_count	6
+sessions_established	2,
+tcp_retrans_pct	
+tls_handshake_latency	215.054
+
