@@ -225,14 +225,14 @@ def main() -> None:
 
     log.info("Opening webview window …")
     try:
-        webview.create_window(
+        window = webview.create_window(
             "NetOps Studio",
             f"http://127.0.0.1:{args.frontend_port}",
             width=1280,
             height=800,
             resizable=True,
         )
-        webview.start(debug=False)
+        webview.start(debug=True)  # Habilitar DevTools para debug
     except Exception as exc:
         _show_error(
             "NetOps Studio — Window Error",

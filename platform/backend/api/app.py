@@ -570,96 +570,100 @@ def _collect_real(topology: Topology | None, labels: Dict[str, Any] | None = Non
         )
 
     for node in topology.nodes:
-        container = node.meta.get("container_name") or node.id
-        # Transport: ss -s and /proc/net/snmp
-        if layer_flags.get("transport", True):
-            ss_output = _run_cmd(["docker", "exec", container, "ss", "-s"]) if container else ""
-            ss_data = _parse_ss_summary(ss_output) if ss_output else {}
-            if ss_data:
-                samples.append(_mk("ss_sockets_total", "transport", node.id, ss_data.get("total", 0.0), {"source": "ss -s"}))
-                samples.append(
-                    _mk(
-                        "ss_tcp_states",
-                        "transport",
-                        node.id,
-                        ss_data.get("tcp_total", 0.0),
-                        {
-                            "estab": ss_data.get("tcp_estab", 0.0),
-                            "closed": ss_data.get("tcp_closed", 0.0),
-                            "orphaned": ss_data.get("tcp_orphaned", 0.0),
-                            "timewait": ss_data.get("tcp_timewait", 0.0),
-                            "source": "ss -s",
-                        },
-                    )
-                )
-                for proto in ["udp", "tcp", "raw", "inet", "frag"]:
+        try:
+            container = node.meta.get("container_name") or node.id
+            # Transport: ss -s and /proc/net/snmp
+            if layer_flags.get("transport", True):
+                ss_output = _run_cmd(["docker", "exec", container, "ss", "-s"]) if container else ""
+                ss_data = _parse_ss_summary(ss_output) if ss_output else {}
+                if ss_data:
+                    samples.append(_mk("ss_sockets_total", "transport", node.id, ss_data.get("total", 0.0), {"source": "ss -s"}))
                     samples.append(
                         _mk(
-                            f"ss_{proto}_sockets_total",
+                            "ss_tcp_states",
                             "transport",
                             node.id,
-                            ss_data.get(f"{proto}_total", 0.0),
+                            ss_data.get("tcp_total", 0.0),
                             {
-                                "ip": ss_data.get(f"{proto}_ip", 0.0),
-                                "ipv6": ss_data.get(f"{proto}_ipv6", 0.0),
+                                "estab": ss_data.get("tcp_estab", 0.0),
+                                "closed": ss_data.get("tcp_closed", 0.0),
+                                "orphaned": ss_data.get("tcp_orphaned", 0.0),
+                                "timewait": ss_data.get("tcp_timewait", 0.0),
                                 "source": "ss -s",
                             },
                         )
                     )
+                    for proto in ["udp", "tcp", "raw", "inet", "frag"]:
+                        samples.append(
+                            _mk(
+                                f"ss_{proto}_sockets_total",
+                                "transport",
+                                node.id,
+                                ss_data.get(f"{proto}_total", 0.0),
+                                {
+                                    "ip": ss_data.get(f"{proto}_ip", 0.0),
+                                    "ipv6": ss_data.get(f"{proto}_ipv6", 0.0),
+                                    "source": "ss -s",
+                                },
+                            )
+                        )
 
-            snmp_output = _run_cmd(["docker", "exec", container, "cat", "/proc/net/snmp"]) if container else ""
-            snmp_data = _parse_snmp(snmp_output) if snmp_output else {}
-            for key, val in snmp_data.items():
-                samples.append(_mk(f"snmp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
+                snmp_output = _run_cmd(["docker", "exec", container, "cat", "/proc/net/snmp"]) if container else ""
+                snmp_data = _parse_snmp(snmp_output) if snmp_output else {}
+                for key, val in snmp_data.items():
+                    samples.append(_mk(f"snmp_{key}", "transport", node.id, float(val), {"source": "/proc/net/snmp"}))
 
-        # Link/Physical: ip -s link
-        if layer_flags.get("link", True) or layer_flags.get("physical", True):
-            ip_link_output = _run_cmd(["docker", "exec", container, "ip", "-s", "link"]) if container else ""
-            ip_link_stats = _parse_ip_link(ip_link_output) if ip_link_output else {}
-            for iface, vals in ip_link_stats.items():
-                path = f"{node.id}:{iface}"
-                if layer_flags.get("physical", True):
-                    samples.append(_mk("if_errors", "physical", path, vals.get("errors", 0.0), {"source": "ip -s link"}))
-                    samples.append(_mk("if_discards", "physical", path, vals.get("dropped", 0.0), {"source": "ip -s link"}))
-                if layer_flags.get("link", True):
-                    samples.append(_mk("queue_drops", "link", path, vals.get("dropped", 0.0), {"source": "ip -s link"}))
+            # Link/Physical: ip -s link
+            if layer_flags.get("link", True) or layer_flags.get("physical", True):
+                ip_link_output = _run_cmd(["docker", "exec", container, "ip", "-s", "link"]) if container else ""
+                ip_link_stats = _parse_ip_link(ip_link_output) if ip_link_output else {}
+                for iface, vals in ip_link_stats.items():
+                    path = f"{node.id}:{iface}"
+                    if layer_flags.get("physical", True):
+                        samples.append(_mk("if_errors", "physical", path, vals.get("errors", 0.0), {"source": "ip -s link"}))
+                        samples.append(_mk("if_discards", "physical", path, vals.get("dropped", 0.0), {"source": "ip -s link"}))
+                    if layer_flags.get("link", True):
+                        samples.append(_mk("queue_drops", "link", path, vals.get("dropped", 0.0), {"source": "ip -s link"}))
 
-        # Network: basic ping between hosts (h1->h2, h2->h1 when mgmt_ip available)
-        if layer_flags.get("network", True) and node.type == "host":
-            peers = [n for n in topology.nodes if n.type == "host" and n.id != node.id and n.mgmt_ip]
-            if peers:
-                target = peers[0]
-                ping_cmd = ["docker", "exec", container, "ping", "-c", "3", "-i", "0.2", target.mgmt_ip]
-                ping_output = _run_cmd(ping_cmd)
-                m = re.search(r"(\d+)% packet loss", ping_output)
-                loss = float(m.group(1)) if m else 0.0
-                rtt_match = re.search(r"rtt min/avg/max/mdev = ([0-9.]+)/([0-9.]+)/([0-9.]+)/([0-9.]+)", ping_output)
-                if rtt_match:
-                    latency = float(rtt_match.group(2))
-                    jitter = float(rtt_match.group(4))
-                else:
-                    latency = 0.0
-                    jitter = 0.0
-                samples.append(_mk("latency_ms", "network", node.id, latency, {"dst": target.id, "source": "ping"}))
-                samples.append(_mk("packet_loss_pct", "network", node.id, loss, {"dst": target.id, "source": "ping"}))
-                samples.append(_mk("jitter_ms", "network", node.id, jitter, {"dst": target.id, "source": "ping"}))
+            # Network: basic ping between hosts (h1->h2, h2->h1 when mgmt_ip available)
+            if layer_flags.get("network", True) and node.type == "host":
+                peers = [n for n in topology.nodes if n.type == "host" and n.id != node.id and n.mgmt_ip]
+                if peers:
+                    target = peers[0]
+                    ping_cmd = ["docker", "exec", container, "ping", "-c", "3", "-i", "0.2", target.mgmt_ip]
+                    ping_output = _run_cmd(ping_cmd)
+                    m = re.search(r"(\d+)% packet loss", ping_output)
+                    loss = float(m.group(1)) if m else 0.0
+                    rtt_match = re.search(r"rtt min/avg/max/mdev = ([0-9.]+)/([0-9.]+)/([0-9.]+)/([0-9.]+)", ping_output)
+                    if rtt_match:
+                        latency = float(rtt_match.group(2))
+                        jitter = float(rtt_match.group(4))
+                    else:
+                        latency = 0.0
+                        jitter = 0.0
+                    samples.append(_mk("latency_ms", "network", node.id, latency, {"dst": target.id, "source": "ping"}))
+                    samples.append(_mk("packet_loss_pct", "network", node.id, loss, {"dst": target.id, "source": "ping"}))
+                    samples.append(_mk("jitter_ms", "network", node.id, jitter, {"dst": target.id, "source": "ping"}))
 
-        # Control/Dataplane (best-effort with ovs-ofctl on switches)
-        if node.type == "switch" and layer_flags.get("control", True):
-            ofctl_ports = _run_cmd(["docker", "exec", container, "ovs-ofctl", "dump-ports", "br-s1"]) if container else ""
-            if ofctl_ports:
-                samples.append(_mk("controller_conn_ok", "control", node.id, 1.0, {"source": "ovs-ofctl"}))
-        if node.type == "switch" and layer_flags.get("dataplane", True):
-            flows_dump = _run_cmd(["docker", "exec", container, "ovs-ofctl", "dump-flows", "br-s1"]) if container else ""
-            if flows_dump:
-                lines = [ln for ln in flows_dump.splitlines() if "n_packets" in ln]
-                for idx, ln in enumerate(lines[:10]):
-                    m_pkts = re.search(r"n_packets=(\d+)", ln)
-                    m_bytes = re.search(r"n_bytes=(\d+)", ln)
-                    pkts = float(m_pkts.group(1)) if m_pkts else 0.0
-                    byt = float(m_bytes.group(1)) if m_bytes else 0.0
-                    samples.append(_mk("openflow_flow_packets", "dataplane", node.id, pkts, {"flow_id": f"flow_{idx}", "source": "ovs-ofctl"}))
-                    samples.append(_mk("openflow_flow_bytes", "dataplane", node.id, byt, {"flow_id": f"flow_{idx}", "source": "ovs-ofctl"}))
+            # Control/Dataplane (best-effort with ovs-ofctl on switches)
+            if node.type == "switch" and layer_flags.get("control", True):
+                ofctl_ports = _run_cmd(["docker", "exec", container, "ovs-ofctl", "dump-ports", "br-s1"]) if container else ""
+                if ofctl_ports:
+                    samples.append(_mk("controller_conn_ok", "control", node.id, 1.0, {"source": "ovs-ofctl"}))
+            if node.type == "switch" and layer_flags.get("dataplane", True):
+                flows_dump = _run_cmd(["docker", "exec", container, "ovs-ofctl", "dump-flows", "br-s1"]) if container else ""
+                if flows_dump:
+                    lines = [ln for ln in flows_dump.splitlines() if "n_packets" in ln]
+                    for idx, ln in enumerate(lines[:10]):
+                        m_pkts = re.search(r"n_packets=(\d+)", ln)
+                        m_bytes = re.search(r"n_bytes=(\d+)", ln)
+                        pkts = float(m_pkts.group(1)) if m_pkts else 0.0
+                        byt = float(m_bytes.group(1)) if m_bytes else 0.0
+                        samples.append(_mk("openflow_flow_packets", "dataplane", node.id, pkts, {"flow_id": f"flow_{idx}", "source": "ovs-ofctl"}))
+                        samples.append(_mk("openflow_flow_bytes", "dataplane", node.id, byt, {"flow_id": f"flow_{idx}", "source": "ovs-ofctl"}))
+        except Exception as e:
+            logger.error(f"Erro ao coletar métricas do nó {node.id}: {e}")
+            continue
     return samples
 
 
@@ -1625,6 +1629,138 @@ async def health() -> Dict[str, str]:
     return {"status": "ok"}
 
 
+# ── Experiment draft (rascunho) persistence ───────────────────────────────────
+EXPERIMENT_DRAFT_FILE = temp_root / "experiment_draft.json"
+EXPERIMENT_RUN_STATE_FILE = temp_root / "experiment_run_state.json"
+EXPERIMENT_SELECTED_METRICS_FILE = temp_root / "experiment_selected_metrics.json"
+EXPERIMENT_HISTORY_FILE = temp_root / "experiment_history.json"
+
+
+@app.get("/experiment/draft")
+async def get_experiment_draft() -> Dict[str, Any]:
+    """Carregar rascunho do experimento (para persistência de UI)"""
+    if EXPERIMENT_DRAFT_FILE.exists():
+        try:
+            with open(EXPERIMENT_DRAFT_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+@app.post("/experiment/draft")
+async def save_experiment_draft(draft: Dict[str, Any]) -> Dict[str, str]:
+    """Salvar rascunho do experimento (para persistência de UI)"""
+    try:
+        temp_root.mkdir(parents=True, exist_ok=True)
+        with open(EXPERIMENT_DRAFT_FILE, "w") as f:
+            json.dump(draft, f, indent=2)
+        return {"status": "saved"}
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@app.get("/experiment/run-state")
+async def get_experiment_run_state() -> Dict[str, Any]:
+    """Carregar estado de execução do experimento"""
+    if EXPERIMENT_RUN_STATE_FILE.exists():
+        try:
+            with open(EXPERIMENT_RUN_STATE_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+@app.post("/experiment/run-state")
+async def save_experiment_run_state(state: Dict[str, Any]) -> Dict[str, str]:
+    """Salvar estado de execução do experimento"""
+    try:
+        temp_root.mkdir(parents=True, exist_ok=True)
+        with open(EXPERIMENT_RUN_STATE_FILE, "w") as f:
+            json.dump(state, f, indent=2)
+        return {"status": "saved"}
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@app.get("/experiment/selected-metrics")
+async def get_selected_metrics() -> Dict[str, Any]:
+    """Carregar métricas selecionadas"""
+    if EXPERIMENT_SELECTED_METRICS_FILE.exists():
+        try:
+            with open(EXPERIMENT_SELECTED_METRICS_FILE, "r") as f:
+                data = json.load(f)
+                return {"metricKeys": data}
+        except Exception:
+            pass
+    return {"metricKeys": []}
+
+
+@app.post("/experiment/selected-metrics")
+async def save_selected_metrics(data: Dict[str, Any]) -> Dict[str, str]:
+    """Salvar métricas selecionadas"""
+    try:
+        temp_root.mkdir(parents=True, exist_ok=True)
+        metric_keys = data.get("metricKeys", [])
+        with open(EXPERIMENT_SELECTED_METRICS_FILE, "w") as f:
+            json.dump(metric_keys, f, indent=2)
+        return {"status": "saved"}
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@app.get("/experiment/history")
+async def get_experiment_history() -> List[Dict[str, Any]]:
+    """Carregar histórico de experimentos do disco"""
+    if EXPERIMENT_HISTORY_FILE.exists():
+        try:
+            with open(EXPERIMENT_HISTORY_FILE, "r") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+        except Exception:
+            pass
+    return []
+
+
+@app.post("/experiment/history")
+async def save_experiment_history(records: List[Dict[str, Any]]) -> Dict[str, str]:
+    """Salvar histórico de experimentos no disco"""
+    try:
+        temp_root.mkdir(parents=True, exist_ok=True)
+        with open(EXPERIMENT_HISTORY_FILE, "w") as f:
+            json.dump(records, f, indent=2)
+        return {"status": "saved", "count": len(records)}
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@app.post("/experiment/history/append")
+async def append_experiment_record(record: Dict[str, Any]) -> Dict[str, str]:
+    """Adicionar um registro ao histórico de experimentos"""
+    try:
+        temp_root.mkdir(parents=True, exist_ok=True)
+        existing: list = []
+        if EXPERIMENT_HISTORY_FILE.exists():
+            try:
+                with open(EXPERIMENT_HISTORY_FILE, "r") as f:
+                    existing = json.load(f)
+                    if not isinstance(existing, list):
+                        existing = []
+            except Exception:
+                existing = []
+        # Adicionar no início (mais recente primeiro)
+        existing.insert(0, record)
+        # Manter apenas os últimos 200 registros
+        existing = existing[:200]
+        with open(EXPERIMENT_HISTORY_FILE, "w") as f:
+            json.dump(existing, f, indent=2)
+        return {"status": "saved", "count": len(existing)}
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
 @app.get("/netmon/blocks")
 async def list_netmon_blocks() -> List[Dict[str, Any]]:
     try:
@@ -1712,14 +1848,14 @@ async def export_metrics(layer: MetricLayer | None = None) -> Response:
     return Response(content="\n".join(lines), media_type="text/plain")
 
 
-@app.post("/metrics/collect", response_model=Dict[str, int], dependencies=[Depends(require_api_key)])
+@app.post("/metrics/collect", response_model=Dict[str, Any], dependencies=[Depends(require_api_key)])
 async def collect_metrics(
     mode: str = "synthetic",
     run_id: str | None = None,
     experiment_id: str | None = None,
     topology_id: str | None = None,
     version: str | None = None,
-) -> Dict[str, int]:
+) -> Dict[str, Any]:
     labels = {k: v for k, v in {"run_id": run_id, "experiment_id": experiment_id, "topology_id": topology_id, "version": version}.items() if v is not None}
     topology = topologies.get(topology_id) if topology_id else next(iter(topologies.values()), None)
     use_real_setting = system_settings.get("use_real_data", real_collection_default)
