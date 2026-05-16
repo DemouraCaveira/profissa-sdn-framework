@@ -568,6 +568,14 @@ function LayerGroup({
   setSelectedKeys: (next: Set<string>) => void;
 }) {
   const specs = useMemo(() => getLayerMetrics(layer), [layer]);
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return specs;
+    const q = search.toLowerCase();
+    return specs.filter((s) => s.key.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+  }, [specs, search]);
 
   const selectedCount = useMemo(() => {
     let c = 0;
@@ -580,12 +588,25 @@ function LayerGroup({
 
   return (
     <div className="rounded-lg border border-border-0/60 bg-bg-1/30">
-      <div className="flex items-center justify-between gap-2 border-b border-border-0/50 px-2 py-1.5">
+      {/* Header — always visible */}
+      <div
+        className="flex cursor-pointer items-center justify-between gap-2 px-2 py-1.5 select-none"
+        onClick={() => setOpen((v) => !v)}
+      >
         <div className="flex items-center gap-2">
+          <span className="text-[10px] text-fg-1">{open ? "▾" : "▸"}</span>
           <div className="font-mono text-[11px] font-semibold text-fg-0">{layer}</div>
           <div className="text-[10px] text-fg-1">{selectedCount}/{specs.length}</div>
+          {selectedCount > 0 && (
+            <span className="rounded-md border border-accent-ok/40 bg-accent-ok/10 px-1.5 py-0.5 font-mono text-[9px] text-accent-ok">
+              {selectedCount} sel
+            </span>
+          )}
         </div>
-        <label className="flex cursor-pointer items-center gap-2 text-[11px] text-fg-1">
+        <label
+          className="flex cursor-pointer items-center gap-1.5 text-[11px] text-fg-1"
+          onClick={(e) => e.stopPropagation()}
+        >
           <input
             type="checkbox"
             checked={allSelected}
@@ -599,24 +620,44 @@ function LayerGroup({
               setSelectedKeys(next);
             }}
           />
-          Marcar camada
+          Todas
         </label>
       </div>
-      <div className="space-y-1 p-2">
-        {specs.map((spec) => (
-          <MetricRow
-            key={spec.key}
-            spec={spec}
-            checked={selectedKeys.has(spec.key)}
-            onToggle={() => {
-              const next = new Set(selectedKeys);
-              if (next.has(spec.key)) next.delete(spec.key);
-              else next.add(spec.key);
-              setSelectedKeys(next);
-            }}
-          />
-        ))}
-      </div>
+
+      {/* Collapsible body */}
+      {open && (
+        <div className="border-t border-border-0/50">
+          {/* Search inside layer */}
+          <div className="px-2 pt-1.5 pb-1">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Filtrar métricas…"
+              className="h-7 w-full rounded-md border border-border-0/60 bg-bg-2/50 px-2 text-[11px] text-fg-0 placeholder:text-fg-1/60 focus:outline-none focus:ring-1 focus:ring-accent-ok/40"
+            />
+          </div>
+          <div className="max-h-48 space-y-1 overflow-y-auto p-2 pt-0">
+            {filtered.length === 0 ? (
+              <div className="py-2 text-center text-[10px] text-fg-1">Nenhuma métrica encontrada</div>
+            ) : (
+              filtered.map((spec) => (
+                <MetricRow
+                  key={spec.key}
+                  spec={spec}
+                  checked={selectedKeys.has(spec.key)}
+                  onToggle={() => {
+                    const next = new Set(selectedKeys);
+                    if (next.has(spec.key)) next.delete(spec.key);
+                    else next.add(spec.key);
+                    setSelectedKeys(next);
+                  }}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2505,12 +2546,10 @@ export function ExperimentsView() {
                     </div>
                   ) : null}
 
-                  <div className="max-h-[420px] overflow-auto pr-1">
-                    <div className="space-y-2">
-                      {L0_L7.map((layer) => (
-                        <LayerGroup key={layer} layer={layer} selectedKeys={selectedMetricKeys} setSelectedKeys={setSelectedMetricKeys} />
-                      ))}
-                    </div>
+                  <div className="space-y-2">
+                    {L0_L7.map((layer) => (
+                      <LayerGroup key={layer} layer={layer} selectedKeys={selectedMetricKeys} setSelectedKeys={setSelectedMetricKeys} />
+                    ))}
                   </div>
                 </div>
 
